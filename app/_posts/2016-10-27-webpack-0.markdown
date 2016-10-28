@@ -1,9 +1,8 @@
 ---
 layout: post
-title:  "webpack"
+title:  "webpack 介绍"
 date:   2016-10-27 19:29:30 +0800
 categories: webpack
-<<<<<<< HEAD
 ---
 
 介绍
@@ -42,6 +41,3 @@ Webpack是配置驱动，一般配置文件名为webpack.config.js。
 这些转化被定义使用*loaders*和*plugins*来实现目的。
 
 在这个部分我会向你如何建立一个基础的开发配置基于Webpack。
-=======
----
->>>>>>> 03d8cb78e2276b6eeef2e2b11474ef5b384211be
