@@ -6,9 +6,69 @@
 </description>
     <link>https://whatthecole.github.io/webpack//webpack/</link>
     <atom:link href="https://whatthecole.github.io/webpack//webpack/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 28 Oct 2016 20:58:05 +0800</pubDate>
-    <lastBuildDate>Fri, 28 Oct 2016 20:58:05 +0800</lastBuildDate>
+    <pubDate>Fri, 28 Oct 2016 21:02:09 +0800</pubDate>
+    <lastBuildDate>Fri, 28 Oct 2016 21:02:09 +0800</lastBuildDate>
     <generator>Jekyll v3.1.1</generator>
+    
+      <item>
+        <title></title>
+        <description>&lt;h1 id=&quot;section&quot;&gt;介绍&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://webpack.github.io/&quot;&gt;Webpack&lt;/a&gt; 通过解决一个基本的问题–绑定问题，来简化了web开发。解决了开发中许多痛苦的问题。&lt;/p&gt;
+
+&lt;p&gt;由于它是配置驱动方法，所以webpack并不是一个容易学的工具。&lt;/p&gt;
+
+&lt;h3 id=&quot;webpack-&quot;&gt;Webpack 是什么&lt;/h3&gt;
+&lt;p&gt;web开发的三大要素是HTML,JavaScript和CSS。
+最简单的开发方式是直接写文件。不过这样最终会变得很笨重。&lt;/p&gt;
+
+&lt;p&gt;最幼稚的方式去加载JavaScript是将其所有绑定在一个单独的文件中。
+不过这样的做法是不行的，你需要将这些JavaScript文件分割开来，这样有利于缓存这些文件。
+你可以在需要这些依赖的时候动态加载它们。随着应用程序的发展，复杂度也随之上升。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://webpack.github.io/&quot;&gt;Webpack&lt;/a&gt;是针对这些问题而开发出来的。
+它能处理上述的那些问题。
+它能通过工具实现一些结果，以及创建你需要的工作流。
+事实上，这能满足一般的需求。
+像Grunt、Gulp也可以实现这些，不过你要手写许多配置。&lt;/p&gt;
+
+&lt;h3 id=&quot;webpack--1&quot;&gt;Webpack 如何改变这些情况&lt;/h3&gt;
+&lt;p&gt;Webpack另辟蹊径。它允许你对待你的项目就像一个依赖图表一样。
+假设你项目中有一个index.js文件，您可以通过&lt;code class=&quot;highlighter-rouge&quot;&gt;import&lt;/code&gt;语句引入项目所需要的依赖。
+同样的方式也适用于样式文件及其他资源。&lt;/p&gt;
+
+&lt;p&gt;Webpack为你预先处理所有事情，并且给你配置指定的绑定依赖。这种声明的方法十分强大，
+不过有点难学。然后，一旦你开始懂得了Webpack是如何工作的，它将变成不过或缺的工具。&lt;/p&gt;
+
+&lt;h3 id=&quot;developing-with-webpack&quot;&gt;Developing with Webpack&lt;/h3&gt;
+&lt;p&gt;Webpack是配置驱动，一般配置文件名为webpack.config.js。
+配置文件定义了你项目的输入输出。最重要的，它修饰了你运行的转化的类型。
+这些转化被定义使用&lt;em&gt;loaders&lt;/em&gt;和&lt;em&gt;plugins&lt;/em&gt;来实现目的。&lt;/p&gt;
+
+&lt;h1 id=&quot;webpack&quot;&gt;在这个部分我会向你如何建立一个基础的开发配置基于Webpack。&lt;/h1&gt;
+&lt;hr /&gt;
+&lt;blockquote&gt;
+  &lt;blockquote&gt;
+    &lt;blockquote&gt;
+      &lt;blockquote&gt;
+        &lt;blockquote&gt;
+          &lt;blockquote&gt;
+            &lt;blockquote&gt;
+              &lt;p&gt;03d8cb78e2276b6eeef2e2b11474ef5b384211be&lt;/p&gt;
+            &lt;/blockquote&gt;
+          &lt;/blockquote&gt;
+        &lt;/blockquote&gt;
+      &lt;/blockquote&gt;
+    &lt;/blockquote&gt;
+  &lt;/blockquote&gt;
+&lt;/blockquote&gt;
+</description>
+        <pubDate>Fri, 28 Oct 2016 21:02:09 +0800</pubDate>
+        <link>https://whatthecole.github.io/webpack//webpack/2016/10/28/2016-10-27-webpack.html</link>
+        <guid isPermaLink="true">https://whatthecole.github.io/webpack//webpack/2016/10/28/2016-10-27-webpack.html</guid>
+        
+        
+      </item>
     
       <item>
         <title>webpack</title>
@@ -76,52 +136,6 @@
         <category>jekyll</category>
         
         <category>update</category>
-        
-      </item>
-    
-      <item>
-        <title>webpack</title>
-        <description>&lt;h1 id=&quot;section&quot;&gt;介绍&lt;/h1&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://webpack.github.io/&quot;&gt;Webpack&lt;/a&gt; 通过解决一个基本的问题–绑定问题，来简化了web开发。解决了开发中许多痛苦的问题。&lt;/p&gt;
-
-&lt;p&gt;由于它是配置驱动方法，所以webpack并不是一个容易学的工具。&lt;/p&gt;
-
-&lt;h3 id=&quot;webpack-&quot;&gt;Webpack 是什么&lt;/h3&gt;
-&lt;p&gt;web开发的三大要素是HTML,JavaScript和CSS。
-最简单的开发方式是直接写文件。不过这样最终会变得很笨重。&lt;/p&gt;
-
-&lt;p&gt;最幼稚的方式去加载JavaScript是将其所有绑定在一个单独的文件中。
-不过这样的做法是不行的，你需要将这些JavaScript文件分割开来，这样有利于缓存这些文件。
-你可以在需要这些依赖的时候动态加载它们。随着应用程序的发展，复杂度也随之上升。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://webpack.github.io/&quot;&gt;Webpack&lt;/a&gt;是针对这些问题而开发出来的。
-它能处理上述的那些问题。
-它能通过工具实现一些结果，以及创建你需要的工作流。
-事实上，这能满足一般的需求。
-像Grunt、Gulp也可以实现这些，不过你要手写许多配置。&lt;/p&gt;
-
-&lt;h3 id=&quot;webpack--1&quot;&gt;Webpack 如何改变这些情况&lt;/h3&gt;
-&lt;p&gt;Webpack另辟蹊径。它允许你对待你的项目就像一个依赖图表一样。
-假设你项目中有一个index.js文件，您可以通过&lt;code class=&quot;highlighter-rouge&quot;&gt;import&lt;/code&gt;语句引入项目所需要的依赖。
-同样的方式也适用于样式文件及其他资源。&lt;/p&gt;
-
-&lt;p&gt;Webpack为你预先处理所有事情，并且给你配置指定的绑定依赖。这种声明的方法十分强大，
-不过有点难学。然后，一旦你开始懂得了Webpack是如何工作的，它将变成不过或缺的工具。&lt;/p&gt;
-
-&lt;h3 id=&quot;developing-with-webpack&quot;&gt;Developing with Webpack&lt;/h3&gt;
-&lt;p&gt;Webpack是配置驱动，一般配置文件名为webpack.config.js。
-配置文件定义了你项目的输入输出。最重要的，它修饰了你运行的转化的类型。
-这些转化被定义使用&lt;em&gt;loaders&lt;/em&gt;和&lt;em&gt;plugins&lt;/em&gt;来实现目的。&lt;/p&gt;
-
-&lt;p&gt;在这个部分我会向你如何建立一个基础的开发配置基于Webpack。&lt;/p&gt;
-</description>
-        <pubDate>Thu, 27 Oct 2016 19:29:30 +0800</pubDate>
-        <link>https://whatthecole.github.io/webpack//webpack/webpack/2016/10/27/webpack.html</link>
-        <guid isPermaLink="true">https://whatthecole.github.io/webpack//webpack/webpack/2016/10/27/webpack.html</guid>
-        
-        
-        <category>webpack</category>
         
       </item>
     
