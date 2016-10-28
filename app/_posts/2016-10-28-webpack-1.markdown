@@ -1,0 +1,25 @@
+---
+layout: post
+title:  "webpack"
+date:   16/10/28 下午4:34
+categories: webpack
+---
+
+### 准备工作
+安装最新的版本的[Node.js](http://nodejs.org/)，确保你的命令行能执行`node`和`npm`;
+同时安装好`git`;
+
+> 最好能用[Vagrant](https://www.vagrantup.com/) 或者 [nvm](https://www.npmjs.com/package/nvm)， 方便管理你node的版本。
+ 
+### 建立项目
+首先我们先创建一个项目目录。
+
+{% highlight ruby %}
+mkdir webpack-demo && cd $_
+npm init -y
+{% endhighlight %}
+
+### 安装Webpack
+简单的安装Webpack的方法是直接全局安装`npm i webpack -g`,
+不过个人的建议是安装到你项目的目录当中，这样避免一些版本控制的问题。
+
