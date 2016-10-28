@@ -12,12 +12,24 @@ categories: webpack
 > 最好能用[Vagrant](https://www.vagrantup.com/) 或者 [nvm](https://www.npmjs.com/package/nvm)， 方便管理你node的版本。
  
 ### 建立项目
-首先我们先创建一个项目目录。
+为了方便，我们使用`git`来管理版本。
+{% highlight ruby %}
+git init
+echo "first file" >> file
+git add file
+git commit -m "first commit"
+git remote add origin git@yourrepository.git
+git push origin master
+{% endhighlight %}
+之后的学习的每个课程都会创建一个分支。
+
+然后我们创建一个项目目录。
 
 {% highlight ruby %}
 mkdir webpack-demo && cd $_
 npm init -y
 {% endhighlight %}
+
 
 ### 安装Webpack
 简单的安装Webpack的方法是直接全局安装`npm i webpack -g`,
