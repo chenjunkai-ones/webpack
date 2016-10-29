@@ -1,0 +1,95 @@
+---
+layout: post
+title:  "webpack - splitting the configuration"
+date:   16/10/29 上午10:16
+categories: webpack
+---
+
+随着项目的增长，你必须找到一个方法来管理它。
+分开每个环境就变得有必要了，方便你控制你的构建结果。
+方法有很多，以下是几种可行的方案。
+
+- 用多个文件中维护配置，通过`--config`参数将Webpack指向到各个配置文件中。
+通过模块导入分享配置。可以参考[webpack/react-starter](https://github.com/webpack/react-starter)
+
+- 把配置放入一个库，例如：[HenrikJoreteg/hjs-webpack](https://github.com/HenrikJoreteg/hjs-webpack)
+
+- 将配置写入一个单独的文件。如果我们通过*npm*(i.e.,`npm run test`),
+npm会将这个信息设置到环境变量中去。我们可以匹配它，并返回我们想要配置。
+
+在这里，为了方便我们理解我们使用最后一种方法，这里有个`webpack-merge`去实现这个方法。
+
+### webpack-merge
+首先安装这个模块
+
+`npm i webpack-merge --save-dev`
+
+接下来，我们需要为您的配置定义一些拆分点，以便我们可以根据每个npm脚本进行自定义。
+
+**webpack.config.js**
+{% highlight javascript %}
+    //The path module provides utilities for working with file and directory paths.
+    const path = require('path');
+    const HtmlWebpackPlugin = require('html-webpack-plugin');
+    const merge = require('webpack-merge');
+    
+    const PATH = {
+        app: path.join(__dirname, 'app'),
+        build: path.join(__dirname, 'build')
+    };
+    
+    
+    const common = {
+        //入口采用一个路径或者是一个入口对象
+        entry: {
+            app: PATH.app
+        },
+        output: {
+            path: PATH.build,
+            filename: '[name].js'
+        },
+        plugins: [
+            new HtmlWebpackPlugin({
+                title: 'Webpack demo'
+            })
+        ]
+    };
+    
+    var config;
+    
+    switch (process.env.npm_lifecycle_event) {
+        case 'build':
+            config.merge(common, {});
+            break;
+        default :
+            config.merge(common, {});
+    }
+    
+    module.exports = config;
+{% endhighlight %}
+
+运行的结果跟改变前是一样的。不过，现在我们有了扩展的空间。
+
+### 整合 webpack-validator
+[webpack-validator](https://www.npmjs.com/package/webpack-validator)
+可以验证配置并提供一些警告。这可以带走我们学习和使用Webpack的痛苦。
+
+`npm i webpack-validator --save-dev`
+
+直接导入：
+
+**webpack.config.js**
+{% highlight javascript %}
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const merge = require('webpack-merge');
+const validate = require('webpack-validator');
+
+...
+
+module.exports = validate(config);
+{% endhighlight %}
+
+### 小结
+
+[原文地址：http://survivejs.com/webpack/developing-with-webpack/splitting-configuration/](http://survivejs.com/webpack/developing-with-webpack/splitting-configuration/)
