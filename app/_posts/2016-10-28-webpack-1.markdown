@@ -35,3 +35,160 @@ npm init -y
 简单的安装Webpack的方法是直接全局安装`npm i webpack -g`,
 不过个人的建议是安装到你项目的目录当中，这样避免一些版本控制的问题。
 
+将Webpack安装到你的项目中
+{% highlight ruby %}
+npm i webpack --save-dev
+{% endhighlight %}
+
+你会发现你的package.json里的`devDependencies`多了webpack，
+除了安装到node_modules下，npm还生成一个可供执行的入口。
+
+你可以用`npm bin`显示可执行包的确切的路径。你可以尝试用命令行执行node_modules/.bin/webpack
+执行之后，你会看到版本号的一些信息
+
+{% highlight ruby %}
+node_modules/.bin/webpack
+webpack 1.13.3
+Usage: https://webpack.github.io/docs/cli.html
+
+Options:
+  --help, -h, -?
+  --config
+  --context
+  --entry
+  
+  ...
+  
+  --display-error-details
+    --display-origins
+    --display-cached
+    --display-cached-assets
+    --display-reasons, --verbose, -v
+  
+  Output filename not configured.
+{% endhighlight %}
+
+### 目录结构
+-app/ 
+  - index.js
+  - component.js
+-build/  
+- package.json
+- webpack.config.js
+
+这是项目的目录结构，app是我们项目的源码，build是项目输出目录，webpack.config.js
+是Webpack的配置文件。
+
+### 建立资源
+接下来写一个简单输出hello world的组件。
+**app/components.js**
+
+{% highlight javascript linenos %}
+module.exports = function () {
+    var element = document.createElement('div');
+    element.innerHTML = 'Hello World!!!';
+
+    return element;
+};
+{% endhighlight %}
+写一个入口文件，并将组件`require`进去。
+**app/index.js**
+
+{% highlight javascript linenos %}
+var component = require('./component');
+
+document.body.appendChild(component());
+{% endhighlight %}
+
+### 配置 Webpack
+我们通过webpack.config.js文件来告知Webpack我们要做些什么。
+为了让维护变得简单，我们用`html-webpack-plugin`来为我们的应用生成index.html。
+*html-webpack-plugin*会将生成的资源引入到其中。
+{% highlight ruby %}
+npm i html-webpack-plugin --save-dev
+{% endhighlight %}
+
+**webpack.config.js**
+{% highlight javascript linenos %}
+//The path module provides utilities for working with file and directory paths.
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+const PATH = {
+    app: path.join(__dirname, 'app'),
+    build: path.join(__dirname, 'build')
+};
+
+module.exports = {
+    //入口采用一个路径或者是一个入口对象
+    entry: {
+        app: PATH.app
+    },
+    output: {
+        path: PATH.build,
+        filename: '[name].js'
+    },
+    plugin: [
+        new HtmlWebpackPlugin({
+            title: 'Webpack demo'
+        })
+    ]
+};
+
+{% endhighlight%}
+
+`entry`路径可以是一个相对路径。
+[context](https://webpack.github.io/docs/configuration.html#context)字段可用于配置该查找。
+鉴于大量的地方要求使用绝对路径，我倾向于全部使用绝对路径来避免一些困惑。
+
+现在当你运行`node_modules/.bin/webpack`, 你将会看到这些输出：
+{% highlight text %}
+Hash: d9bcbc55eb97ef228d44
+Version: webpack 1.13.3
+Time: 53ms
+ Asset     Size  Chunks             Chunk Names
+app.js  1.69 kB       0  [emitted]  app
+   [0] ./app/index.js 80 bytes {0} [built]
+   [1] ./app/component.js 145 bytes {0} [built]
+{% endhighlight %}
+
+输出的内容有很多，这里一一讲解一下：   
+- `Hash: d9bcbc55eb97ef228d44` - 构建的哈希值。    
+- `Version: webpack 1.13.3` - Webpack的版本。  
+- `Time: 53ms` - 构建耗费的时间。  
+- `app.js  1.69 kB       0  [emitted]  app` - 分别为生产的资源名，大小，相关的**chunks**的id,
+生成状态，chunk名。  
+- `[0] ./app/index.js 80 bytes {0} [built]` - 生成的资源的id,名字，大小，入口chunk id,生成的方式。   
+- `Child html-webpack-plugin for "index.html"` - 输出的相关组件。   
+- `+ 3 hidden modules` - Webpack忽略一些输出，即`node_modules`中的模块和类似目录。
+你可以执行`webpack --display-modules`看看信息。[更多解释](https://stackoverflow.com/questions/28858176/what-does-webpack-mean-by-xx-hidden-modules)。   
+
+检查`build/`目录下，如果你仔细看，你会发一些id在你的资源里面。
+![ids within source](/webpack/images/A8E62B5F-5274-4F80-88DA-EF0FA7824F4A.png)
+
+打开`build/index.html`，你会看到你的应用输出hello world。
+
+> 你可以使用工具像*serve*(`npm i serve -g`)为了的构建目录启动一个服务。
+在你的输出目录下执行`serve`,然后用浏览器打开`localhost:3000`,你也可以通过`--port`参数设置你的端口。
+
+> 可以用`path.resolve`代替`path.join`。更多的细节可以参考[Node.js path API](https://nodejs.org/api/path.html)。
+
+### 添加构建的快捷方式
+鉴于执行`node_modules/.bin/webpack`有点冗长，我们通过npm和package.json来实现一些东西。
+把我们的package.json调整一下：
+
+**package.json**
+{% highlight javascript %}
+...
+"scripts": {
+    "build": "webpack"
+}
+...
+{% endhighlight %}
+
+通过运行*npm run build*，你可以看到跟之前执行一毛一样的结果。
+
+### 小结
+基本的工作已经完成了，不过离我们的要实现的目标还相去甚远。下一个章节我们将使用Webpack更高级的功能。
+
+[原文地址:http://survivejs.com/webpack/developing-with-webpack/getting-started/](http://survivejs.com/webpack/developing-with-webpack/getting-started/)
