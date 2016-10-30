@@ -1,0 +1,161 @@
+---
+layout: post
+title:  "2016-10-29-webpack-3"
+date:   2016-10-29 16:34
+categories: webpack
+---
+
+常见的两个工具有[LiveReload](http://livereload.com/)或者[Browsersync](http://www.browsersync.io/)。
+
+Webpack有watch模式，`webpack --watch`。使用watch模式时，Webpack会检测你文件的改变并自动重新编译。
+*webpack-dev-server*就是建立在watch模式上。
+
+*webpack-dev-server*是一个运行在内存中的开发服务器。能在你开发的时候自动刷新你浏览器的内容。
+它也支持一个高级的Webpack功能--Hot Module Replacement(HMR),HMR提供了一种不用整个刷新浏览器的方式。
+这针对一些技术十分有用，例如React。
+
+安装*webpack-dev-server*
+
+`npm i webpack-dev-server --save-dev`
+
+你可以用`npm bin`目录下的命令去执行webpack-dev-server。
+`webpack-dev-server --inline`。`--inline`。*inline*模式的话会将webpack-dev-server的客户端写入结果代码中。
+
+如我们之前做的一样，我们将新的命令加入*package.json*的`scripts`中去：
+
+{% highlight javascript %}
+...
+"scripts": {
+
+  "start": "webpack-dev-server",
+
+  "build": "webpack"
+},
+...
+{% endhighlight %}
+
+当你运行*npm run start*或者*npm start*，将会看到以下这些：
+{% highlight text %}
+> webpack-demo@1.0.0 start /Users/cjk/Documents/survivejs/webpack-demo
+> webpack-dev-server
+
+ http://localhost:8080/webpack-dev-server/
+webpack result is served from /
+content is served from /Users/cjk/Documents/survivejs/webpack-demo
+Hash: d9bcbc55eb97ef228d44
+Version: webpack 1.13.3
+Time: 405ms
+     Asset       Size  Chunks             Chunk Names
+    app.js    1.69 kB       0  [emitted]  app
+index.html  180 bytes          [emitted]
+chunk    {0} app.js (app) 225 bytes [rendered]
+    [0] ./app/index.js 80 bytes {0} [built]
+    [1] ./app/component.js 145 bytes {0} [built]
+Child html-webpack-plugin for "index.html":
+    chunk    {0} index.html 536 kB [rendered]
+        [0] ./~/html-webpack-plugin/lib/loader.js!./~/html-webpack-plugin/default_index.ejs 540 bytes {0} [built]
+        [1] ./~/lodash/lodash.js 535 kB {0} [built]
+        [2] (webpack)/buildin/module.js 241 bytes {0} [built]
+webpack: bundle is now VALID.
+{% endhighlight %}
+
+这样就意味着开发服务器正在运行中，可以在你的浏览器中打开 [http://localhost:8080/](http://localhost:8080/)。
+
+### 配置Hot Module Replacement(HMR)
+HMR建立在*webpack-dev-server*上。可以即时的替换modules。举个例子，
+*style-loader*可以在不强制刷新的情况下更新你的CSS。
+
+我们可以通过`--hot`参数启用HMR,`webpack-dev-server --inline -hot`。
+
+### Defining Configuration for HMR
+让我们的配置可管理，我将像HMR这样功能性的东西单独分离。
+这样可以保持*webpack.config.js*的简洁同时提高复用性。
+
+我们把所以配置放在*libs/parts.js*。
+**libs/parts.js**
+
+{% highlight javascript %}
+const webpack = require('webpack');
+
+exports.devServer = function (options) {
+    return {
+        devServer: {
+            historyApiFallback: true,
+            hot: true,
+            inline: true,
+            stats: 'errors-only',
+            host: options.host,
+            port: options.port
+        },
+        plugins: [
+            new webpack.HotModuleReplacementPlugin({
+                multiStep: true
+            })
+        ]
+    }
+}
+{% endhighlight %}
+
+**webpack.config.js**
+
+{% highlight javascript %}
+
+//The path module provides utilities for working with file and directory paths.
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const merge = require('webpack-merge');
+const validate = require('webpack-validator');
+const parts = require('./libs/parts');
+
+...
+
+switch (process.env.npm_lifecycle_event) {
+    case 'build':
+        config = merge(
+            common,
+            parts.devServer({
+                host: process.env.HOST,
+                port: process.env.PORT
+            })
+        );
+        break;
+    default :
+        config = merge(common, {});
+}
+
+module.exports = validate(config);
+
+{% endhighlight %}
+
+现在运行`npm start`然后打开**localhost:8080**，然后尝试修改*app/component.js*。
+浏览器自动刷新。不过需要注意的是，这是整个页面的刷新。
+
+> 访问localhost:8080/webpack-dev-server/ 可以看到状态信息在页面顶部。
+
+### HMR on Windows，Ubuntu and Vagrant
+在 Windows，Ubuntu 和 Vagrant下可能会有一些问题。我们可以通过下面的方法解决：
+
+**libs/parts.js**
+
+{% highlight javascript %}
+const webpack = require('webpack');
+
+exports.devServer = function (options) {
+    return {
+        watchOptions: {
+            aggregateTimeout: 300,
+            poll: 1000
+        },
+        devServer: {
+            ...
+        },
+        ...
+    };
+}
+{% endhighlight %}
+
+### 另一种方式使用 webpack-dev-server
+我们可以建立一个Express server,并把 *webpack-dev* 当成一个中转层，这也是 Node.js 的API，
+这是一个不错的方式可以如果你想要可控和灵活。
+
+

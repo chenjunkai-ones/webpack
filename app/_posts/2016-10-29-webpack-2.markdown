@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "webpack - splitting the configuration"
-date:   16/10/29 上午10:16
+title:  "2016-10-29-webpack-2"
+date:   2016-10-29 10:16
 categories: webpack
 ---
 

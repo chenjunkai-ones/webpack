@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "webpack 创建项目"
-date:   16/10/28 下午4:34
+title:  "2016-10-28-webpack-1"
+date:   2016-10-28 04:34
 categories: webpack
 ---
 
