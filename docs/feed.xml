@@ -5,17 +5,163 @@
     <description></description>
     <link>https://whatthecole.github.io/webpack//webpack/</link>
     <atom:link href="https://whatthecole.github.io/webpack//webpack/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 30 Oct 2016 11:09:02 +0800</pubDate>
-    <lastBuildDate>Sun, 30 Oct 2016 11:09:02 +0800</lastBuildDate>
+    <pubDate>Mon, 31 Oct 2016 12:27:00 +0800</pubDate>
+    <lastBuildDate>Mon, 31 Oct 2016 12:27:00 +0800</lastBuildDate>
     <generator>Jekyll v3.1.1</generator>
     
       <item>
-        <title>2016-10-29-webpack-4</title>
-        <description>&lt;p&gt;hello world!!&lt;/p&gt;
+        <title>2016-10-30-webpack-4</title>
+        <description>&lt;p&gt;在这一章节，我们会在项目内建立CSS，并且看看它如何在浏览器中自动刷新。
+Webpack不需要强制刷新浏览器。这里有更聪明的做法。&lt;/p&gt;
+
+&lt;h3 id=&quot;css&quot;&gt;加载CSS&lt;/h3&gt;
+&lt;p&gt;我们首先需要这两个加载器(loaders)。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;npm i css-loader style-loader --save-dev&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;libs/parts.js&lt;/strong&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;exports&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;setupCSS&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;paths&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;module&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;loader&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                    &lt;span class=&quot;na&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\.&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;css$/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                    &lt;span class=&quot;na&quot;&gt;loaders&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;style&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;css&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+                    &lt;span class=&quot;na&quot;&gt;include&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;paths&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;strong&gt;webpack.config.js&lt;/strong&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;switch&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;process&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;npm_lifecycle_event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;build&#39;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;config&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;merge&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;common&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;parts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;setupCSS&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;default&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;config&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;merge&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;common&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;parts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;setupCSS&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;module&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;exports&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;validate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;test&lt;/code&gt;接收一个正则表达式，匹配的文件会通知特定的加载器。
+加载器的执行时从右到左。&lt;/p&gt;
+
+&lt;p&gt;在上面的代码中，&lt;em&gt;css-loader&lt;/em&gt;会先执行，然后再执行&lt;em&gt;style-loader&lt;/em&gt;。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;css-loader&lt;/code&gt;会解析CSS文件中的&lt;code class=&quot;highlighter-rouge&quot;&gt;@import&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;url&lt;/code&gt;语句。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;style-loader&lt;/code&gt;处理JavaScript中的&lt;code class=&quot;highlighter-rouge&quot;&gt;require&lt;/code&gt;语句。
+CSS预处理语言，如Sass和Less。也是用这样的方式。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;加载器转化指定资源文件并返回新的资源。加载器可以被链起来。see Webpack’s &lt;a href=&quot;http://webpack.github.io/docs/using-loaders.html&quot;&gt;What are loaders?&lt;/a&gt; and &lt;a href=&quot;http://webpack.github.io/docs/list-of-loaders.html&quot;&gt;list of loaders&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;section&quot;&gt;初始化样式&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;app/main.css&lt;/strong&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-css&quot; data-lang=&quot;css&quot;&gt;&lt;span class=&quot;nt&quot;&gt;body&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;background&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;cornsilk&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Webpack不会处理没被&lt;code class=&quot;highlighter-rouge&quot;&gt;require&lt;/code&gt;的文件。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;app/index.js&lt;/strong&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;./main.css&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;执行&lt;em&gt;npm start&lt;/em&gt; 打开localhost:8080，你会看到body的背景颜色已经改变。
+修改main.css，会看到网页样式随之更改。&lt;/p&gt;
+
+&lt;h3 id=&quot;csscss&quot;&gt;理解CSS作用域和CSS模块&lt;/h3&gt;
+&lt;p&gt;当你像这样&lt;code class=&quot;highlighter-rouge&quot;&gt;require&lt;/code&gt;一个CSS文件，Webpack会将其绑定到你&lt;code class=&quot;highlighter-rouge&quot;&gt;require&lt;/code&gt;它的地方。
+假设你用&lt;em&gt;style-loader&lt;/em&gt;，Webpack会将它写到一个&lt;code class=&quot;highlighter-rouge&quot;&gt;style&lt;/code&gt;标签中。这意味着，默认的情况下，这个文件被作用于全局作用域中。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/css-modules/css-modules&quot;&gt;CSS Modules&lt;/a&gt;
+是一个CSS文件，其中默认情况下所有类名和动画名称都在局部作用域里。
+所有的&lt;code class=&quot;highlighter-rouge&quot;&gt;(url(...))&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;@imports&lt;/code&gt;都是模块请求模式(&lt;code class=&quot;highlighter-rouge&quot;&gt;./xxx&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;../xxx&lt;/code&gt;代表相对路径，&lt;code class=&quot;highlighter-rouge&quot;&gt;xxx&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;xxx/yyy&lt;/code&gt;代表模块文件夹)。&lt;/p&gt;
+
+&lt;p&gt;CSS Modules 编译成一个低级交换格式称为ICSS或者&lt;a href=&quot;https://github.com/css-modules/icss&quot;&gt;interoperable CSS&lt;/a&gt;,
+但是像正常的CSS文件一样。&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-css&quot; data-lang=&quot;css&quot;&gt;&lt;span class=&quot;c&quot;&gt;/*style.css*/&lt;/span&gt;
+&lt;span class=&quot;nc&quot;&gt;.className&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;color&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;green&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;当从一个JS Module中导入CSS Module，它导出具有从本地名称到全局名称的所有映射的对象。&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;kr&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;styles&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;./style.css&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// import { className } from &quot;./style.css&quot;;&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;element&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;innerHTML&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;&amp;lt;div class=&quot;&#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;styles&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;className&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;&quot;&amp;gt;&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;建议用驼峰法命名本地类名，不过这不是强制的。&lt;/p&gt;
+
+&lt;p&gt;CSS Modules 允许使用:global(.className)的语法，声明一个全局规则。凡是这样声明的class，都不会被编译成哈希字符串。&lt;/p&gt;
+
+&lt;p&gt;我们可以通过下面的方式组合选择器。&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-css&quot; data-lang=&quot;css&quot;&gt;&lt;span class=&quot;nc&quot;&gt;.className&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nl&quot;&gt;color&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;green&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;nl&quot;&gt;background&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;red&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nc&quot;&gt;.otherClassName&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;py&quot;&gt;composes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;className&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;nl&quot;&gt;color&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;yellow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;这里需要注意的是，&lt;code class=&quot;highlighter-rouge&quot;&gt;composes&lt;/code&gt;的选择器要在其它的之前。继承只能对于同个本地作用域的选择器和它只是一个单独的类名。
+当一个类名&lt;code class=&quot;highlighter-rouge&quot;&gt;composes&lt;/code&gt;到另一个类名，CSS Modules导出本地类的两个类名。这可以添加多个类名。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;compose: classNameA classNameB&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;依赖&lt;/p&gt;
+
+&lt;p&gt;从其它的CSS Modules&lt;code class=&quot;highlighter-rouge&quot;&gt;compose&lt;/code&gt;类名进来。&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-css&quot; data-lang=&quot;css&quot;&gt;&lt;span class=&quot;nc&quot;&gt;.otherClassName&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;py&quot;&gt;compose&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;className&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&quot;./style.css&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;注意，当从不同的文件composing多个class时，执行顺序是没被定义的。
+确认不要在多个class里为相同的属性定义不同的值，当你要compose一个单独的class里面。&lt;/p&gt;
+
+&lt;p&gt;需要注意避免循环依赖。&lt;/p&gt;
+
+&lt;p&gt;用预编译语言。&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-sass&quot; data-lang=&quot;sass&quot;&gt;&lt;span class=&quot;na&quot;&gt;:global&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nc&quot;&gt;.global-class-name&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;color&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;green&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;err&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;使用CSS Module的优点。
+- 解决冲突
+- 分离依赖
+- 没有全局作用域&lt;/p&gt;
+
+&lt;h3 id=&quot;section-1&quot;&gt;小结&lt;/h3&gt;
 </description>
-        <pubDate>Sat, 29 Oct 2016 20:49:00 +0800</pubDate>
-        <link>https://whatthecole.github.io/webpack//webpack/webpack/2016/10/29/webpack-4.html</link>
-        <guid isPermaLink="true">https://whatthecole.github.io/webpack//webpack/webpack/2016/10/29/webpack-4.html</guid>
+        <pubDate>Sun, 30 Oct 2016 11:14:00 +0800</pubDate>
+        <link>https://whatthecole.github.io/webpack//webpack/webpack/2016/10/30/webpack-4.html</link>
+        <guid isPermaLink="true">https://whatthecole.github.io/webpack//webpack/webpack/2016/10/30/webpack-4.html</guid>
         
         
         <category>webpack</category>
