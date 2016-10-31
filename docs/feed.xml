@@ -5,9 +5,166 @@
     <description></description>
     <link>https://whatthecole.github.io/webpack//webpack/</link>
     <atom:link href="https://whatthecole.github.io/webpack//webpack/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 31 Oct 2016 12:27:00 +0800</pubDate>
-    <lastBuildDate>Mon, 31 Oct 2016 12:27:00 +0800</lastBuildDate>
+    <pubDate>Mon, 31 Oct 2016 22:20:57 +0800</pubDate>
+    <lastBuildDate>Mon, 31 Oct 2016 22:20:57 +0800</lastBuildDate>
     <generator>Jekyll v3.1.1</generator>
+    
+      <item>
+        <title>2016-10-31-webpack-5</title>
+        <description>&lt;p&gt;为了提高程序的可调试性，我们来生成一个代码和样式的资源映射(source map)。
+资源映射能让我们定位到错误。Webpack可以生成内嵌资源映射或者单独的资源映射文件。
+前者由于其更好的性能，在开发期间十分有用，后者对产品使用来所能更灵活的保持绑定的大小。&lt;/p&gt;
+
+&lt;h3 id=&quot;section&quot;&gt;在开发中启用资源映射&lt;/h3&gt;
+&lt;p&gt;在开发中启用资源映射，可以使用&lt;code class=&quot;highlighter-rouge&quot;&gt;eval-source-map&lt;/code&gt;，而在产品中我们可以使用正常的资源文件(separate file)。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;webpack.config.js&lt;/strong&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;switch&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;process&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;npm_lifecycle_event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;build&#39;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;config&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;merge&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;common&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;na&quot;&gt;devtool&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;source-map&#39;&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;parts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;setupCSS&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;default&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;config&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;merge&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;common&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+              &lt;span class=&quot;na&quot;&gt;devtool&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;eval-source-map&#39;&lt;/span&gt;  
+            &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;parts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;setupCSS&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;parts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;devServer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
+                &lt;span class=&quot;na&quot;&gt;host&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;process&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;HOST&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                &lt;span class=&quot;na&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;process&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;PORT&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;eval-source-map&lt;/code&gt;在初始化的时候比较缓慢，不过重新build的速度很快，并且产出真实的文件。
+快速开发具体的选项，如&lt;code class=&quot;highlighter-rouge&quot;&gt;cheap-module-eval-source-map&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;eval&lt;/code&gt;,可以产出较低质量的资源映射。
+所有的&lt;code class=&quot;highlighter-rouge&quot;&gt;eval&lt;/code&gt;的选项都会将发出sourcemaps作为你的JavaScript代码的一部分。&lt;/p&gt;
+
+&lt;p&gt;启动你浏览器对映射资源的支持。&lt;/p&gt;
+
+&lt;h3 id=&quot;webpack-sourcemap-&quot;&gt;Webpack Sourcemap 类型的支持&lt;/h3&gt;
+&lt;p&gt;尽管&lt;code class=&quot;highlighter-rouge&quot;&gt;eval-source-map&lt;/code&gt;或者&lt;code class=&quot;highlighter-rouge&quot;&gt;eval&lt;/code&gt;已经足够我们在开发中使用了。
+Webpack还是提供了几个其它类型。不过这些对你产品没有帮助。
+下面的表格是从&lt;a href=&quot;https://webpack.github.io/docs/configuration.html#devtool&quot;&gt;文档&lt;/a&gt;整理出来的。&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Sourcemap type&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;Quality&lt;/th&gt;
+      &lt;th&gt;Notes&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;eval&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;Generated code&lt;/td&gt;
+      &lt;td&gt;Each module is executed with &lt;code class=&quot;highlighter-rouge&quot;&gt;eval&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;//@ sourceURL&lt;/code&gt;.&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;cheap-eval-source-map&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;Transformed code (lines only)&lt;/td&gt;
+      &lt;td&gt;Each module is executed with &lt;code class=&quot;highlighter-rouge&quot;&gt;eval&lt;/code&gt; and a sourcemap is added as a dataurl to the &lt;code class=&quot;highlighter-rouge&quot;&gt;eval&lt;/code&gt;.&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;cheap-module-eval-source-map&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;Original source (lines only)&lt;/td&gt;
+      &lt;td&gt;Same idea, but higher quality with lower performance.&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;eval-source-map&lt;/code&gt;&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;Original source&lt;/td&gt;
+      &lt;td&gt;Same idea, but highest quality and lowest performance.&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;你可以从&lt;code class=&quot;highlighter-rouge&quot;&gt;eval-source-map&lt;/code&gt;开始，试一下每个选项，你会感觉它逐渐的变慢。&lt;/p&gt;
+
+&lt;p&gt;Webpack也可以友好地生成给产品使用的资源映射。这些映射会被写入一个单独的文件。
+而且只有在被浏览器请求的时候才会被加载。有良好的体验的同时，也便于你调试。
+| Sourcemap type | Quality | Notes |
+| ————– | ——- | —– |
+| &lt;code class=&quot;highlighter-rouge&quot;&gt;cheap-source-map&lt;/code&gt; | Transformed code (lines only) | Generated sourcemaps don’t have column mappings. Sourcemaps from loaders are not used. |
+| &lt;code class=&quot;highlighter-rouge&quot;&gt;cheap-module-source-map&lt;/code&gt; | Original source (lines only) | Same except sourcemaps from loaders are simplified to a single mapping per line. |
+| &lt;code class=&quot;highlighter-rouge&quot;&gt;source-map&lt;/code&gt; | Original source | The best quality with the most complete result, but also the slowest. |&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;source-map&lt;/code&gt;虽然会花费较长的时间去生成资源映射，不过质量是最佳的。如果你不在乎产品的资源映射，你可以设置一些性能更好的选项。&lt;/p&gt;
+
+&lt;p&gt;这里有一些其它的会影响资源映射表生成的选项。&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;config&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;output&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// 修改生成的资源映文件的名字。&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// 你可以用 [file], [id], 和 [hash] 替换符.&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// 默认的选项对大部分案例来说已经足够了&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;sourceMapFilename&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;[file].map&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Default&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;// 资源映射文件的模板，该选项不需要经常修改。&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;devtoolModuleFilenameTemplate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;webpack:///[resource-path]?[loaders]&#39;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;sourcemapdevtoolplugin&quot;&gt;SourceMapDevToolPlugin&lt;/h3&gt;
+&lt;p&gt;如果你想更好地控制sourcesmap的生成，可以用&lt;code class=&quot;highlighter-rouge&quot;&gt;SourceMapDevToolPlugin&lt;/code&gt;代替。
+这种方式可以只生成你想要的部分并严格控制结果。
+一旦你使用这个插件，&lt;code class=&quot;highlighter-rouge&quot;&gt;devtool&lt;/code&gt;这个选项就可以被完全忽略掉了。&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;config&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;plugins&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;webpack&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;SourceMapDevToolPlugin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
+      &lt;span class=&quot;c1&quot;&gt;// 匹配规则。&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;RegExp&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;include&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;RegExp&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+
+      &lt;span class=&quot;c1&quot;&gt;// 排除匹配规则&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;exclude&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;RegExp&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+
+      &lt;span class=&quot;c1&quot;&gt;// 一旦设置，将会输出到这个文件中。&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;filename&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+
+      &lt;span class=&quot;c1&quot;&gt;// This line is appended to the original asset processed. For&lt;/span&gt;
+      &lt;span class=&quot;c1&quot;&gt;// instance &#39;[url]&#39; would get replaced with an url to the&lt;/span&gt;
+      &lt;span class=&quot;c1&quot;&gt;// sourcemap.&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+
+      &lt;span class=&quot;c1&quot;&gt;// See `devtoolModuleFilenameTemplate` for specifics.&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;moduleFilenameTemplate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;fallbackModuleFilenameTemplate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+
+      &lt;span class=&quot;na&quot;&gt;module&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;bool&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// If false, separate sourcemaps aren&#39;t generated.&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;columns&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;bool&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// If false, column mappings are ignored.&lt;/span&gt;
+
+      &lt;span class=&quot;c1&quot;&gt;// Use simpler line to line mappings for the matched modules.&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;lineToLine&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;bool&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;include&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;exclude&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}),&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;如果你想为样式文件启用sourcemap，可以通过请求参数实现。加载器，如css-loader，sass-loader和less-loader。接收一个&lt;code class=&quot;highlighter-rouge&quot;&gt;?sourceMap&lt;/code&gt;(i.e,&lt;code class=&quot;highlighter-rouge&quot;&gt;css?sourceMap&lt;/code&gt;)。&lt;/p&gt;
+
+</description>
+        <pubDate>Mon, 31 Oct 2016 12:32:00 +0800</pubDate>
+        <link>https://whatthecole.github.io/webpack//webpack/webpack/2016/10/31/webpack-5.html</link>
+        <guid isPermaLink="true">https://whatthecole.github.io/webpack//webpack/webpack/2016/10/31/webpack-5.html</guid>
+        
+        
+        <category>webpack</category>
+        
+      </item>
     
       <item>
         <title>2016-10-30-webpack-4</title>
