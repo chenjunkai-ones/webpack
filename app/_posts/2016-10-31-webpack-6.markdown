@@ -1,0 +1,155 @@
+---
+layout: post
+title:  "2016-10-31-webpack-6"
+date:   2016-10-31 22:30:00 +0800
+categories: webpack
+---
+
+目前为止，我们还没有考虑到我们的项目输出，毫无疑问的，整个项目会变得有点大，特别是我们包含了React之后。
+我们可以用多种技术来压缩项目的大小。我们还可以利用客户端级缓存和延迟加载某些资源。
+
+首先是压缩，简化代码的同时不会对代码解析失去任何意义。
+
+> 即使我们压缩了我们的代码，我们依然可以生成资源映射通过`devtool`。
+这样可以更好的调试，尽管是发布产品的代码。
+
+现在项目还没有什么内容，我们先安装个React:
+
+`npm i react --save`
+
+然后添加React依赖到项目里面：
+
+**app/index.js**
+
+{% highlight javascript %}
+require('react');
+
+...
+{% endhighlight %}
+
+现在运行`npm run build`。
+
+{% highlight text %}
+Hash: d6c9f1017d63b25287b4
+Version: webpack 1.13.3
+Time: 1025ms
+     Asset       Size  Chunks             Chunk Names
+    app.js     155 kB       0  [emitted]  app
+app.js.map     181 kB       0  [emitted]  app
+index.html  180 bytes          [emitted]
+   [0] ./app/index.js 121 bytes {0} [built]
+  [38] ./app/component.js 228 bytes {0} [built]
+    + 37 hidden modules
+Child html-webpack-plugin for "index.html":
+        + 3 hidden modules
+{% endhighlight %}
+
+155KB有点大。现在我们来压缩它
+
+最简单的方式是 `webpack -p`. `-p`是`--optimize-minimize`的快捷方式。
+或者我们可以直接用为我们提供更多功能的插件。
+默认的情况下Uglify会输出很多警告，在这种情况下它们不提供值。
+我们将禁用它们。
+
+如我们之前提到的，我们可以定义一个函数，并从我们的主配置中指向到它上：
+**libs/parts.js**
+{% highlight javascript %}
+...
+
+exports.minify = function() {
+    return {
+      plugins: [
+          new webpack.optimize.UglifyJsPlugin({
+              compress: {
+                  warnings: false
+              }
+          })
+      ]
+    };
+};
+{% endhighlight %}
+
+**webpack.config.js**
+{% highlight javascript %}
+...
+
+switch (process.env.npm_lifecycle_event) {
+    case 'build':
+        config = merge(
+            common,
+            {
+                devtool: 'source-map'
+            },
+            parts.minify(),
+            parts.setupCSS(PATH.app)
+        );
+        break;
+    default :
+        ...
+}
+{% endhighlight %}
+
+如果运行`npm run build`,你会看到以下结果：
+{% highlight text %}
+Hash: c1a3495508496d5dcccd
+Version: webpack 1.13.3
+Time: 1962ms
+     Asset       Size  Chunks             Chunk Names
+    app.js    44.8 kB       0  [emitted]  app
+app.js.map     378 kB       0  [emitted]  app
+index.html  180 bytes          [emitted]
+   [0] ./app/index.js 121 bytes {0} [built]
+  [38] ./app/component.js 228 bytes {0} [built]
+    + 37 hidden modules
+Child html-webpack-plugin for "index.html":
+        + 3 hidden modules
+{% endhighlight %}
+
+虽然还有很多工作还做，不过目前来说，总体明显小了。
+
+### 通过Webpack控制UglifyJS
+UglifyJS有个**mangling**的功能，默认被启用。
+这个功能会压缩本地函数和变量名成一个简单的字符。
+它也可以重写属性成一个更紧凑的格式如果配置有声明的话。
+
+这些改变会破坏你的代码，所以你必须小心一点。一个好的例子就是Angular1.0还有它的注入系统。
+
+除了mangling，[UglifyJS](http://lisperator.net/uglifyjs/)
+还有其它功能：
+
+{% highlight javascript %}
+new webpack.optimize.UglifyJsPlugin({
+  // 不要美化输出
+  beautify: false,
+
+  // 去掉注释
+  comments: false,
+
+  // 压缩的具体选项
+  compress: {
+    warnings: false,
+
+    // 去除console语句
+    drop_console: true
+  },
+
+  // Mangling 具体选项
+  mangle: {
+    // 不要替换$
+    except: ['$'],
+
+    // 不用考虑IE8
+    screw_ie8 : true,
+
+    // 不要 mangle 函数名
+    keep_fnames: true
+  }
+})
+{% endhighlight %}
+如果启用了mangling，最好设置`except: ['webpackJsonp']`避免mangling了Webpack运行时。
+
+> 另外的一种方法是用[uglify-loader](https://www.npmjs.com/package/uglify-loader)。
+
+### 小结
+
+[原文地址](http://survivejs.com/webpack/building-with-webpack/minifying-build/)

@@ -164,3 +164,5 @@ CSS Modules 允许使用:global(.className)的语法，声明一个全局规则�
 - 没有全局作用域
 
 ### 小结
+
+[原文地址](http://survivejs.com/webpack/developing-with-webpack/refreshing-css/)

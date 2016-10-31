@@ -5,9 +5,165 @@
     <description></description>
     <link>https://whatthecole.github.io/webpack//webpack/</link>
     <atom:link href="https://whatthecole.github.io/webpack//webpack/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 31 Oct 2016 22:20:57 +0800</pubDate>
-    <lastBuildDate>Mon, 31 Oct 2016 22:20:57 +0800</lastBuildDate>
+    <pubDate>Tue, 01 Nov 2016 01:08:33 +0800</pubDate>
+    <lastBuildDate>Tue, 01 Nov 2016 01:08:33 +0800</lastBuildDate>
     <generator>Jekyll v3.1.1</generator>
+    
+      <item>
+        <title>2016-10-31-webpack-6</title>
+        <description>&lt;p&gt;目前为止，我们还没有考虑到我们的项目输出，毫无疑问的，整个项目会变得有点大，特别是我们包含了React之后。
+我们可以用多种技术来压缩项目的大小。我们还可以利用客户端级缓存和延迟加载某些资源。&lt;/p&gt;
+
+&lt;p&gt;首先是压缩，简化代码的同时不会对代码解析失去任何意义。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;即使我们压缩了我们的代码，我们依然可以生成资源映射通过&lt;code class=&quot;highlighter-rouge&quot;&gt;devtool&lt;/code&gt;。
+这样可以更好的调试，尽管是发布产品的代码。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;现在项目还没有什么内容，我们先安装个React:&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;npm i react --save&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;然后添加React依赖到项目里面：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;app/index.js&lt;/strong&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;react&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;现在运行&lt;code class=&quot;highlighter-rouge&quot;&gt;npm run build&lt;/code&gt;。&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;Hash: d6c9f1017d63b25287b4
+Version: webpack 1.13.3
+Time: 1025ms
+     Asset       Size  Chunks             Chunk Names
+    app.js     155 kB       0  [emitted]  app
+app.js.map     181 kB       0  [emitted]  app
+index.html  180 bytes          [emitted]
+   [0] ./app/index.js 121 bytes {0} [built]
+  [38] ./app/component.js 228 bytes {0} [built]
+    + 37 hidden modules
+Child html-webpack-plugin for &quot;index.html&quot;:
+        + 3 hidden modules&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;155KB有点大。现在我们来压缩它&lt;/p&gt;
+
+&lt;p&gt;最简单的方式是 &lt;code class=&quot;highlighter-rouge&quot;&gt;webpack -p&lt;/code&gt;. &lt;code class=&quot;highlighter-rouge&quot;&gt;-p&lt;/code&gt;是&lt;code class=&quot;highlighter-rouge&quot;&gt;--optimize-minimize&lt;/code&gt;的快捷方式。
+或者我们可以直接用为我们提供更多功能的插件。
+默认的情况下Uglify会输出很多警告，在这种情况下它们不提供值。
+我们将禁用它们。&lt;/p&gt;
+
+&lt;p&gt;如我们之前提到的，我们可以定义一个函数，并从我们的主配置中指向到它上：
+&lt;strong&gt;libs/parts.js&lt;/strong&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;exports&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;minify&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;plugins&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+          &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;webpack&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;optimize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;UglifyJsPlugin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
+              &lt;span class=&quot;na&quot;&gt;compress&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                  &lt;span class=&quot;na&quot;&gt;warnings&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;
+              &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;strong&gt;webpack.config.js&lt;/strong&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;switch&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;process&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;npm_lifecycle_event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;build&#39;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;config&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;merge&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;common&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;na&quot;&gt;devtool&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;source-map&#39;&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;parts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;minify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;parts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;setupCSS&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;default&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;如果运行&lt;code class=&quot;highlighter-rouge&quot;&gt;npm run build&lt;/code&gt;,你会看到以下结果：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;Hash: c1a3495508496d5dcccd
+Version: webpack 1.13.3
+Time: 1962ms
+     Asset       Size  Chunks             Chunk Names
+    app.js    44.8 kB       0  [emitted]  app
+app.js.map     378 kB       0  [emitted]  app
+index.html  180 bytes          [emitted]
+   [0] ./app/index.js 121 bytes {0} [built]
+  [38] ./app/component.js 228 bytes {0} [built]
+    + 37 hidden modules
+Child html-webpack-plugin for &quot;index.html&quot;:
+        + 3 hidden modules&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;虽然还有很多工作还做，不过目前来说，总体明显小了。&lt;/p&gt;
+
+&lt;h3 id=&quot;webpackuglifyjs&quot;&gt;通过Webpack控制UglifyJS&lt;/h3&gt;
+&lt;p&gt;UglifyJS有个&lt;strong&gt;mangling&lt;/strong&gt;的功能，默认被启用。
+这个功能会压缩本地函数和变量名成一个简单的字符。
+它也可以重写属性成一个更紧凑的格式如果配置有声明的话。&lt;/p&gt;
+
+&lt;p&gt;这些改变会破坏你的代码，所以你必须小心一点。一个好的例子就是Angular1.0还有它的注入系统。&lt;/p&gt;
+
+&lt;p&gt;除了mangling，&lt;a href=&quot;http://lisperator.net/uglifyjs/&quot;&gt;UglifyJS&lt;/a&gt;
+还有其它功能：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;webpack&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;optimize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;UglifyJsPlugin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;// 不要美化输出&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;beautify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;// 去掉注释&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;comments&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;// 压缩的具体选项&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;compress&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;warnings&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;// 去除console语句&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;drop_console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;// Mangling 具体选项&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;mangle&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// 不要替换$&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;except&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;$&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;// 不用考虑IE8&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;screw_ie8&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;// 不要 mangle 函数名&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;keep_fnames&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;如果启用了mangling，最好设置&lt;code class=&quot;highlighter-rouge&quot;&gt;except: [&#39;webpackJsonp&#39;]&lt;/code&gt;避免mangling了Webpack运行时。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;另外的一种方法是用&lt;a href=&quot;https://www.npmjs.com/package/uglify-loader&quot;&gt;uglify-loader&lt;/a&gt;。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;section&quot;&gt;小结&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://survivejs.com/webpack/building-with-webpack/minifying-build/&quot;&gt;原文地址&lt;/a&gt;&lt;/p&gt;
+</description>
+        <pubDate>Mon, 31 Oct 2016 22:30:00 +0800</pubDate>
+        <link>https://whatthecole.github.io/webpack//webpack/webpack/2016/10/31/webpack-6.html</link>
+        <guid isPermaLink="true">https://whatthecole.github.io/webpack//webpack/webpack/2016/10/31/webpack-6.html</guid>
+        
+        
+        <category>webpack</category>
+        
+      </item>
     
       <item>
         <title>2016-10-31-webpack-5</title>
@@ -156,6 +312,9 @@ Webpack还是提供了几个其它类型。不过这些对你产品没有帮助�
 
 &lt;p&gt;如果你想为样式文件启用sourcemap，可以通过请求参数实现。加载器，如css-loader，sass-loader和less-loader。接收一个&lt;code class=&quot;highlighter-rouge&quot;&gt;?sourceMap&lt;/code&gt;(i.e,&lt;code class=&quot;highlighter-rouge&quot;&gt;css?sourceMap&lt;/code&gt;)。&lt;/p&gt;
 
+&lt;h3 id=&quot;section-1&quot;&gt;小结&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://survivejs.com/webpack/developing-with-webpack/enabling-sourcemaps/&quot;&gt;原文地址&lt;/a&gt;&lt;/p&gt;
 </description>
         <pubDate>Mon, 31 Oct 2016 12:32:00 +0800</pubDate>
         <link>https://whatthecole.github.io/webpack//webpack/webpack/2016/10/31/webpack-5.html</link>
@@ -315,6 +474,8 @@ CSS预处理语言，如Sass和Less。也是用这样的方式。&lt;/p&gt;
 - 没有全局作用域&lt;/p&gt;
 
 &lt;h3 id=&quot;section-1&quot;&gt;小结&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://survivejs.com/webpack/developing-with-webpack/refreshing-css/&quot;&gt;原文地址&lt;/a&gt;&lt;/p&gt;
 </description>
         <pubDate>Sun, 30 Oct 2016 11:14:00 +0800</pubDate>
         <link>https://whatthecole.github.io/webpack//webpack/webpack/2016/10/30/webpack-4.html</link>

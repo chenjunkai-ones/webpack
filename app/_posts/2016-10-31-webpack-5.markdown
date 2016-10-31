@@ -131,3 +131,6 @@ const config = {
 
 如果你想为样式文件启用sourcemap，可以通过请求参数实现。加载器，如css-loader，sass-loader和less-loader。接收一个`?sourceMap`(i.e,`css?sourceMap`)。
 
+###小结
+
+[原文地址](http://survivejs.com/webpack/developing-with-webpack/enabling-sourcemaps/)
