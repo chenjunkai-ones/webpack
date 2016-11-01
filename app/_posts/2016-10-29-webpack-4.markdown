@@ -11,7 +11,7 @@ Webpack不需要强制刷新浏览器。这里有更聪明的做法。
 ### 加载CSS
 我们首先需要这两个加载器(loaders)。
 
-`npm i css-loader style-loader --save-dev`
+ `npm i css-loader style-loader --save-dev `
 
 **libs/parts.js**
 {% highlight javascript %}
@@ -57,12 +57,12 @@ module.exports = validate(config);
 
 {% endhighlight %}
 
-`test`接收一个正则表达式，匹配的文件会通知特定的加载器。
+ `test `接收一个正则表达式，匹配的文件会通知特定的加载器。
 加载器的执行时从右到左。
 
 在上面的代码中，*css-loader*会先执行，然后再执行*style-loader*。
-`css-loader`会解析CSS文件中的`@import`和`url`语句。
-`style-loader`处理JavaScript中的`require`语句。
+ `css-loader `会解析CSS文件中的 `@import `和 `url `语句。
+ `style-loader `处理JavaScript中的 `require `语句。
 CSS预处理语言，如Sass和Less。也是用这样的方式。
 
 > 加载器转化指定资源文件并返回新的资源。加载器可以被链起来。see Webpack's [What are loaders?](http://webpack.github.io/docs/using-loaders.html) and [list of loaders](http://webpack.github.io/docs/list-of-loaders.html)
@@ -75,7 +75,7 @@ body {
 }
 {% endhighlight %}
 
-Webpack不会处理没被`require`的文件。
+Webpack不会处理没被 `require `的文件。
 
 **app/index.js**
 {% highlight javascript %}
@@ -89,12 +89,12 @@ require('./main.css');
 修改main.css，会看到网页样式随之更改。
 
 ### 理解CSS作用域和CSS模块
-当你像这样`require`一个CSS文件，Webpack会将其绑定到你`require`它的地方。
-假设你用*style-loader*，Webpack会将它写到一个`style`标签中。这意味着，默认的情况下，这个文件被作用于全局作用域中。
+当你像这样 `require `一个CSS文件，Webpack会将其绑定到你 `require `它的地方。
+假设你用*style-loader*，Webpack会将它写到一个 `style `标签中。这意味着，默认的情况下，这个文件被作用于全局作用域中。
 
 [CSS Modules](https://github.com/css-modules/css-modules)
 是一个CSS文件，其中默认情况下所有类名和动画名称都在局部作用域里。
-所有的`(url(...))`和`@imports`都是模块请求模式(`./xxx`和`../xxx`代表相对路径，`xxx`和`xxx/yyy`代表模块文件夹)。
+所有的 `(url(...)) `和 `@imports `都是模块请求模式( `./xxx `和 `../xxx `代表相对路径， `xxx `和 `xxx/yyy `代表模块文件夹)。
 
 CSS Modules 编译成一个低级交换格式称为ICSS或者[interoperable CSS](https://github.com/css-modules/icss),
 但是像正常的CSS文件一样。
@@ -131,13 +131,13 @@ CSS Modules 允许使用:global(.className)的语法，声明一个全局规则�
   color: yellow;
 }
 {% endhighlight %}
-这里需要注意的是，`composes`的选择器要在其它的之前。继承只能对于同个本地作用域的选择器和它只是一个单独的类名。
-当一个类名`composes`到另一个类名，CSS Modules导出本地类的两个类名。这可以添加多个类名。
-`compose: classNameA classNameB`。
+这里需要注意的是， `composes `的选择器要在其它的之前。继承只能对于同个本地作用域的选择器和它只是一个单独的类名。
+当一个类名 `composes `到另一个类名，CSS Modules导出本地类的两个类名。这可以添加多个类名。
+ `compose: classNameA classNameB `。
 
 依赖
 
-从其它的CSS Modules`compose`类名进来。
+从其它的CSS Modules `compose `类名进来。
 {% highlight css %}
 .otherClassName {
     compose: className from "./style.css";

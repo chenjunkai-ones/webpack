@@ -64,7 +64,7 @@
   <div class="post-content" itemprop="articleBody">
     <p>常见的两个工具有<a href="http://livereload.com/">LiveReload</a>或者<a href="http://www.browsersync.io/">Browsersync</a>。</p>
 
-<p>Webpack有watch模式，<code class="highlighter-rouge">webpack --watch</code>。使用watch模式时，Webpack会检测你文件的改变并自动重新编译。
+<p>Webpack有watch模式， <code class="highlighter-rouge">webpack --watch </code>。使用watch模式时，Webpack会检测你文件的改变并自动重新编译。
 <em>webpack-dev-server</em>就是建立在watch模式上。</p>
 
 <p><em>webpack-dev-server</em>是一个运行在内存中的开发服务器。能在你开发的时候自动刷新你浏览器的内容。
@@ -73,12 +73,12 @@
 
 <p>安装<em>webpack-dev-server</em></p>
 
-<p><code class="highlighter-rouge">npm i webpack-dev-server --save-dev</code></p>
+<p><code class="highlighter-rouge">npm i webpack-dev-server --save-dev </code></p>
 
-<p>你可以用<code class="highlighter-rouge">npm bin</code>目录下的命令去执行webpack-dev-server。
-<code class="highlighter-rouge">webpack-dev-server --inline</code>。<code class="highlighter-rouge">--inline</code>。<em>inline</em>模式的话会将webpack-dev-server的客户端写入结果代码中。</p>
+<p>你可以用 <code class="highlighter-rouge">npm bin </code>目录下的命令去执行webpack-dev-server。
+ <code class="highlighter-rouge">webpack-dev-server --inline </code>。 <code class="highlighter-rouge">--inline </code>。<em>inline</em>模式的话会将webpack-dev-server的客户端写入结果代码中。</p>
 
-<p>如我们之前做的一样，我们将新的命令加入<em>package.json</em>的<code class="highlighter-rouge">scripts</code>中去：</p>
+<p>如我们之前做的一样，我们将新的命令加入<em>package.json</em>的 <code class="highlighter-rouge">scripts </code>中去：</p>
 
 <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="p">...</span>
 <span class="s2">"scripts"</span><span class="err">:</span> <span class="p">{</span>
@@ -119,7 +119,7 @@ webpack: bundle is now VALID.</code></pre></figure>
 <p>HMR建立在<em>webpack-dev-server</em>上。可以即时的替换modules。举个例子，
 <em>style-loader</em>可以在不强制刷新的情况下更新你的CSS。</p>
 
-<p>我们可以通过<code class="highlighter-rouge">--hot</code>参数启用HMR,<code class="highlighter-rouge">webpack-dev-server --inline -hot</code>。</p>
+<p>我们可以通过 <code class="highlighter-rouge">--hot </code>参数启用HMR, <code class="highlighter-rouge">webpack-dev-server --inline -hot </code>。</p>
 
 <h3 id="defining-configuration-for-hmr">Defining Configuration for HMR</h3>
 <p>让我们的配置可管理，我将像HMR这样功能性的东西单独分离。
@@ -175,7 +175,7 @@ webpack: bundle is now VALID.</code></pre></figure>
 
 <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">validate</span><span class="p">(</span><span class="nx">config</span><span class="p">);</span></code></pre></figure>
 
-<p>现在运行<code class="highlighter-rouge">npm start</code>然后打开<strong>localhost:8080</strong>，然后尝试修改<em>app/component.js</em>。
+<p>现在运行 <code class="highlighter-rouge">npm start </code>然后打开<strong>localhost:8080</strong>，然后尝试修改<em>app/component.js</em>。
 浏览器自动刷新。不过需要注意的是，这是整个页面的刷新。</p>
 
 <blockquote>

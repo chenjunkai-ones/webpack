@@ -1,0 +1,213 @@
+---
+layout: post
+title: "2016-11-01-webpack-8"
+date: 2016-11-01 11:45:00 +0800
+categories: webpack
+---
+
+目前我们的应用就只是一个单一的文件，
+这样并不理想，如果我们改变了应用，客户端会连同依赖一并下载。
+我们只想它下载改变了的部分。如果依赖改变了，客户端应该只获取依赖。
+实际应用的代码也是如此。
+
+**bundle splitting**，可以把依赖捆绑到自己包上，这样有利于客户端缓存。
+我们依然可以保持整个应用的大小跟之前一样，不过这样会增加一些网络请求，会带来一部分开销。
+不过缓存的好处可以弥补这部分开销。
+
+简单来说，假设我们有一个*app.js*(100KB),我们可以将它切割成*app.js*和*vendor.js*。
+这样对于那些之前使用过应用的客户端来说，应用改变的代价变小了。
+
+缓存也会带来一些问题。其中有一个就是缓存失效的问题。
+不过我们之后再来讨论，我们先来分割一些捆绑包。
+
+目前为止我们的项目只有个一入口 `app `。我们从 `app `目录输出到 `build `目录。
+
+为了改善情况，我们定义一个包含React的 `vendor `的入口。
+
+**webpack.config.js**
+{% highlight javascript %}
+...
+
+const common = {
+    //入口采用一个路径或者是一个入口对象
+    entry: {
+        app: PATH.app,
+        vendor: ['react']
+    },
+    output: {
+        path: PATH.build,
+        filename: '[name].js'
+    },
+    plugins: [
+        new HtmlWebpackPlugin({
+            title: 'Webpack demo'
+        })
+    ]
+};
+
+...
+{% endhighlight %}
+
+我们拥有两个单独的入口，或者叫**entry chunks**。
+现在运行 `npm run build `;
+{% highlight text %}
+Hash: 985a128e4956eb9a22da
+Version: webpack 1.13.3
+Time: 2187ms
+        Asset       Size  Chunks             Chunk Names
+       app.js    24.2 kB       0  [emitted]  app
+    vendor.js    20.2 kB       1  [emitted]  vendor
+   app.js.map     295 kB       0  [emitted]  app
+vendor.js.map     265 kB       1  [emitted]  vendor
+   index.html  236 bytes          [emitted]
+   [0] ./app/index.js 121 bytes {0} [built]
+   [0] multi vendor 28 bytes {1} [built]
+  [34] ./app/component.js 228 bytes {0} [built]
+    + 33 hidden modules
+Child html-webpack-plugin for "index.html":
+        + 3 hidden modules
+{% endhighlight %}
+
+现在*app.js*和*vendor.js*有了单独的chunk id，尽管输出的大小有点偏差。
+*app.js*应该更小一点。
+
+检查你的输出结果，你会发现app.js包含了React。Webpack默认会将相关的依赖加入文件中。
+如下图：
+![Webpack](http://survivejs.com/webpack/images/bundle_01.png)
+
+ `CommonsChunkPlugin `插件允许我们改变这种默认的行为，这样我们就可以达到我们的预期效果了。
+
+### CommonsChunkPlugin
+
+[CommonsChunkPlugin](https://webpack.github.io/docs/list-of-plugins.html#commonschunkplugin)
+是一个复杂且强悍的插件。为了让我们以后的工作更简单，我们提取一个的文件--**manifest**。
+它包含启动整个应用程序并包含其所需的依赖性信息的Webpack运行时。这样可以避免一系列的问题。尽管浏览器需要加载多一个文件，
+但是它允许我们去实现一个可靠的缓存，这个将会在接下讨论。
+
+如果我们不提取一个manifest，Webpack将会把运行时生成在vendor绑定包中。
+一旦我们修改了应用代码，应用的绑定包hash将会改变。正因为hash改变，运行时的实现也会改变，因为它是用hash来加载应用绑定的。
+由于这样，vendor绑定也会得到一个新hash。这样也是为什么我们要把manifest单独开来，这样做可以避免一些问题。
+
+**libs/parts.js**
+
+{% highlight javascript %}
+...
+
+exports.extractBundle = function(options) {
+    const entry = {};
+    entry[options.name] = options.entries;
+
+    return {
+        entry: entry,
+        plugins: [
+            new webpack.optimize.CommonsChunkPlugin({
+                names: [options.name, 'manifest']
+            })
+        ]
+    }
+};
+{% endhighlight %}
+
+我们现在可以把相关的 `vendor `配置去掉了，用extractBundle函数替代：
+
+{% highlight javascript %}
+...
+
+const common = {
+    //入口采用一个路径或者是一个入口对象
+    entry: {
+        app: PATH.app
+    },
+    output: {
+        path: PATH.build,
+        filename: '[name].js'
+    },
+    plugins: [
+        new HtmlWebpackPlugin({
+            title: 'Webpack demo'
+        })
+    ]
+};
+
+...
+
+switch (process.env.npm_lifecycle_event) {
+    case 'build':
+        config = merge(
+            common,
+            {
+                devtool: 'source-map'
+            },
+            parts.setFreeVariable(
+                'process.env.NODE_ENV',
+                'production'
+            ),
+            parts.extractBundle({
+                name: 'vendor',
+                entries: ['react']
+            }),
+            parts.minify(),
+            parts.setupCSS(PATH.app)
+        );
+        break;
+    default :
+        ...
+}
+
+module.exports = validate(config);
+{% endhighlight %}
+
+执行 `npm run build `
+
+{% highlight text %}
+Hash: 141575b511b4c7f0f9f9
+Version: webpack 1.13.3
+Time: 1743ms
+          Asset       Size  Chunks             Chunk Names
+         app.js    4.07 kB    0, 2  [emitted]  app
+      vendor.js      20 kB    1, 2  [emitted]  vendor
+    manifest.js  774 bytes       2  [emitted]  manifest
+     app.js.map    31.2 kB    0, 2  [emitted]  app
+  vendor.js.map     262 kB    1, 2  [emitted]  vendor
+manifest.js.map    8.71 kB       2  [emitted]  manifest
+     index.html  294 bytes          [emitted]
+   [0] ./app/index.js 121 bytes {0} [built]
+   [0] multi vendor 28 bytes {1} [built]
+  [34] ./app/component.js 228 bytes {0} [built]
+    + 33 hidden modules
+Child html-webpack-plugin for "index.html":
+        + 3 hidden modules
+{% endhighlight %}
+
+现在的结果就是我们想要的了：
+![webpack](http://survivejs.com/webpack/images/bundle_02.png)
+
+> 除了这样，我们可以通过[require.ensure](https://webpack.github.io/docs/code-splitting.html)异步加载
+
+### 自动加载依赖到vendor绑定
+如果你严格区分 `dependencies `和 `devDependencies `,那么下面的方法可以让Webpack可以自动选出 `vendor `依赖。
+
+{% highlight javascript %}
+...
+
+const pkg = require('./package.json');
+
+...
+
+const common = {
+    entry: {
+        app: PATH.app,
+        vendor: Object.keys(pkg.dependencies)
+    }
+    ...
+}
+
+...
+
+{% endhighlight %}
+
+当然你想排除一些依赖时， 你可以用 `filter `。
+
+### 小结
+
+[原文地址](http://survivejs.com/webpack/building-with-webpack/splitting-bundles/)

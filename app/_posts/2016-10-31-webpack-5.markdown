@@ -10,7 +10,7 @@ categories: webpack
 前者由于其更好的性能，在开发期间十分有用，后者对产品使用来所能更灵活的保持绑定的大小。
 
 ### 在开发中启用资源映射
-在开发中启用资源映射，可以使用`eval-source-map`，而在产品中我们可以使用正常的资源文件(separate file)。
+在开发中启用资源映射，可以使用 `eval-source-map `，而在产品中我们可以使用正常的资源文件(separate file)。
 
 **webpack.config.js**
 
@@ -42,35 +42,35 @@ switch (process.env.npm_lifecycle_event) {
 }
 {% endhighlight %}
 
-`eval-source-map`在初始化的时候比较缓慢，不过重新build的速度很快，并且产出真实的文件。
-快速开发具体的选项，如`cheap-module-eval-source-map`和`eval`,可以产出较低质量的资源映射。
-所有的`eval`的选项都会将发出sourcemaps作为你的JavaScript代码的一部分。
+ `eval-source-map `在初始化的时候比较缓慢，不过重新build的速度很快，并且产出真实的文件。
+快速开发具体的选项，如 `cheap-module-eval-source-map `和 `eval `,可以产出较低质量的资源映射。
+所有的 `eval `的选项都会将发出sourcemaps作为你的JavaScript代码的一部分。
 
 启动你浏览器对映射资源的支持。
 
 ### Webpack Sourcemap 类型的支持
-尽管`eval-source-map`或者`eval`已经足够我们在开发中使用了。
+尽管 `eval-source-map `或者 `eval `已经足够我们在开发中使用了。
 Webpack还是提供了几个其它类型。不过这些对你产品没有帮助。
 下面的表格是从[文档](https://webpack.github.io/docs/configuration.html#devtool)整理出来的。
 
 | Sourcemap type | Quality       | Notes |
 | -------------- |:-------------:|-------|
-| `eval`         |Generated code | Each module is executed with `eval` and `//@ sourceURL`.|
-| `cheap-eval-source-map` | Transformed code (lines only) | Each module is executed with `eval` and a sourcemap is added as a dataurl to the `eval`. |
-| `cheap-module-eval-source-map` | Original source (lines only)	| Same idea, but higher quality with lower performance. |
-| `eval-source-map` | Original source | Same idea, but highest quality and lowest performance. |
+|  `eval `         |Generated code | Each module is executed with  `eval ` and  `//@ sourceURL `.|
+|  `cheap-eval-source-map ` | Transformed code (lines only) | Each module is executed with  `eval ` and a sourcemap is added as a dataurl to the  `eval `. |
+|  `cheap-module-eval-source-map ` | Original source (lines only)	| Same idea, but higher quality with lower performance. |
+|  `eval-source-map ` | Original source | Same idea, but highest quality and lowest performance. |
 
-你可以从`eval-source-map`开始，试一下每个选项，你会感觉它逐渐的变慢。
+你可以从 `eval-source-map `开始，试一下每个选项，你会感觉它逐渐的变慢。
 
 Webpack也可以友好地生成给产品使用的资源映射。这些映射会被写入一个单独的文件。
 而且只有在被浏览器请求的时候才会被加载。有良好的体验的同时，也便于你调试。
 | Sourcemap type | Quality | Notes |
 | -------------- | ------- | ----- |
-| `cheap-source-map` | Transformed code (lines only) | Generated sourcemaps don't have column mappings. Sourcemaps from loaders are not used. |
-| `cheap-module-source-map` | Original source (lines only) | Same except sourcemaps from loaders are simplified to a single mapping per line. |
-| `source-map` | Original source | The best quality with the most complete result, but also the slowest. |
+|  `cheap-source-map ` | Transformed code (lines only) | Generated sourcemaps don't have column mappings. Sourcemaps from loaders are not used. |
+|  `cheap-module-source-map ` | Original source (lines only) | Same except sourcemaps from loaders are simplified to a single mapping per line. |
+|  `source-map ` | Original source | The best quality with the most complete result, but also the slowest. |
 
-`source-map`虽然会花费较长的时间去生成资源映射，不过质量是最佳的。如果你不在乎产品的资源映射，你可以设置一些性能更好的选项。
+ `source-map `虽然会花费较长的时间去生成资源映射，不过质量是最佳的。如果你不在乎产品的资源映射，你可以设置一些性能更好的选项。
 
 这里有一些其它的会影响资源映射表生成的选项。
 
@@ -90,9 +90,9 @@ const config = {
 {% endhighlight %}
 
 ### SourceMapDevToolPlugin
-如果你想更好地控制sourcesmap的生成，可以用`SourceMapDevToolPlugin`代替。
+如果你想更好地控制sourcesmap的生成，可以用 `SourceMapDevToolPlugin `代替。
 这种方式可以只生成你想要的部分并严格控制结果。
-一旦你使用这个插件，`devtool`这个选项就可以被完全忽略掉了。
+一旦你使用这个插件， `devtool `这个选项就可以被完全忽略掉了。
 
 {% highlight javascript %}
 const config = {
@@ -113,7 +113,7 @@ const config = {
       // sourcemap.
       append: false | string,
 
-      // See `devtoolModuleFilenameTemplate` for specifics.
+      // See  `devtoolModuleFilenameTemplate ` for specifics.
       moduleFilenameTemplate: string,
       fallbackModuleFilenameTemplate: string,
 
@@ -129,7 +129,7 @@ const config = {
 };
 {% endhighlight %}
 
-如果你想为样式文件启用sourcemap，可以通过请求参数实现。加载器，如css-loader，sass-loader和less-loader。接收一个`?sourceMap`(i.e,`css?sourceMap`)。
+如果你想为样式文件启用sourcemap，可以通过请求参数实现。加载器，如css-loader，sass-loader和less-loader。接收一个 `?sourceMap `(i.e, `css?sourceMap `)。
 
 ###小结
 

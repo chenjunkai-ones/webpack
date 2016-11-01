@@ -1,0 +1,100 @@
+---
+layout: post
+title: "2016-11-01-webpack-9"
+date: 2016-11-01 17:39:00 +0800
+categories: webpack
+---
+
+Webpack有个占位符的概念（**placeholders**）。这些字符串被用于将特定的信息附加到Webpack输出上。
+最常见的用法：
+-  `[path] ` - 返回入口路径
+-  `[name] ` - 返回入口名
+-  `[hash] ` - 返回构建的哈希值
+-  `[chunkhash] ` - 返回一个chunk的指定hash
+
+假设我们有一个这样的配置文件：
+
+{% highlight javascript %}
+{
+    output: {
+        path: PATHS.build,
+        filename: '[name].[chunkhash].js'
+    }
+}
+{% endhighlight %}
+
+我们生成的文件名将会下面这个样子：
+
+{% highlight javascript %}
+app.d587bbd6e38337f5accd.js
+vendor.dc746a5db4ed650296e1.js
+{% endhighlight %}
+
+hash的值会随相关联的文件内容的改变而改变，因此缓存会失效。
+更准确的说浏览器会发送一个新的请求来请求新的文件。
+这样意味着只有更新了的绑定才需要被重新请求一次。
+
+有另外一种方式可以使缓存失效，通过请求字符串，在文件后面加上问号和hash可以使缓存失效。
+不过不建议使用这个方法，根据[Steve Sounders](http://www.stevesouders.com/blog/2008/08/23/revving-filenames-dont-use-querystring/)
+的博客，前者的方法更为高效。
+
+### 设置hash
+我们已经将应用分割成 `app.js `和 `vendor.js `，而且设置了一个单独的 `manifest `文件来引导它。
+接下来为了我们获取hash行为，我们生成 `app.d587bbd6e38337f5accd.js` 和 `vendor.dc746a5db4ed650296e1.js`来替代原有的。
+
+**webpack.config.js**
+{% highlight javascript %}
+...
+
+switch (process.env.npm_lifecycle_event) {
+    case 'build':
+        config = merge(
+            common,
+            {
+                devtool: 'source-map',
+                output: {
+                    path: PATHS.build,
+                    filename: '[name].[chunkhash].js',
+                    chunkFilename: '[chunkhash].js'
+                }
+            },
+            ...
+        );
+        break;
+    default :
+        ...
+}
+
+module.exports = validate(config);
+
+{% endhighlight %}
+
+其中占位符是不可或缺的，现在我们来运行一下 `npm run build`：
+
+{% highlight text %}
+Hash: a64ea964943daa977eed
+Version: webpack 1.13.3
+Time: 1766ms
+                               Asset       Size  Chunks             Chunk Names
+         app.4301460b63e58f524498.js    4.09 kB    0, 2  [emitted]  app
+      vendor.e3291039820e572fafd3.js      20 kB    1, 2  [emitted]  vendor
+    manifest.c40550b27106d9576d53.js  815 bytes       2  [emitted]  manifest
+     app.4301460b63e58f524498.js.map    31.2 kB    0, 2  [emitted]  app
+  vendor.e3291039820e572fafd3.js.map     262 kB    1, 2  [emitted]  vendor
+manifest.c40550b27106d9576d53.js.map    8.76 kB       2  [emitted]  manifest
+                          index.html  357 bytes          [emitted]
+   [0] ./app/index.js 121 bytes {0} [built]
+   [0] multi vendor 28 bytes {1} [built]
+  [34] ./app/component.js 228 bytes {0} [built]
+    + 33 hidden modules
+Child html-webpack-plugin for "index.html":
+        + 3 hidden modules
+        
+{% endhighlight %}
+
+我们的文件现在有了整齐的hash。为了证明，你可以尝试在*app/index.js*加一句`console.log`。
+重新build一遍，你会发现只有app和manifest发生了改变。
+
+### 小结
+
+[原文地址](http://survivejs.com/webpack/building-with-webpack/adding-hashes-to-filenames/)

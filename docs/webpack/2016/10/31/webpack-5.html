@@ -67,7 +67,7 @@
 前者由于其更好的性能，在开发期间十分有用，后者对产品使用来所能更灵活的保持绑定的大小。</p>
 
 <h3 id="section">在开发中启用资源映射</h3>
-<p>在开发中启用资源映射，可以使用<code class="highlighter-rouge">eval-source-map</code>，而在产品中我们可以使用正常的资源文件(separate file)。</p>
+<p>在开发中启用资源映射，可以使用 <code class="highlighter-rouge">eval-source-map </code>，而在产品中我们可以使用正常的资源文件(separate file)。</p>
 
 <p><strong>webpack.config.js</strong></p>
 
@@ -97,14 +97,14 @@
         <span class="p">);</span>
 <span class="p">}</span></code></pre></figure>
 
-<p><code class="highlighter-rouge">eval-source-map</code>在初始化的时候比较缓慢，不过重新build的速度很快，并且产出真实的文件。
-快速开发具体的选项，如<code class="highlighter-rouge">cheap-module-eval-source-map</code>和<code class="highlighter-rouge">eval</code>,可以产出较低质量的资源映射。
-所有的<code class="highlighter-rouge">eval</code>的选项都会将发出sourcemaps作为你的JavaScript代码的一部分。</p>
+<p><code class="highlighter-rouge">eval-source-map </code>在初始化的时候比较缓慢，不过重新build的速度很快，并且产出真实的文件。
+快速开发具体的选项，如 <code class="highlighter-rouge">cheap-module-eval-source-map </code>和 <code class="highlighter-rouge">eval </code>,可以产出较低质量的资源映射。
+所有的 <code class="highlighter-rouge">eval </code>的选项都会将发出sourcemaps作为你的JavaScript代码的一部分。</p>
 
 <p>启动你浏览器对映射资源的支持。</p>
 
 <h3 id="webpack-sourcemap-">Webpack Sourcemap 类型的支持</h3>
-<p>尽管<code class="highlighter-rouge">eval-source-map</code>或者<code class="highlighter-rouge">eval</code>已经足够我们在开发中使用了。
+<p>尽管 <code class="highlighter-rouge">eval-source-map </code>或者 <code class="highlighter-rouge">eval </code>已经足够我们在开发中使用了。
 Webpack还是提供了几个其它类型。不过这些对你产品没有帮助。
 下面的表格是从<a href="https://webpack.github.io/docs/configuration.html#devtool">文档</a>整理出来的。</p>
 
@@ -118,39 +118,39 @@ Webpack还是提供了几个其它类型。不过这些对你产品没有帮助�
   </thead>
   <tbody>
     <tr>
-      <td><code class="highlighter-rouge">eval</code></td>
+      <td><code class="highlighter-rouge">eval </code></td>
       <td style="text-align: center">Generated code</td>
-      <td>Each module is executed with <code class="highlighter-rouge">eval</code> and <code class="highlighter-rouge">//@ sourceURL</code>.</td>
+      <td>Each module is executed with  <code class="highlighter-rouge">eval </code> and  <code class="highlighter-rouge">//@ sourceURL </code>.</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">cheap-eval-source-map</code></td>
+      <td><code class="highlighter-rouge">cheap-eval-source-map </code></td>
       <td style="text-align: center">Transformed code (lines only)</td>
-      <td>Each module is executed with <code class="highlighter-rouge">eval</code> and a sourcemap is added as a dataurl to the <code class="highlighter-rouge">eval</code>.</td>
+      <td>Each module is executed with  <code class="highlighter-rouge">eval </code> and a sourcemap is added as a dataurl to the  <code class="highlighter-rouge">eval </code>.</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">cheap-module-eval-source-map</code></td>
+      <td><code class="highlighter-rouge">cheap-module-eval-source-map </code></td>
       <td style="text-align: center">Original source (lines only)</td>
       <td>Same idea, but higher quality with lower performance.</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">eval-source-map</code></td>
+      <td><code class="highlighter-rouge">eval-source-map </code></td>
       <td style="text-align: center">Original source</td>
       <td>Same idea, but highest quality and lowest performance.</td>
     </tr>
   </tbody>
 </table>
 
-<p>你可以从<code class="highlighter-rouge">eval-source-map</code>开始，试一下每个选项，你会感觉它逐渐的变慢。</p>
+<p>你可以从 <code class="highlighter-rouge">eval-source-map </code>开始，试一下每个选项，你会感觉它逐渐的变慢。</p>
 
 <p>Webpack也可以友好地生成给产品使用的资源映射。这些映射会被写入一个单独的文件。
 而且只有在被浏览器请求的时候才会被加载。有良好的体验的同时，也便于你调试。
 | Sourcemap type | Quality | Notes |
 | ————– | ——- | —– |
-| <code class="highlighter-rouge">cheap-source-map</code> | Transformed code (lines only) | Generated sourcemaps don’t have column mappings. Sourcemaps from loaders are not used. |
-| <code class="highlighter-rouge">cheap-module-source-map</code> | Original source (lines only) | Same except sourcemaps from loaders are simplified to a single mapping per line. |
-| <code class="highlighter-rouge">source-map</code> | Original source | The best quality with the most complete result, but also the slowest. |</p>
+|  <code class="highlighter-rouge">cheap-source-map </code> | Transformed code (lines only) | Generated sourcemaps don’t have column mappings. Sourcemaps from loaders are not used. |
+|  <code class="highlighter-rouge">cheap-module-source-map </code> | Original source (lines only) | Same except sourcemaps from loaders are simplified to a single mapping per line. |
+|  <code class="highlighter-rouge">source-map </code> | Original source | The best quality with the most complete result, but also the slowest. |</p>
 
-<p><code class="highlighter-rouge">source-map</code>虽然会花费较长的时间去生成资源映射，不过质量是最佳的。如果你不在乎产品的资源映射，你可以设置一些性能更好的选项。</p>
+<p><code class="highlighter-rouge">source-map </code>虽然会花费较长的时间去生成资源映射，不过质量是最佳的。如果你不在乎产品的资源映射，你可以设置一些性能更好的选项。</p>
 
 <p>这里有一些其它的会影响资源映射表生成的选项。</p>
 
@@ -168,9 +168,9 @@ Webpack还是提供了几个其它类型。不过这些对你产品没有帮助�
 <span class="p">};</span></code></pre></figure>
 
 <h3 id="sourcemapdevtoolplugin">SourceMapDevToolPlugin</h3>
-<p>如果你想更好地控制sourcesmap的生成，可以用<code class="highlighter-rouge">SourceMapDevToolPlugin</code>代替。
+<p>如果你想更好地控制sourcesmap的生成，可以用 <code class="highlighter-rouge">SourceMapDevToolPlugin </code>代替。
 这种方式可以只生成你想要的部分并严格控制结果。
-一旦你使用这个插件，<code class="highlighter-rouge">devtool</code>这个选项就可以被完全忽略掉了。</p>
+一旦你使用这个插件， <code class="highlighter-rouge">devtool </code>这个选项就可以被完全忽略掉了。</p>
 
 <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kr">const</span> <span class="nx">config</span> <span class="o">=</span> <span class="p">{</span>
   <span class="na">plugins</span><span class="p">:</span> <span class="p">[</span>
@@ -190,7 +190,7 @@ Webpack还是提供了几个其它类型。不过这些对你产品没有帮助�
       <span class="c1">// sourcemap.</span>
       <span class="na">append</span><span class="p">:</span> <span class="kc">false</span> <span class="o">|</span> <span class="nx">string</span><span class="p">,</span>
 
-      <span class="c1">// See `devtoolModuleFilenameTemplate` for specifics.</span>
+      <span class="c1">// See  `devtoolModuleFilenameTemplate ` for specifics.</span>
       <span class="na">moduleFilenameTemplate</span><span class="p">:</span> <span class="nx">string</span><span class="p">,</span>
       <span class="na">fallbackModuleFilenameTemplate</span><span class="p">:</span> <span class="nx">string</span><span class="p">,</span>
 
@@ -205,7 +205,7 @@ Webpack还是提供了几个其它类型。不过这些对你产品没有帮助�
   <span class="p">...</span>
 <span class="p">};</span></code></pre></figure>
 
-<p>如果你想为样式文件启用sourcemap，可以通过请求参数实现。加载器，如css-loader，sass-loader和less-loader。接收一个<code class="highlighter-rouge">?sourceMap</code>(i.e,<code class="highlighter-rouge">css?sourceMap</code>)。</p>
+<p>如果你想为样式文件启用sourcemap，可以通过请求参数实现。加载器，如css-loader，sass-loader和less-loader。接收一个 <code class="highlighter-rouge">?sourceMap </code>(i.e, <code class="highlighter-rouge">css?sourceMap </code>)。</p>
 
 <h3 id="section-1">小结</h3>
 

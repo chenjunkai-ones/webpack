@@ -5,9 +5,523 @@
     <description></description>
     <link>https://whatthecole.github.io/webpack//webpack/</link>
     <atom:link href="https://whatthecole.github.io/webpack//webpack/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 01 Nov 2016 01:08:33 +0800</pubDate>
-    <lastBuildDate>Tue, 01 Nov 2016 01:08:33 +0800</lastBuildDate>
+    <pubDate>Tue, 01 Nov 2016 23:16:23 +0800</pubDate>
+    <lastBuildDate>Tue, 01 Nov 2016 23:16:23 +0800</lastBuildDate>
     <generator>Jekyll v3.1.1</generator>
+    
+      <item>
+        <title>2016-11-01-webpack-10</title>
+        <description>&lt;p&gt;我们当前的设置并没有在两次构建之间清除&lt;code class=&quot;highlighter-rouge&quot;&gt;build&lt;/code&gt;目录。
+你可以通过npm脚本出发&lt;code class=&quot;highlighter-rouge&quot;&gt;rm -rf ./build &amp;amp;&amp;amp; webpack&lt;/code&gt;。
+也可以通过插件来清除目录。&lt;/p&gt;
+
+&lt;h3 id=&quot;clean-webpack-plugin&quot;&gt;设置clean-webpack-plugin&lt;/h3&gt;
+&lt;p&gt;首先安装 &lt;a href=&quot;https://www.npmjs.com/package/clean-webpack-plugin&quot;&gt;clean-webpack-plugin&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;npm i clean-webpack-plugin --save-dev&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;libs/parts.js&lt;/strong&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;webpack&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;webpack&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;CleanWebpackPlugin&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;clean-webpack-plugin&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;exports&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;clean&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;plugins&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;CleanWebpackPlugin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;na&quot;&gt;root&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;process&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;cwd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;      
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;strong&gt;webpack.config.js&lt;/strong&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;switch&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;process&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;npm_lifecycle_event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;build&#39;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;config&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;merge&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;common&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;na&quot;&gt;devtool&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;source-map&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                &lt;span class=&quot;na&quot;&gt;output&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                    &lt;span class=&quot;na&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;PATHS&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                    &lt;span class=&quot;na&quot;&gt;filename&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;[name].[chunkhash].js&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                    &lt;span class=&quot;na&quot;&gt;chunkFilename&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;[chunkhash].js&#39;&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;parts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;clean&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;PATHS&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;default&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;这样就能保证每次构建之后 &lt;code class=&quot;highlighter-rouge&quot;&gt;build&lt;/code&gt; 目录始终保持整洁。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;如果你想保护你的隐藏文件。你可以使用 &lt;code class=&quot;highlighter-rouge&quot;&gt;path.join(PATHS.build, &#39;*&#39;)&lt;/code&gt; 替换掉 &lt;code class=&quot;highlighter-rouge&quot;&gt;PATHS.build&lt;/code&gt;。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;section&quot;&gt;小结&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://survivejs.com/webpack/building-with-webpack/cleaning-build/&quot;&gt;原文地址&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;section-1&quot;&gt;小结&lt;/h3&gt;
+</description>
+        <pubDate>Tue, 01 Nov 2016 22:56:00 +0800</pubDate>
+        <link>https://whatthecole.github.io/webpack//webpack/webpack/2016/11/01/webpack-10.html</link>
+        <guid isPermaLink="true">https://whatthecole.github.io/webpack//webpack/webpack/2016/11/01/webpack-10.html</guid>
+        
+        
+        <category>webpack</category>
+        
+      </item>
+    
+      <item>
+        <title>2016-11-01-webpack-9</title>
+        <description>&lt;p&gt;Webpack有个占位符的概念（&lt;strong&gt;placeholders&lt;/strong&gt;）。这些字符串被用于将特定的信息附加到Webpack输出上。
+最常见的用法：
+-  &lt;code class=&quot;highlighter-rouge&quot;&gt;[path] &lt;/code&gt; - 返回入口路径
+-  &lt;code class=&quot;highlighter-rouge&quot;&gt;[name] &lt;/code&gt; - 返回入口名
+-  &lt;code class=&quot;highlighter-rouge&quot;&gt;[hash] &lt;/code&gt; - 返回构建的哈希值
+-  &lt;code class=&quot;highlighter-rouge&quot;&gt;[chunkhash] &lt;/code&gt; - 返回一个chunk的指定hash&lt;/p&gt;
+
+&lt;p&gt;假设我们有一个这样的配置文件：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;output&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nl&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;PATHS&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;filename&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;[name].[chunkhash].js&#39;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;我们生成的文件名将会下面这个样子：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;d587bbd6e38337f5accd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;js&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;vendor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;dc746a5db4ed650296e1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;js&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;hash的值会随相关联的文件内容的改变而改变，因此缓存会失效。
+更准确的说浏览器会发送一个新的请求来请求新的文件。
+这样意味着只有更新了的绑定才需要被重新请求一次。&lt;/p&gt;
+
+&lt;p&gt;有另外一种方式可以使缓存失效，通过请求字符串，在文件后面加上问号和hash可以使缓存失效。
+不过不建议使用这个方法，根据&lt;a href=&quot;http://www.stevesouders.com/blog/2008/08/23/revving-filenames-dont-use-querystring/&quot;&gt;Steve Sounders&lt;/a&gt;
+的博客，前者的方法更为高效。&lt;/p&gt;
+
+&lt;h3 id=&quot;hash&quot;&gt;设置hash&lt;/h3&gt;
+&lt;p&gt;我们已经将应用分割成 &lt;code class=&quot;highlighter-rouge&quot;&gt;app.js &lt;/code&gt;和 &lt;code class=&quot;highlighter-rouge&quot;&gt;vendor.js &lt;/code&gt;，而且设置了一个单独的 &lt;code class=&quot;highlighter-rouge&quot;&gt;manifest &lt;/code&gt;文件来引导它。
+接下来为了我们获取hash行为，我们生成 &lt;code class=&quot;highlighter-rouge&quot;&gt;app.d587bbd6e38337f5accd.js&lt;/code&gt; 和 &lt;code class=&quot;highlighter-rouge&quot;&gt;vendor.dc746a5db4ed650296e1.js&lt;/code&gt;来替代原有的。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;webpack.config.js&lt;/strong&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;switch&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;process&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;npm_lifecycle_event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;build&#39;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;config&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;merge&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;common&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;na&quot;&gt;devtool&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;source-map&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                &lt;span class=&quot;na&quot;&gt;output&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                    &lt;span class=&quot;na&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;PATHS&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                    &lt;span class=&quot;na&quot;&gt;filename&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;[name].[chunkhash].js&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                    &lt;span class=&quot;na&quot;&gt;chunkFilename&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;[chunkhash].js&#39;&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;default&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;module&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;exports&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;validate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;其中占位符是不可或缺的，现在我们来运行一下 &lt;code class=&quot;highlighter-rouge&quot;&gt;npm run build&lt;/code&gt;：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;Hash: a64ea964943daa977eed
+Version: webpack 1.13.3
+Time: 1766ms
+                               Asset       Size  Chunks             Chunk Names
+         app.4301460b63e58f524498.js    4.09 kB    0, 2  [emitted]  app
+      vendor.e3291039820e572fafd3.js      20 kB    1, 2  [emitted]  vendor
+    manifest.c40550b27106d9576d53.js  815 bytes       2  [emitted]  manifest
+     app.4301460b63e58f524498.js.map    31.2 kB    0, 2  [emitted]  app
+  vendor.e3291039820e572fafd3.js.map     262 kB    1, 2  [emitted]  vendor
+manifest.c40550b27106d9576d53.js.map    8.76 kB       2  [emitted]  manifest
+                          index.html  357 bytes          [emitted]
+   [0] ./app/index.js 121 bytes {0} [built]
+   [0] multi vendor 28 bytes {1} [built]
+  [34] ./app/component.js 228 bytes {0} [built]
+    + 33 hidden modules
+Child html-webpack-plugin for &quot;index.html&quot;:
+        + 3 hidden modules
+        &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;我们的文件现在有了整齐的hash。为了证明，你可以尝试在&lt;em&gt;app/index.js&lt;/em&gt;加一句&lt;code class=&quot;highlighter-rouge&quot;&gt;console.log&lt;/code&gt;。
+重新build一遍，你会发现只有app和manifest发生了改变。&lt;/p&gt;
+
+&lt;h3 id=&quot;section&quot;&gt;小结&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://survivejs.com/webpack/building-with-webpack/adding-hashes-to-filenames/&quot;&gt;原文地址&lt;/a&gt;&lt;/p&gt;
+</description>
+        <pubDate>Tue, 01 Nov 2016 17:39:00 +0800</pubDate>
+        <link>https://whatthecole.github.io/webpack//webpack/webpack/2016/11/01/webpack-9.html</link>
+        <guid isPermaLink="true">https://whatthecole.github.io/webpack//webpack/webpack/2016/11/01/webpack-9.html</guid>
+        
+        
+        <category>webpack</category>
+        
+      </item>
+    
+      <item>
+        <title>2016-11-01-webpack-8</title>
+        <description>&lt;p&gt;目前我们的应用就只是一个单一的文件，
+这样并不理想，如果我们改变了应用，客户端会连同依赖一并下载。
+我们只想它下载改变了的部分。如果依赖改变了，客户端应该只获取依赖。
+实际应用的代码也是如此。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;bundle splitting&lt;/strong&gt;，可以把依赖捆绑到自己包上，这样有利于客户端缓存。
+我们依然可以保持整个应用的大小跟之前一样，不过这样会增加一些网络请求，会带来一部分开销。
+不过缓存的好处可以弥补这部分开销。&lt;/p&gt;
+
+&lt;p&gt;简单来说，假设我们有一个&lt;em&gt;app.js&lt;/em&gt;(100KB),我们可以将它切割成&lt;em&gt;app.js&lt;/em&gt;和&lt;em&gt;vendor.js&lt;/em&gt;。
+这样对于那些之前使用过应用的客户端来说，应用改变的代价变小了。&lt;/p&gt;
+
+&lt;p&gt;缓存也会带来一些问题。其中有一个就是缓存失效的问题。
+不过我们之后再来讨论，我们先来分割一些捆绑包。&lt;/p&gt;
+
+&lt;p&gt;目前为止我们的项目只有个一入口 &lt;code class=&quot;highlighter-rouge&quot;&gt;app &lt;/code&gt;。我们从 &lt;code class=&quot;highlighter-rouge&quot;&gt;app &lt;/code&gt;目录输出到 &lt;code class=&quot;highlighter-rouge&quot;&gt;build &lt;/code&gt;目录。&lt;/p&gt;
+
+&lt;p&gt;为了改善情况，我们定义一个包含React的 &lt;code class=&quot;highlighter-rouge&quot;&gt;vendor &lt;/code&gt;的入口。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;webpack.config.js&lt;/strong&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+
+&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;common&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;//入口采用一个路径或者是一个入口对象&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;entry&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;vendor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;react&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;output&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;filename&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;[name].js&#39;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;plugins&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;HtmlWebpackPlugin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;title&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;Webpack demo&#39;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;我们拥有两个单独的入口，或者叫&lt;strong&gt;entry chunks&lt;/strong&gt;。
+现在运行 &lt;code class=&quot;highlighter-rouge&quot;&gt;npm run build &lt;/code&gt;;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;Hash: 985a128e4956eb9a22da
+Version: webpack 1.13.3
+Time: 2187ms
+        Asset       Size  Chunks             Chunk Names
+       app.js    24.2 kB       0  [emitted]  app
+    vendor.js    20.2 kB       1  [emitted]  vendor
+   app.js.map     295 kB       0  [emitted]  app
+vendor.js.map     265 kB       1  [emitted]  vendor
+   index.html  236 bytes          [emitted]
+   [0] ./app/index.js 121 bytes {0} [built]
+   [0] multi vendor 28 bytes {1} [built]
+  [34] ./app/component.js 228 bytes {0} [built]
+    + 33 hidden modules
+Child html-webpack-plugin for &quot;index.html&quot;:
+        + 3 hidden modules&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;现在&lt;em&gt;app.js&lt;/em&gt;和&lt;em&gt;vendor.js&lt;/em&gt;有了单独的chunk id，尽管输出的大小有点偏差。
+&lt;em&gt;app.js&lt;/em&gt;应该更小一点。&lt;/p&gt;
+
+&lt;p&gt;检查你的输出结果，你会发现app.js包含了React。Webpack默认会将相关的依赖加入文件中。
+如下图：
+&lt;img src=&quot;http://survivejs.com/webpack/images/bundle_01.png&quot; alt=&quot;Webpack&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;CommonsChunkPlugin &lt;/code&gt;插件允许我们改变这种默认的行为，这样我们就可以达到我们的预期效果了。&lt;/p&gt;
+
+&lt;h3 id=&quot;commonschunkplugin&quot;&gt;CommonsChunkPlugin&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://webpack.github.io/docs/list-of-plugins.html#commonschunkplugin&quot;&gt;CommonsChunkPlugin&lt;/a&gt;
+是一个复杂且强悍的插件。为了让我们以后的工作更简单，我们提取一个的文件–&lt;strong&gt;manifest&lt;/strong&gt;。
+它包含启动整个应用程序并包含其所需的依赖性信息的Webpack运行时。这样可以避免一系列的问题。尽管浏览器需要加载多一个文件，
+但是它允许我们去实现一个可靠的缓存，这个将会在接下讨论。&lt;/p&gt;
+
+&lt;p&gt;如果我们不提取一个manifest，Webpack将会把运行时生成在vendor绑定包中。
+一旦我们修改了应用代码，应用的绑定包hash将会改变。正因为hash改变，运行时的实现也会改变，因为它是用hash来加载应用绑定的。
+由于这样，vendor绑定也会得到一个新hash。这样也是为什么我们要把manifest单独开来，这样做可以避免一些问题。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;libs/parts.js&lt;/strong&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;exports&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;extractBundle&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;entry&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{};&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;entry&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;entries&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;entry&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;entry&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;plugins&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;webpack&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;optimize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;CommonsChunkPlugin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
+                &lt;span class=&quot;na&quot;&gt;names&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;manifest&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;我们现在可以把相关的 &lt;code class=&quot;highlighter-rouge&quot;&gt;vendor &lt;/code&gt;配置去掉了，用extractBundle函数替代：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+
+&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;common&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;//入口采用一个路径或者是一个入口对象&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;entry&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;output&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;filename&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;[name].js&#39;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;plugins&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;HtmlWebpackPlugin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;title&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;Webpack demo&#39;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;switch&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;process&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;npm_lifecycle_event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;build&#39;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;config&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;merge&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;common&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;na&quot;&gt;devtool&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;source-map&#39;&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;parts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;setFreeVariable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+                &lt;span class=&quot;s1&quot;&gt;&#39;process.env.NODE_ENV&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                &lt;span class=&quot;s1&quot;&gt;&#39;production&#39;&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;parts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;extractBundle&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
+                &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;vendor&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                &lt;span class=&quot;na&quot;&gt;entries&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;react&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;}),&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;parts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;minify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;parts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;setupCSS&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;default&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;module&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;exports&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;validate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;执行 &lt;code class=&quot;highlighter-rouge&quot;&gt;npm run build &lt;/code&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;Hash: 141575b511b4c7f0f9f9
+Version: webpack 1.13.3
+Time: 1743ms
+          Asset       Size  Chunks             Chunk Names
+         app.js    4.07 kB    0, 2  [emitted]  app
+      vendor.js      20 kB    1, 2  [emitted]  vendor
+    manifest.js  774 bytes       2  [emitted]  manifest
+     app.js.map    31.2 kB    0, 2  [emitted]  app
+  vendor.js.map     262 kB    1, 2  [emitted]  vendor
+manifest.js.map    8.71 kB       2  [emitted]  manifest
+     index.html  294 bytes          [emitted]
+   [0] ./app/index.js 121 bytes {0} [built]
+   [0] multi vendor 28 bytes {1} [built]
+  [34] ./app/component.js 228 bytes {0} [built]
+    + 33 hidden modules
+Child html-webpack-plugin for &quot;index.html&quot;:
+        + 3 hidden modules&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;现在的结果就是我们想要的了：
+&lt;img src=&quot;http://survivejs.com/webpack/images/bundle_02.png&quot; alt=&quot;webpack&quot; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;除了这样，我们可以通过&lt;a href=&quot;https://webpack.github.io/docs/code-splitting.html&quot;&gt;require.ensure&lt;/a&gt;异步加载&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;vendor&quot;&gt;自动加载依赖到vendor绑定&lt;/h3&gt;
+&lt;p&gt;如果你严格区分 &lt;code class=&quot;highlighter-rouge&quot;&gt;dependencies &lt;/code&gt;和 &lt;code class=&quot;highlighter-rouge&quot;&gt;devDependencies &lt;/code&gt;,那么下面的方法可以让Webpack可以自动选出 &lt;code class=&quot;highlighter-rouge&quot;&gt;vendor &lt;/code&gt;依赖。&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+
+&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;pkg&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;./package.json&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+
+&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;common&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;entry&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;vendor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Object&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;keys&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;pkg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;dependencies&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;当然你想排除一些依赖时， 你可以用 &lt;code class=&quot;highlighter-rouge&quot;&gt;filter &lt;/code&gt;。&lt;/p&gt;
+
+&lt;h3 id=&quot;section&quot;&gt;小结&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://survivejs.com/webpack/building-with-webpack/splitting-bundles/&quot;&gt;原文地址&lt;/a&gt;&lt;/p&gt;
+</description>
+        <pubDate>Tue, 01 Nov 2016 11:45:00 +0800</pubDate>
+        <link>https://whatthecole.github.io/webpack//webpack/webpack/2016/11/01/webpack-8.html</link>
+        <guid isPermaLink="true">https://whatthecole.github.io/webpack//webpack/webpack/2016/11/01/webpack-8.html</guid>
+        
+        
+        <category>webpack</category>
+        
+      </item>
+    
+      <item>
+        <title>2016-11-01-webpack-7</title>
+        <description>&lt;h3 id=&quot;section&quot;&gt;设置环境变量&lt;/h3&gt;
+&lt;p&gt;React 依赖于基于 &lt;code class=&quot;highlighter-rouge&quot;&gt;process.env.NODE_ENV &lt;/code&gt;的优化。如果把环境变量设置为 &lt;code class=&quot;highlighter-rouge&quot;&gt;production &lt;/code&gt;，React将会以一种优化的方式去构建。
+这样会禁用一些检查。例如原型类型检查(property type checks)。最重要的是构建之后的体积会更小而且提高了性能。&lt;/p&gt;
+
+&lt;h3 id=&quot;defineplugin&quot;&gt;DefinePlugin&lt;/h3&gt;
+&lt;p&gt;Webpack 提供了  &lt;code class=&quot;highlighter-rouge&quot;&gt;DefinePlugin &lt;/code&gt;。它能重写匹配自由变量(free variables)。如下：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// Not free, not ok to replace&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;foo&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;bar&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;bar&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// Free, ok to replace&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;bar&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;bar&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;bar&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;如果我们将 &lt;code class=&quot;highlighter-rouge&quot;&gt;bar &lt;/code&gt;替换成 &lt;code class=&quot;highlighter-rouge&quot;&gt;&#39;bar&#39; &lt;/code&gt;,如下：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// Not free, not ok to replace&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;foo&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;bar&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;bar&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// Free, ok to replace&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;bar&#39;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;bar&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;bar&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;进一步分析 &lt;code class=&quot;highlighter-rouge&quot;&gt;&#39;bar&#39; === &#39;bar&#39; &lt;/code&gt;等于 &lt;code class=&quot;highlighter-rouge&quot;&gt;true &lt;/code&gt;，所以UglifyJS会将代码格式化成：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// Not free, not ok to replace&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;foo&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;bar&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;bar&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// Free, ok to replace&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;bar&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;而且UglifyJS可以排除一些 &lt;code class=&quot;highlighter-rouge&quot;&gt;if &lt;/code&gt;语句：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// Not free, not ok to replace&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;foo&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;bar&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;bar&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// Free, ok to replace&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;bar&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;这就是 &lt;code class=&quot;highlighter-rouge&quot;&gt;DefinePlugin &lt;/code&gt;的核心理念。利用这种技巧我们可以切换部分代码。
+UglifyJS能够为我们执行分析，并启用或禁用我们想启用或禁用的整个部分。&lt;/p&gt;
+
+&lt;h3 id=&quot;processenvnodeenv&quot;&gt;设置process.env.NODE_ENV&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;libs/parts.js&lt;/strong&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;exports&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;setFreeVariable&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;env&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{};&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;JSON&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;stringify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;plugins&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;webpack&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;DefinePlugin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;strong&gt;webpack.config.js&lt;/strong&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;switch&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;process&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;npm_lifecycle_event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;build&#39;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;config&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;merge&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;common&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;na&quot;&gt;devtool&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;source-map&#39;&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;parts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;setFreeVariable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+                &lt;span class=&quot;s1&quot;&gt;&#39;process.env.NODE_ENV&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                &lt;span class=&quot;s1&quot;&gt;&#39;production&#39;&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;parts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;minify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;parts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;setupCSS&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;default&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;module&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;exports&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;validate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;执行 &lt;code class=&quot;highlighter-rouge&quot;&gt;npm run build &lt;/code&gt;：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;Hash: 6c5477b354dc8086006f
+Version: webpack 1.13.3
+Time: 1803ms
+     Asset       Size  Chunks             Chunk Names
+    app.js    24.2 kB       0  [emitted]  app
+app.js.map     295 kB       0  [emitted]  app
+index.html  180 bytes          [emitted]
+   [0] ./app/index.js 121 bytes {0} [built]
+  [34] ./app/component.js 228 bytes {0} [built]
+    + 33 hidden modules
+Child html-webpack-plugin for &quot;index.html&quot;:
+        + 3 hidden modules&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;我们从155kb到44.8kb。到现在的24.2kb。我们在通过gzip再压缩40%。&lt;/p&gt;
+
+&lt;h3 id=&quot;section-1&quot;&gt;小结&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;http://survivejs.com/webpack/building-with-webpack/setting-environment-variables/&quot;&gt;原文地址&lt;/a&gt;&lt;/p&gt;
+
+</description>
+        <pubDate>Tue, 01 Nov 2016 01:20:00 +0800</pubDate>
+        <link>https://whatthecole.github.io/webpack//webpack/webpack/2016/11/01/webpack-7.html</link>
+        <guid isPermaLink="true">https://whatthecole.github.io/webpack//webpack/webpack/2016/11/01/webpack-7.html</guid>
+        
+        
+        <category>webpack</category>
+        
+      </item>
     
       <item>
         <title>2016-10-31-webpack-6</title>
@@ -17,13 +531,13 @@
 &lt;p&gt;首先是压缩，简化代码的同时不会对代码解析失去任何意义。&lt;/p&gt;
 
 &lt;blockquote&gt;
-  &lt;p&gt;即使我们压缩了我们的代码，我们依然可以生成资源映射通过&lt;code class=&quot;highlighter-rouge&quot;&gt;devtool&lt;/code&gt;。
+  &lt;p&gt;即使我们压缩了我们的代码，我们依然可以生成资源映射通过 &lt;code class=&quot;highlighter-rouge&quot;&gt;devtool &lt;/code&gt;。
 这样可以更好的调试，尽管是发布产品的代码。&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;p&gt;现在项目还没有什么内容，我们先安装个React:&lt;/p&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;npm i react --save&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;npm i react --save &lt;/code&gt;&lt;/p&gt;
 
 &lt;p&gt;然后添加React依赖到项目里面：&lt;/p&gt;
 
@@ -33,7 +547,7 @@
 
 &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;现在运行&lt;code class=&quot;highlighter-rouge&quot;&gt;npm run build&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;现在运行 &lt;code class=&quot;highlighter-rouge&quot;&gt;npm run build &lt;/code&gt;。&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;Hash: d6c9f1017d63b25287b4
 Version: webpack 1.13.3
@@ -50,7 +564,7 @@ Child html-webpack-plugin for &quot;index.html&quot;:
 
 &lt;p&gt;155KB有点大。现在我们来压缩它&lt;/p&gt;
 
-&lt;p&gt;最简单的方式是 &lt;code class=&quot;highlighter-rouge&quot;&gt;webpack -p&lt;/code&gt;. &lt;code class=&quot;highlighter-rouge&quot;&gt;-p&lt;/code&gt;是&lt;code class=&quot;highlighter-rouge&quot;&gt;--optimize-minimize&lt;/code&gt;的快捷方式。
+&lt;p&gt;最简单的方式是  &lt;code class=&quot;highlighter-rouge&quot;&gt;webpack -p &lt;/code&gt;.  &lt;code class=&quot;highlighter-rouge&quot;&gt;-p &lt;/code&gt;是 &lt;code class=&quot;highlighter-rouge&quot;&gt;--optimize-minimize &lt;/code&gt;的快捷方式。
 或者我们可以直接用为我们提供更多功能的插件。
 默认的情况下Uglify会输出很多警告，在这种情况下它们不提供值。
 我们将禁用它们。&lt;/p&gt;
@@ -91,7 +605,7 @@ Child html-webpack-plugin for &quot;index.html&quot;:
         &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;如果运行&lt;code class=&quot;highlighter-rouge&quot;&gt;npm run build&lt;/code&gt;,你会看到以下结果：&lt;/p&gt;
+&lt;p&gt;如果运行 &lt;code class=&quot;highlighter-rouge&quot;&gt;npm run build &lt;/code&gt;,你会看到以下结果：&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;Hash: c1a3495508496d5dcccd
 Version: webpack 1.13.3
@@ -146,7 +660,7 @@ Child html-webpack-plugin for &quot;index.html&quot;:
   &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;如果启用了mangling，最好设置&lt;code class=&quot;highlighter-rouge&quot;&gt;except: [&#39;webpackJsonp&#39;]&lt;/code&gt;避免mangling了Webpack运行时。&lt;/p&gt;
+&lt;p&gt;如果启用了mangling，最好设置 &lt;code class=&quot;highlighter-rouge&quot;&gt;except: [&#39;webpackJsonp&#39;] &lt;/code&gt;避免mangling了Webpack运行时。&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;另外的一种方法是用&lt;a href=&quot;https://www.npmjs.com/package/uglify-loader&quot;&gt;uglify-loader&lt;/a&gt;。&lt;/p&gt;
@@ -172,7 +686,7 @@ Child html-webpack-plugin for &quot;index.html&quot;:
 前者由于其更好的性能，在开发期间十分有用，后者对产品使用来所能更灵活的保持绑定的大小。&lt;/p&gt;
 
 &lt;h3 id=&quot;section&quot;&gt;在开发中启用资源映射&lt;/h3&gt;
-&lt;p&gt;在开发中启用资源映射，可以使用&lt;code class=&quot;highlighter-rouge&quot;&gt;eval-source-map&lt;/code&gt;，而在产品中我们可以使用正常的资源文件(separate file)。&lt;/p&gt;
+&lt;p&gt;在开发中启用资源映射，可以使用 &lt;code class=&quot;highlighter-rouge&quot;&gt;eval-source-map &lt;/code&gt;，而在产品中我们可以使用正常的资源文件(separate file)。&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;webpack.config.js&lt;/strong&gt;&lt;/p&gt;
 
@@ -202,14 +716,14 @@ Child html-webpack-plugin for &quot;index.html&quot;:
         &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;eval-source-map&lt;/code&gt;在初始化的时候比较缓慢，不过重新build的速度很快，并且产出真实的文件。
-快速开发具体的选项，如&lt;code class=&quot;highlighter-rouge&quot;&gt;cheap-module-eval-source-map&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;eval&lt;/code&gt;,可以产出较低质量的资源映射。
-所有的&lt;code class=&quot;highlighter-rouge&quot;&gt;eval&lt;/code&gt;的选项都会将发出sourcemaps作为你的JavaScript代码的一部分。&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;eval-source-map &lt;/code&gt;在初始化的时候比较缓慢，不过重新build的速度很快，并且产出真实的文件。
+快速开发具体的选项，如 &lt;code class=&quot;highlighter-rouge&quot;&gt;cheap-module-eval-source-map &lt;/code&gt;和 &lt;code class=&quot;highlighter-rouge&quot;&gt;eval &lt;/code&gt;,可以产出较低质量的资源映射。
+所有的 &lt;code class=&quot;highlighter-rouge&quot;&gt;eval &lt;/code&gt;的选项都会将发出sourcemaps作为你的JavaScript代码的一部分。&lt;/p&gt;
 
 &lt;p&gt;启动你浏览器对映射资源的支持。&lt;/p&gt;
 
 &lt;h3 id=&quot;webpack-sourcemap-&quot;&gt;Webpack Sourcemap 类型的支持&lt;/h3&gt;
-&lt;p&gt;尽管&lt;code class=&quot;highlighter-rouge&quot;&gt;eval-source-map&lt;/code&gt;或者&lt;code class=&quot;highlighter-rouge&quot;&gt;eval&lt;/code&gt;已经足够我们在开发中使用了。
+&lt;p&gt;尽管 &lt;code class=&quot;highlighter-rouge&quot;&gt;eval-source-map &lt;/code&gt;或者 &lt;code class=&quot;highlighter-rouge&quot;&gt;eval &lt;/code&gt;已经足够我们在开发中使用了。
 Webpack还是提供了几个其它类型。不过这些对你产品没有帮助。
 下面的表格是从&lt;a href=&quot;https://webpack.github.io/docs/configuration.html#devtool&quot;&gt;文档&lt;/a&gt;整理出来的。&lt;/p&gt;
 
@@ -223,39 +737,39 @@ Webpack还是提供了几个其它类型。不过这些对你产品没有帮助�
   &lt;/thead&gt;
   &lt;tbody&gt;
     &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;eval&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;eval &lt;/code&gt;&lt;/td&gt;
       &lt;td style=&quot;text-align: center&quot;&gt;Generated code&lt;/td&gt;
-      &lt;td&gt;Each module is executed with &lt;code class=&quot;highlighter-rouge&quot;&gt;eval&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;//@ sourceURL&lt;/code&gt;.&lt;/td&gt;
+      &lt;td&gt;Each module is executed with  &lt;code class=&quot;highlighter-rouge&quot;&gt;eval &lt;/code&gt; and  &lt;code class=&quot;highlighter-rouge&quot;&gt;//@ sourceURL &lt;/code&gt;.&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;cheap-eval-source-map&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;cheap-eval-source-map &lt;/code&gt;&lt;/td&gt;
       &lt;td style=&quot;text-align: center&quot;&gt;Transformed code (lines only)&lt;/td&gt;
-      &lt;td&gt;Each module is executed with &lt;code class=&quot;highlighter-rouge&quot;&gt;eval&lt;/code&gt; and a sourcemap is added as a dataurl to the &lt;code class=&quot;highlighter-rouge&quot;&gt;eval&lt;/code&gt;.&lt;/td&gt;
+      &lt;td&gt;Each module is executed with  &lt;code class=&quot;highlighter-rouge&quot;&gt;eval &lt;/code&gt; and a sourcemap is added as a dataurl to the  &lt;code class=&quot;highlighter-rouge&quot;&gt;eval &lt;/code&gt;.&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;cheap-module-eval-source-map&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;cheap-module-eval-source-map &lt;/code&gt;&lt;/td&gt;
       &lt;td style=&quot;text-align: center&quot;&gt;Original source (lines only)&lt;/td&gt;
       &lt;td&gt;Same idea, but higher quality with lower performance.&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;eval-source-map&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;eval-source-map &lt;/code&gt;&lt;/td&gt;
       &lt;td style=&quot;text-align: center&quot;&gt;Original source&lt;/td&gt;
       &lt;td&gt;Same idea, but highest quality and lowest performance.&lt;/td&gt;
     &lt;/tr&gt;
   &lt;/tbody&gt;
 &lt;/table&gt;
 
-&lt;p&gt;你可以从&lt;code class=&quot;highlighter-rouge&quot;&gt;eval-source-map&lt;/code&gt;开始，试一下每个选项，你会感觉它逐渐的变慢。&lt;/p&gt;
+&lt;p&gt;你可以从 &lt;code class=&quot;highlighter-rouge&quot;&gt;eval-source-map &lt;/code&gt;开始，试一下每个选项，你会感觉它逐渐的变慢。&lt;/p&gt;
 
 &lt;p&gt;Webpack也可以友好地生成给产品使用的资源映射。这些映射会被写入一个单独的文件。
 而且只有在被浏览器请求的时候才会被加载。有良好的体验的同时，也便于你调试。
 | Sourcemap type | Quality | Notes |
 | ————– | ——- | —– |
-| &lt;code class=&quot;highlighter-rouge&quot;&gt;cheap-source-map&lt;/code&gt; | Transformed code (lines only) | Generated sourcemaps don’t have column mappings. Sourcemaps from loaders are not used. |
-| &lt;code class=&quot;highlighter-rouge&quot;&gt;cheap-module-source-map&lt;/code&gt; | Original source (lines only) | Same except sourcemaps from loaders are simplified to a single mapping per line. |
-| &lt;code class=&quot;highlighter-rouge&quot;&gt;source-map&lt;/code&gt; | Original source | The best quality with the most complete result, but also the slowest. |&lt;/p&gt;
+|  &lt;code class=&quot;highlighter-rouge&quot;&gt;cheap-source-map &lt;/code&gt; | Transformed code (lines only) | Generated sourcemaps don’t have column mappings. Sourcemaps from loaders are not used. |
+|  &lt;code class=&quot;highlighter-rouge&quot;&gt;cheap-module-source-map &lt;/code&gt; | Original source (lines only) | Same except sourcemaps from loaders are simplified to a single mapping per line. |
+|  &lt;code class=&quot;highlighter-rouge&quot;&gt;source-map &lt;/code&gt; | Original source | The best quality with the most complete result, but also the slowest. |&lt;/p&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;source-map&lt;/code&gt;虽然会花费较长的时间去生成资源映射，不过质量是最佳的。如果你不在乎产品的资源映射，你可以设置一些性能更好的选项。&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;source-map &lt;/code&gt;虽然会花费较长的时间去生成资源映射，不过质量是最佳的。如果你不在乎产品的资源映射，你可以设置一些性能更好的选项。&lt;/p&gt;
 
 &lt;p&gt;这里有一些其它的会影响资源映射表生成的选项。&lt;/p&gt;
 
@@ -273,9 +787,9 @@ Webpack还是提供了几个其它类型。不过这些对你产品没有帮助�
 &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;h3 id=&quot;sourcemapdevtoolplugin&quot;&gt;SourceMapDevToolPlugin&lt;/h3&gt;
-&lt;p&gt;如果你想更好地控制sourcesmap的生成，可以用&lt;code class=&quot;highlighter-rouge&quot;&gt;SourceMapDevToolPlugin&lt;/code&gt;代替。
+&lt;p&gt;如果你想更好地控制sourcesmap的生成，可以用 &lt;code class=&quot;highlighter-rouge&quot;&gt;SourceMapDevToolPlugin &lt;/code&gt;代替。
 这种方式可以只生成你想要的部分并严格控制结果。
-一旦你使用这个插件，&lt;code class=&quot;highlighter-rouge&quot;&gt;devtool&lt;/code&gt;这个选项就可以被完全忽略掉了。&lt;/p&gt;
+一旦你使用这个插件， &lt;code class=&quot;highlighter-rouge&quot;&gt;devtool &lt;/code&gt;这个选项就可以被完全忽略掉了。&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;config&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;na&quot;&gt;plugins&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
@@ -295,7 +809,7 @@ Webpack还是提供了几个其它类型。不过这些对你产品没有帮助�
       &lt;span class=&quot;c1&quot;&gt;// sourcemap.&lt;/span&gt;
       &lt;span class=&quot;na&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
 
-      &lt;span class=&quot;c1&quot;&gt;// See `devtoolModuleFilenameTemplate` for specifics.&lt;/span&gt;
+      &lt;span class=&quot;c1&quot;&gt;// See  `devtoolModuleFilenameTemplate ` for specifics.&lt;/span&gt;
       &lt;span class=&quot;na&quot;&gt;moduleFilenameTemplate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
       &lt;span class=&quot;na&quot;&gt;fallbackModuleFilenameTemplate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
 
@@ -310,7 +824,7 @@ Webpack还是提供了几个其它类型。不过这些对你产品没有帮助�
   &lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;如果你想为样式文件启用sourcemap，可以通过请求参数实现。加载器，如css-loader，sass-loader和less-loader。接收一个&lt;code class=&quot;highlighter-rouge&quot;&gt;?sourceMap&lt;/code&gt;(i.e,&lt;code class=&quot;highlighter-rouge&quot;&gt;css?sourceMap&lt;/code&gt;)。&lt;/p&gt;
+&lt;p&gt;如果你想为样式文件启用sourcemap，可以通过请求参数实现。加载器，如css-loader，sass-loader和less-loader。接收一个 &lt;code class=&quot;highlighter-rouge&quot;&gt;?sourceMap &lt;/code&gt;(i.e, &lt;code class=&quot;highlighter-rouge&quot;&gt;css?sourceMap &lt;/code&gt;)。&lt;/p&gt;
 
 &lt;h3 id=&quot;section-1&quot;&gt;小结&lt;/h3&gt;
 
@@ -333,7 +847,7 @@ Webpack不需要强制刷新浏览器。这里有更聪明的做法。&lt;/p&gt;
 &lt;h3 id=&quot;css&quot;&gt;加载CSS&lt;/h3&gt;
 &lt;p&gt;我们首先需要这两个加载器(loaders)。&lt;/p&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;npm i css-loader style-loader --save-dev&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;npm i css-loader style-loader --save-dev &lt;/code&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;libs/parts.js&lt;/strong&gt;&lt;/p&gt;
 
@@ -374,12 +888,12 @@ Webpack不需要强制刷新浏览器。这里有更聪明的做法。&lt;/p&gt;
 
 &lt;span class=&quot;nx&quot;&gt;module&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;exports&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;validate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;test&lt;/code&gt;接收一个正则表达式，匹配的文件会通知特定的加载器。
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;test &lt;/code&gt;接收一个正则表达式，匹配的文件会通知特定的加载器。
 加载器的执行时从右到左。&lt;/p&gt;
 
 &lt;p&gt;在上面的代码中，&lt;em&gt;css-loader&lt;/em&gt;会先执行，然后再执行&lt;em&gt;style-loader&lt;/em&gt;。
-&lt;code class=&quot;highlighter-rouge&quot;&gt;css-loader&lt;/code&gt;会解析CSS文件中的&lt;code class=&quot;highlighter-rouge&quot;&gt;@import&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;url&lt;/code&gt;语句。
-&lt;code class=&quot;highlighter-rouge&quot;&gt;style-loader&lt;/code&gt;处理JavaScript中的&lt;code class=&quot;highlighter-rouge&quot;&gt;require&lt;/code&gt;语句。
+ &lt;code class=&quot;highlighter-rouge&quot;&gt;css-loader &lt;/code&gt;会解析CSS文件中的 &lt;code class=&quot;highlighter-rouge&quot;&gt;@import &lt;/code&gt;和 &lt;code class=&quot;highlighter-rouge&quot;&gt;url &lt;/code&gt;语句。
+ &lt;code class=&quot;highlighter-rouge&quot;&gt;style-loader &lt;/code&gt;处理JavaScript中的 &lt;code class=&quot;highlighter-rouge&quot;&gt;require &lt;/code&gt;语句。
 CSS预处理语言，如Sass和Less。也是用这样的方式。&lt;/p&gt;
 
 &lt;blockquote&gt;
@@ -393,7 +907,7 @@ CSS预处理语言，如Sass和Less。也是用这样的方式。&lt;/p&gt;
     &lt;span class=&quot;nl&quot;&gt;background&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;cornsilk&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;Webpack不会处理没被&lt;code class=&quot;highlighter-rouge&quot;&gt;require&lt;/code&gt;的文件。&lt;/p&gt;
+&lt;p&gt;Webpack不会处理没被 &lt;code class=&quot;highlighter-rouge&quot;&gt;require &lt;/code&gt;的文件。&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;app/index.js&lt;/strong&gt;&lt;/p&gt;
 
@@ -405,12 +919,12 @@ CSS预处理语言，如Sass和Less。也是用这样的方式。&lt;/p&gt;
 修改main.css，会看到网页样式随之更改。&lt;/p&gt;
 
 &lt;h3 id=&quot;csscss&quot;&gt;理解CSS作用域和CSS模块&lt;/h3&gt;
-&lt;p&gt;当你像这样&lt;code class=&quot;highlighter-rouge&quot;&gt;require&lt;/code&gt;一个CSS文件，Webpack会将其绑定到你&lt;code class=&quot;highlighter-rouge&quot;&gt;require&lt;/code&gt;它的地方。
-假设你用&lt;em&gt;style-loader&lt;/em&gt;，Webpack会将它写到一个&lt;code class=&quot;highlighter-rouge&quot;&gt;style&lt;/code&gt;标签中。这意味着，默认的情况下，这个文件被作用于全局作用域中。&lt;/p&gt;
+&lt;p&gt;当你像这样 &lt;code class=&quot;highlighter-rouge&quot;&gt;require &lt;/code&gt;一个CSS文件，Webpack会将其绑定到你 &lt;code class=&quot;highlighter-rouge&quot;&gt;require &lt;/code&gt;它的地方。
+假设你用&lt;em&gt;style-loader&lt;/em&gt;，Webpack会将它写到一个 &lt;code class=&quot;highlighter-rouge&quot;&gt;style &lt;/code&gt;标签中。这意味着，默认的情况下，这个文件被作用于全局作用域中。&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://github.com/css-modules/css-modules&quot;&gt;CSS Modules&lt;/a&gt;
 是一个CSS文件，其中默认情况下所有类名和动画名称都在局部作用域里。
-所有的&lt;code class=&quot;highlighter-rouge&quot;&gt;(url(...))&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;@imports&lt;/code&gt;都是模块请求模式(&lt;code class=&quot;highlighter-rouge&quot;&gt;./xxx&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;../xxx&lt;/code&gt;代表相对路径，&lt;code class=&quot;highlighter-rouge&quot;&gt;xxx&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;xxx/yyy&lt;/code&gt;代表模块文件夹)。&lt;/p&gt;
+所有的 &lt;code class=&quot;highlighter-rouge&quot;&gt;(url(...)) &lt;/code&gt;和 &lt;code class=&quot;highlighter-rouge&quot;&gt;@imports &lt;/code&gt;都是模块请求模式( &lt;code class=&quot;highlighter-rouge&quot;&gt;./xxx &lt;/code&gt;和 &lt;code class=&quot;highlighter-rouge&quot;&gt;../xxx &lt;/code&gt;代表相对路径， &lt;code class=&quot;highlighter-rouge&quot;&gt;xxx &lt;/code&gt;和 &lt;code class=&quot;highlighter-rouge&quot;&gt;xxx/yyy &lt;/code&gt;代表模块文件夹)。&lt;/p&gt;
 
 &lt;p&gt;CSS Modules 编译成一个低级交换格式称为ICSS或者&lt;a href=&quot;https://github.com/css-modules/icss&quot;&gt;interoperable CSS&lt;/a&gt;,
 但是像正常的CSS文件一样。&lt;/p&gt;
@@ -443,13 +957,13 @@ CSS预处理语言，如Sass和Less。也是用这样的方式。&lt;/p&gt;
   &lt;span class=&quot;nl&quot;&gt;color&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;yellow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;这里需要注意的是，&lt;code class=&quot;highlighter-rouge&quot;&gt;composes&lt;/code&gt;的选择器要在其它的之前。继承只能对于同个本地作用域的选择器和它只是一个单独的类名。
-当一个类名&lt;code class=&quot;highlighter-rouge&quot;&gt;composes&lt;/code&gt;到另一个类名，CSS Modules导出本地类的两个类名。这可以添加多个类名。
-&lt;code class=&quot;highlighter-rouge&quot;&gt;compose: classNameA classNameB&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;这里需要注意的是， &lt;code class=&quot;highlighter-rouge&quot;&gt;composes &lt;/code&gt;的选择器要在其它的之前。继承只能对于同个本地作用域的选择器和它只是一个单独的类名。
+当一个类名 &lt;code class=&quot;highlighter-rouge&quot;&gt;composes &lt;/code&gt;到另一个类名，CSS Modules导出本地类的两个类名。这可以添加多个类名。
+ &lt;code class=&quot;highlighter-rouge&quot;&gt;compose: classNameA classNameB &lt;/code&gt;。&lt;/p&gt;
 
 &lt;p&gt;依赖&lt;/p&gt;
 
-&lt;p&gt;从其它的CSS Modules&lt;code class=&quot;highlighter-rouge&quot;&gt;compose&lt;/code&gt;类名进来。&lt;/p&gt;
+&lt;p&gt;从其它的CSS Modules &lt;code class=&quot;highlighter-rouge&quot;&gt;compose &lt;/code&gt;类名进来。&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-css&quot; data-lang=&quot;css&quot;&gt;&lt;span class=&quot;nc&quot;&gt;.otherClassName&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
     &lt;span class=&quot;py&quot;&gt;compose&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;className&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&quot;./style.css&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
@@ -490,7 +1004,7 @@ CSS预处理语言，如Sass和Less。也是用这样的方式。&lt;/p&gt;
         <title>2016-10-29-webpack-3</title>
         <description>&lt;p&gt;常见的两个工具有&lt;a href=&quot;http://livereload.com/&quot;&gt;LiveReload&lt;/a&gt;或者&lt;a href=&quot;http://www.browsersync.io/&quot;&gt;Browsersync&lt;/a&gt;。&lt;/p&gt;
 
-&lt;p&gt;Webpack有watch模式，&lt;code class=&quot;highlighter-rouge&quot;&gt;webpack --watch&lt;/code&gt;。使用watch模式时，Webpack会检测你文件的改变并自动重新编译。
+&lt;p&gt;Webpack有watch模式， &lt;code class=&quot;highlighter-rouge&quot;&gt;webpack --watch &lt;/code&gt;。使用watch模式时，Webpack会检测你文件的改变并自动重新编译。
 &lt;em&gt;webpack-dev-server&lt;/em&gt;就是建立在watch模式上。&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;webpack-dev-server&lt;/em&gt;是一个运行在内存中的开发服务器。能在你开发的时候自动刷新你浏览器的内容。
@@ -499,12 +1013,12 @@ CSS预处理语言，如Sass和Less。也是用这样的方式。&lt;/p&gt;
 
 &lt;p&gt;安装&lt;em&gt;webpack-dev-server&lt;/em&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;npm i webpack-dev-server --save-dev&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;npm i webpack-dev-server --save-dev &lt;/code&gt;&lt;/p&gt;
 
-&lt;p&gt;你可以用&lt;code class=&quot;highlighter-rouge&quot;&gt;npm bin&lt;/code&gt;目录下的命令去执行webpack-dev-server。
-&lt;code class=&quot;highlighter-rouge&quot;&gt;webpack-dev-server --inline&lt;/code&gt;。&lt;code class=&quot;highlighter-rouge&quot;&gt;--inline&lt;/code&gt;。&lt;em&gt;inline&lt;/em&gt;模式的话会将webpack-dev-server的客户端写入结果代码中。&lt;/p&gt;
+&lt;p&gt;你可以用 &lt;code class=&quot;highlighter-rouge&quot;&gt;npm bin &lt;/code&gt;目录下的命令去执行webpack-dev-server。
+ &lt;code class=&quot;highlighter-rouge&quot;&gt;webpack-dev-server --inline &lt;/code&gt;。 &lt;code class=&quot;highlighter-rouge&quot;&gt;--inline &lt;/code&gt;。&lt;em&gt;inline&lt;/em&gt;模式的话会将webpack-dev-server的客户端写入结果代码中。&lt;/p&gt;
 
-&lt;p&gt;如我们之前做的一样，我们将新的命令加入&lt;em&gt;package.json&lt;/em&gt;的&lt;code class=&quot;highlighter-rouge&quot;&gt;scripts&lt;/code&gt;中去：&lt;/p&gt;
+&lt;p&gt;如我们之前做的一样，我们将新的命令加入&lt;em&gt;package.json&lt;/em&gt;的 &lt;code class=&quot;highlighter-rouge&quot;&gt;scripts &lt;/code&gt;中去：&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
 &lt;span class=&quot;s2&quot;&gt;&quot;scripts&quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
@@ -545,7 +1059,7 @@ webpack: bundle is now VALID.&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 &lt;p&gt;HMR建立在&lt;em&gt;webpack-dev-server&lt;/em&gt;上。可以即时的替换modules。举个例子，
 &lt;em&gt;style-loader&lt;/em&gt;可以在不强制刷新的情况下更新你的CSS。&lt;/p&gt;
 
-&lt;p&gt;我们可以通过&lt;code class=&quot;highlighter-rouge&quot;&gt;--hot&lt;/code&gt;参数启用HMR,&lt;code class=&quot;highlighter-rouge&quot;&gt;webpack-dev-server --inline -hot&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;我们可以通过 &lt;code class=&quot;highlighter-rouge&quot;&gt;--hot &lt;/code&gt;参数启用HMR, &lt;code class=&quot;highlighter-rouge&quot;&gt;webpack-dev-server --inline -hot &lt;/code&gt;。&lt;/p&gt;
 
 &lt;h3 id=&quot;defining-configuration-for-hmr&quot;&gt;Defining Configuration for HMR&lt;/h3&gt;
 &lt;p&gt;让我们的配置可管理，我将像HMR这样功能性的东西单独分离。
@@ -601,7 +1115,7 @@ webpack: bundle is now VALID.&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;span class=&quot;nx&quot;&gt;module&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;exports&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;validate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;现在运行&lt;code class=&quot;highlighter-rouge&quot;&gt;npm start&lt;/code&gt;然后打开&lt;strong&gt;localhost:8080&lt;/strong&gt;，然后尝试修改&lt;em&gt;app/component.js&lt;/em&gt;。
+&lt;p&gt;现在运行 &lt;code class=&quot;highlighter-rouge&quot;&gt;npm start &lt;/code&gt;然后打开&lt;strong&gt;localhost:8080&lt;/strong&gt;，然后尝试修改&lt;em&gt;app/component.js&lt;/em&gt;。
 浏览器自动刷新。不过需要注意的是，这是整个页面的刷新。&lt;/p&gt;
 
 &lt;blockquote&gt;
@@ -650,24 +1164,24 @@ webpack: bundle is now VALID.&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;ul&gt;
   &lt;li&gt;
-    &lt;p&gt;用多个文件中维护配置，通过&lt;code class=&quot;highlighter-rouge&quot;&gt;--config&lt;/code&gt;参数将Webpack指向到各个配置文件中。
+    &lt;p&gt;用多个文件中维护配置，通过 &lt;code class=&quot;highlighter-rouge&quot;&gt;--config &lt;/code&gt;参数将Webpack指向到各个配置文件中。
 通过模块导入分享配置。可以参考&lt;a href=&quot;https://github.com/webpack/react-starter&quot;&gt;webpack/react-starter&lt;/a&gt;&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
     &lt;p&gt;把配置放入一个库，例如：&lt;a href=&quot;https://github.com/HenrikJoreteg/hjs-webpack&quot;&gt;HenrikJoreteg/hjs-webpack&lt;/a&gt;&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;p&gt;将配置写入一个单独的文件。如果我们通过&lt;em&gt;npm&lt;/em&gt;(i.e.,&lt;code class=&quot;highlighter-rouge&quot;&gt;npm run test&lt;/code&gt;),
+    &lt;p&gt;将配置写入一个单独的文件。如果我们通过&lt;em&gt;npm&lt;/em&gt;(i.e., &lt;code class=&quot;highlighter-rouge&quot;&gt;npm run test &lt;/code&gt;),
 npm会将这个信息设置到环境变量中去。我们可以匹配它，并返回我们想要配置。&lt;/p&gt;
   &lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;在这里，为了方便我们理解我们使用最后一种方法，这里有个&lt;code class=&quot;highlighter-rouge&quot;&gt;webpack-merge&lt;/code&gt;去实现这个方法。&lt;/p&gt;
+&lt;p&gt;在这里，为了方便我们理解我们使用最后一种方法，这里有个 &lt;code class=&quot;highlighter-rouge&quot;&gt;webpack-merge &lt;/code&gt;去实现这个方法。&lt;/p&gt;
 
 &lt;h3 id=&quot;webpack-merge&quot;&gt;webpack-merge&lt;/h3&gt;
 &lt;p&gt;首先安装这个模块&lt;/p&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;npm i webpack-merge --save-dev&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;npm i webpack-merge --save-dev &lt;/code&gt;&lt;/p&gt;
 
 &lt;p&gt;接下来，我们需要为您的配置定义一些拆分点，以便我们可以根据每个npm脚本进行自定义。&lt;/p&gt;
 
@@ -718,7 +1232,7 @@ npm会将这个信息设置到环境变量中去。我们可以匹配它，并�
 &lt;p&gt;&lt;a href=&quot;https://www.npmjs.com/package/webpack-validator&quot;&gt;webpack-validator&lt;/a&gt;
 可以验证配置并提供一些警告。这可以带走我们学习和使用Webpack的痛苦。&lt;/p&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;npm i webpack-validator --save-dev&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;npm i webpack-validator --save-dev &lt;/code&gt;&lt;/p&gt;
 
 &lt;p&gt;直接导入：&lt;/p&gt;
 
@@ -749,15 +1263,15 @@ npm会将这个信息设置到环境变量中去。我们可以匹配它，并�
       <item>
         <title>2016-10-28-webpack-1</title>
         <description>&lt;h3 id=&quot;section&quot;&gt;准备工作&lt;/h3&gt;
-&lt;p&gt;安装最新的版本的&lt;a href=&quot;http://nodejs.org/&quot;&gt;Node.js&lt;/a&gt;，确保你的命令行能执行&lt;code class=&quot;highlighter-rouge&quot;&gt;node&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;npm&lt;/code&gt;;
-同时安装好&lt;code class=&quot;highlighter-rouge&quot;&gt;git&lt;/code&gt;;&lt;/p&gt;
+&lt;p&gt;安装最新的版本的&lt;a href=&quot;http://nodejs.org/&quot;&gt;Node.js&lt;/a&gt;，确保你的命令行能执行 &lt;code class=&quot;highlighter-rouge&quot;&gt;node &lt;/code&gt;和 &lt;code class=&quot;highlighter-rouge&quot;&gt;npm &lt;/code&gt;;
+同时安装好 &lt;code class=&quot;highlighter-rouge&quot;&gt;git &lt;/code&gt;;&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;最好能用&lt;a href=&quot;https://www.vagrantup.com/&quot;&gt;Vagrant&lt;/a&gt; 或者 &lt;a href=&quot;https://www.npmjs.com/package/nvm&quot;&gt;nvm&lt;/a&gt;， 方便管理你node的版本。&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;h3 id=&quot;section-1&quot;&gt;建立项目&lt;/h3&gt;
-&lt;p&gt;为了方便，我们使用&lt;code class=&quot;highlighter-rouge&quot;&gt;git&lt;/code&gt;来管理版本。&lt;/p&gt;
+&lt;p&gt;为了方便，我们使用 &lt;code class=&quot;highlighter-rouge&quot;&gt;git &lt;/code&gt;来管理版本。&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;git&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;init&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;first file&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;file&lt;/span&gt;
@@ -774,17 +1288,17 @@ npm会将这个信息设置到环境变量中去。我们可以匹配它，并�
 &lt;span class=&quot;n&quot;&gt;npm&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;init&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;h3 id=&quot;webpack&quot;&gt;安装Webpack&lt;/h3&gt;
-&lt;p&gt;简单的安装Webpack的方法是直接全局安装&lt;code class=&quot;highlighter-rouge&quot;&gt;npm i webpack -g&lt;/code&gt;,
+&lt;p&gt;简单的安装Webpack的方法是直接全局安装 &lt;code class=&quot;highlighter-rouge&quot;&gt;npm i webpack -g &lt;/code&gt;,
 不过个人的建议是安装到你项目的目录当中，这样避免一些版本控制的问题。&lt;/p&gt;
 
 &lt;p&gt;将Webpack安装到你的项目中&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;npm&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;webpack&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;save&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dev&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;你会发现你的package.json里的&lt;code class=&quot;highlighter-rouge&quot;&gt;devDependencies&lt;/code&gt;多了webpack，
+&lt;p&gt;你会发现你的package.json里的 &lt;code class=&quot;highlighter-rouge&quot;&gt;devDependencies &lt;/code&gt;多了webpack，
 除了安装到node_modules下，npm还生成一个可供执行的入口。&lt;/p&gt;
 
-&lt;p&gt;你可以用&lt;code class=&quot;highlighter-rouge&quot;&gt;npm bin&lt;/code&gt;显示可执行包的确切的路径。你可以尝试用命令行执行node_modules/.bin/webpack
+&lt;p&gt;你可以用 &lt;code class=&quot;highlighter-rouge&quot;&gt;npm bin &lt;/code&gt;显示可执行包的确切的路径。你可以尝试用命令行执行node_modules/.bin/webpack
 执行之后，你会看到版本号的一些信息&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;node_modules&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;bin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;webpack&lt;/span&gt;
@@ -835,7 +1349,7 @@ npm会将这个信息设置到环境变量中去。我们可以匹配它，并�
 &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
 &lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;写一个入口文件，并将组件&lt;code class=&quot;highlighter-rouge&quot;&gt;require&lt;/code&gt;进去。
+&lt;p&gt;写一个入口文件，并将组件 &lt;code class=&quot;highlighter-rouge&quot;&gt;require &lt;/code&gt;进去。
 &lt;strong&gt;app/index.js&lt;/strong&gt;&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
@@ -847,7 +1361,7 @@ npm会将这个信息设置到环境变量中去。我们可以匹配它，并�
 
 &lt;h3 id=&quot;webpack-1&quot;&gt;配置 Webpack&lt;/h3&gt;
 &lt;p&gt;我们通过webpack.config.js文件来告知Webpack我们要做些什么。
-为了让维护变得简单，我们用&lt;code class=&quot;highlighter-rouge&quot;&gt;html-webpack-plugin&lt;/code&gt;来为我们的应用生成index.html。
+为了让维护变得简单，我们用 &lt;code class=&quot;highlighter-rouge&quot;&gt;html-webpack-plugin &lt;/code&gt;来为我们的应用生成index.html。
 &lt;em&gt;html-webpack-plugin&lt;/em&gt;会将生成的资源引入到其中。&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;n&quot;&gt;npm&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;html&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;webpack&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plugin&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;save&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dev&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
@@ -903,11 +1417,11 @@ npm会将这个信息设置到环境变量中去。我们可以匹配它，并�
 &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
 &lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;entry&lt;/code&gt;路径可以是一个相对路径。
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;entry &lt;/code&gt;路径可以是一个相对路径。
 &lt;a href=&quot;https://webpack.github.io/docs/configuration.html#context&quot;&gt;context&lt;/a&gt;字段可用于配置该查找。
 鉴于大量的地方要求使用绝对路径，我倾向于全部使用绝对路径来避免一些困惑。&lt;/p&gt;
 
-&lt;p&gt;现在当你运行&lt;code class=&quot;highlighter-rouge&quot;&gt;node_modules/.bin/webpack&lt;/code&gt;, 你将会看到这些输出：&lt;/p&gt;
+&lt;p&gt;现在当你运行 &lt;code class=&quot;highlighter-rouge&quot;&gt;node_modules/.bin/webpack &lt;/code&gt;, 你将会看到这些输出：&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;Hash: d9bcbc55eb97ef228d44
 Version: webpack 1.13.3
@@ -918,32 +1432,32 @@ app.js  1.69 kB       0  [emitted]  app
    [1] ./app/component.js 145 bytes {0} [built]&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;输出的内容有很多，这里一一讲解一下： &lt;br /&gt;
-- &lt;code class=&quot;highlighter-rouge&quot;&gt;Hash: d9bcbc55eb97ef228d44&lt;/code&gt; - 构建的哈希值。  &lt;br /&gt;
-- &lt;code class=&quot;highlighter-rouge&quot;&gt;Version: webpack 1.13.3&lt;/code&gt; - Webpack的版本。&lt;br /&gt;
-- &lt;code class=&quot;highlighter-rouge&quot;&gt;Time: 53ms&lt;/code&gt; - 构建耗费的时间。&lt;br /&gt;
-- &lt;code class=&quot;highlighter-rouge&quot;&gt;app.js  1.69 kB       0  [emitted]  app&lt;/code&gt; - 分别为生产的资源名，大小，相关的&lt;strong&gt;chunks&lt;/strong&gt;的id,
+-  &lt;code class=&quot;highlighter-rouge&quot;&gt;Hash: d9bcbc55eb97ef228d44 &lt;/code&gt; - 构建的哈希值。  &lt;br /&gt;
+-  &lt;code class=&quot;highlighter-rouge&quot;&gt;Version: webpack 1.13.3 &lt;/code&gt; - Webpack的版本。&lt;br /&gt;
+-  &lt;code class=&quot;highlighter-rouge&quot;&gt;Time: 53ms &lt;/code&gt; - 构建耗费的时间。&lt;br /&gt;
+-  &lt;code class=&quot;highlighter-rouge&quot;&gt;app.js  1.69 kB       0  [emitted]  app &lt;/code&gt; - 分别为生产的资源名，大小，相关的&lt;strong&gt;chunks&lt;/strong&gt;的id,
 生成状态，chunk名。&lt;br /&gt;
-- &lt;code class=&quot;highlighter-rouge&quot;&gt;[0] ./app/index.js 80 bytes {0} [built]&lt;/code&gt; - 生成的资源的id,名字，大小，入口chunk id,生成的方式。 &lt;br /&gt;
-- &lt;code class=&quot;highlighter-rouge&quot;&gt;Child html-webpack-plugin for &quot;index.html&quot;&lt;/code&gt; - 输出的相关组件。 &lt;br /&gt;
-- &lt;code class=&quot;highlighter-rouge&quot;&gt;+ 3 hidden modules&lt;/code&gt; - Webpack忽略一些输出，即&lt;code class=&quot;highlighter-rouge&quot;&gt;node_modules&lt;/code&gt;中的模块和类似目录。
-你可以执行&lt;code class=&quot;highlighter-rouge&quot;&gt;webpack --display-modules&lt;/code&gt;看看信息。&lt;a href=&quot;https://stackoverflow.com/questions/28858176/what-does-webpack-mean-by-xx-hidden-modules&quot;&gt;更多解释&lt;/a&gt;。&lt;/p&gt;
+-  &lt;code class=&quot;highlighter-rouge&quot;&gt;[0] ./app/index.js 80 bytes {0} [built] &lt;/code&gt; - 生成的资源的id,名字，大小，入口chunk id,生成的方式。 &lt;br /&gt;
+-  &lt;code class=&quot;highlighter-rouge&quot;&gt;Child html-webpack-plugin for &quot;index.html&quot; &lt;/code&gt; - 输出的相关组件。 &lt;br /&gt;
+-  &lt;code class=&quot;highlighter-rouge&quot;&gt;+ 3 hidden modules &lt;/code&gt; - Webpack忽略一些输出，即 &lt;code class=&quot;highlighter-rouge&quot;&gt;node_modules &lt;/code&gt;中的模块和类似目录。
+你可以执行 &lt;code class=&quot;highlighter-rouge&quot;&gt;webpack --display-modules &lt;/code&gt;看看信息。&lt;a href=&quot;https://stackoverflow.com/questions/28858176/what-does-webpack-mean-by-xx-hidden-modules&quot;&gt;更多解释&lt;/a&gt;。&lt;/p&gt;
 
-&lt;p&gt;检查&lt;code class=&quot;highlighter-rouge&quot;&gt;build/&lt;/code&gt;目录下，如果你仔细看，你会发一些id在你的资源里面。
+&lt;p&gt;检查 &lt;code class=&quot;highlighter-rouge&quot;&gt;build/ &lt;/code&gt;目录下，如果你仔细看，你会发一些id在你的资源里面。
 &lt;img src=&quot;/webpack/images/A8E62B5F-5274-4F80-88DA-EF0FA7824F4A.png&quot; alt=&quot;ids within source&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;打开&lt;code class=&quot;highlighter-rouge&quot;&gt;build/index.html&lt;/code&gt;，你会看到你的应用输出hello world。&lt;/p&gt;
+&lt;p&gt;打开 &lt;code class=&quot;highlighter-rouge&quot;&gt;build/index.html &lt;/code&gt;，你会看到你的应用输出hello world。&lt;/p&gt;
 
 &lt;blockquote&gt;
-  &lt;p&gt;你可以使用工具像&lt;em&gt;serve&lt;/em&gt;(&lt;code class=&quot;highlighter-rouge&quot;&gt;npm i serve -g&lt;/code&gt;)为了的构建目录启动一个服务。
-在你的输出目录下执行&lt;code class=&quot;highlighter-rouge&quot;&gt;serve&lt;/code&gt;,然后用浏览器打开&lt;code class=&quot;highlighter-rouge&quot;&gt;localhost:3000&lt;/code&gt;,你也可以通过&lt;code class=&quot;highlighter-rouge&quot;&gt;--port&lt;/code&gt;参数设置你的端口。&lt;/p&gt;
+  &lt;p&gt;你可以使用工具像&lt;em&gt;serve&lt;/em&gt;( &lt;code class=&quot;highlighter-rouge&quot;&gt;npm i serve -g &lt;/code&gt;)为了的构建目录启动一个服务。
+在你的输出目录下执行 &lt;code class=&quot;highlighter-rouge&quot;&gt;serve &lt;/code&gt;,然后用浏览器打开 &lt;code class=&quot;highlighter-rouge&quot;&gt;localhost:3000 &lt;/code&gt;,你也可以通过 &lt;code class=&quot;highlighter-rouge&quot;&gt;--port &lt;/code&gt;参数设置你的端口。&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;blockquote&gt;
-  &lt;p&gt;可以用&lt;code class=&quot;highlighter-rouge&quot;&gt;path.resolve&lt;/code&gt;代替&lt;code class=&quot;highlighter-rouge&quot;&gt;path.join&lt;/code&gt;。更多的细节可以参考&lt;a href=&quot;https://nodejs.org/api/path.html&quot;&gt;Node.js path API&lt;/a&gt;。&lt;/p&gt;
+  &lt;p&gt;可以用 &lt;code class=&quot;highlighter-rouge&quot;&gt;path.resolve &lt;/code&gt;代替 &lt;code class=&quot;highlighter-rouge&quot;&gt;path.join &lt;/code&gt;。更多的细节可以参考&lt;a href=&quot;https://nodejs.org/api/path.html&quot;&gt;Node.js path API&lt;/a&gt;。&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;h3 id=&quot;section-4&quot;&gt;添加构建的快捷方式&lt;/h3&gt;
-&lt;p&gt;鉴于执行&lt;code class=&quot;highlighter-rouge&quot;&gt;node_modules/.bin/webpack&lt;/code&gt;有点冗长，我们通过npm和package.json来实现一些东西。
+&lt;p&gt;鉴于执行 &lt;code class=&quot;highlighter-rouge&quot;&gt;node_modules/.bin/webpack &lt;/code&gt;有点冗长，我们通过npm和package.json来实现一些东西。
 把我们的package.json调整一下：&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;package.json&lt;/strong&gt;&lt;/p&gt;
@@ -964,52 +1478,6 @@ app.js  1.69 kB       0  [emitted]  app
         <pubDate>Fri, 28 Oct 2016 04:34:00 +0800</pubDate>
         <link>https://whatthecole.github.io/webpack//webpack/webpack/2016/10/28/webpack-1.html</link>
         <guid isPermaLink="true">https://whatthecole.github.io/webpack//webpack/webpack/2016/10/28/webpack-1.html</guid>
-        
-        
-        <category>webpack</category>
-        
-      </item>
-    
-      <item>
-        <title>webpack 介绍</title>
-        <description>&lt;h1 id=&quot;section&quot;&gt;介绍&lt;/h1&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://webpack.github.io/&quot;&gt;Webpack&lt;/a&gt; 通过解决一个基本的问题–绑定问题，来简化了web开发。解决了开发中许多痛苦的问题。&lt;/p&gt;
-
-&lt;p&gt;由于它是配置驱动方法，所以webpack并不是一个容易学的工具。&lt;/p&gt;
-
-&lt;h3 id=&quot;webpack-&quot;&gt;Webpack 是什么&lt;/h3&gt;
-&lt;p&gt;web开发的三大要素是HTML,JavaScript和CSS。
-最简单的开发方式是直接写文件。不过这样最终会变得很笨重。&lt;/p&gt;
-
-&lt;p&gt;最幼稚的方式去加载JavaScript是将其所有绑定在一个单独的文件中。
-不过这样的做法是不行的，你需要将这些JavaScript文件分割开来，这样有利于缓存这些文件。
-你可以在需要这些依赖的时候动态加载它们。随着应用程序的发展，复杂度也随之上升。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://webpack.github.io/&quot;&gt;Webpack&lt;/a&gt;是针对这些问题而开发出来的。
-它能处理上述的那些问题。
-它能通过工具实现一些结果，以及创建你需要的工作流。
-事实上，这能满足一般的需求。
-像Grunt、Gulp也可以实现这些，不过你要手写许多配置。&lt;/p&gt;
-
-&lt;h3 id=&quot;webpack--1&quot;&gt;Webpack 如何改变这些情况&lt;/h3&gt;
-&lt;p&gt;Webpack另辟蹊径。它允许你对待你的项目就像一个依赖图表一样。
-假设你项目中有一个index.js文件，您可以通过&lt;code class=&quot;highlighter-rouge&quot;&gt;import&lt;/code&gt;语句引入项目所需要的依赖。
-同样的方式也适用于样式文件及其他资源。&lt;/p&gt;
-
-&lt;p&gt;Webpack为你预先处理所有事情，并且给你配置指定的绑定依赖。这种声明的方法十分强大，
-不过有点难学。然后，一旦你开始懂得了Webpack是如何工作的，它将变成不过或缺的工具。&lt;/p&gt;
-
-&lt;h3 id=&quot;developing-with-webpack&quot;&gt;Developing with Webpack&lt;/h3&gt;
-&lt;p&gt;Webpack是配置驱动，一般配置文件名为webpack.config.js。
-配置文件定义了你项目的输入输出。最重要的，它修饰了你运行的转化的类型。
-这些转化被定义使用&lt;em&gt;loaders&lt;/em&gt;和&lt;em&gt;plugins&lt;/em&gt;来实现目的。&lt;/p&gt;
-
-&lt;p&gt;在这个部分我会向你如何建立一个基础的开发配置基于Webpack。&lt;/p&gt;
-</description>
-        <pubDate>Thu, 27 Oct 2016 19:29:30 +0800</pubDate>
-        <link>https://whatthecole.github.io/webpack//webpack/webpack/2016/10/27/webpack-0.html</link>
-        <guid isPermaLink="true">https://whatthecole.github.io/webpack//webpack/webpack/2016/10/27/webpack-0.html</guid>
         
         
         <category>webpack</category>

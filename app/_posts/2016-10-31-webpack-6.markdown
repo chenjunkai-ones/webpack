@@ -10,12 +10,12 @@ categories: webpack
 
 首先是压缩，简化代码的同时不会对代码解析失去任何意义。
 
-> 即使我们压缩了我们的代码，我们依然可以生成资源映射通过`devtool`。
+> 即使我们压缩了我们的代码，我们依然可以生成资源映射通过 `devtool `。
 这样可以更好的调试，尽管是发布产品的代码。
 
 现在项目还没有什么内容，我们先安装个React:
 
-`npm i react --save`
+ `npm i react --save `
 
 然后添加React依赖到项目里面：
 
@@ -27,7 +27,7 @@ require('react');
 ...
 {% endhighlight %}
 
-现在运行`npm run build`。
+现在运行 `npm run build `。
 
 {% highlight text %}
 Hash: d6c9f1017d63b25287b4
@@ -46,7 +46,7 @@ Child html-webpack-plugin for "index.html":
 
 155KB有点大。现在我们来压缩它
 
-最简单的方式是 `webpack -p`. `-p`是`--optimize-minimize`的快捷方式。
+最简单的方式是  `webpack -p `.  `-p `是 `--optimize-minimize `的快捷方式。
 或者我们可以直接用为我们提供更多功能的插件。
 默认的情况下Uglify会输出很多警告，在这种情况下它们不提供值。
 我们将禁用它们。
@@ -89,7 +89,7 @@ switch (process.env.npm_lifecycle_event) {
 }
 {% endhighlight %}
 
-如果运行`npm run build`,你会看到以下结果：
+如果运行 `npm run build `,你会看到以下结果：
 {% highlight text %}
 Hash: c1a3495508496d5dcccd
 Version: webpack 1.13.3
@@ -146,7 +146,7 @@ new webpack.optimize.UglifyJsPlugin({
   }
 })
 {% endhighlight %}
-如果启用了mangling，最好设置`except: ['webpackJsonp']`避免mangling了Webpack运行时。
+如果启用了mangling，最好设置 `except: ['webpackJsonp'] `避免mangling了Webpack运行时。
 
 > 另外的一种方法是用[uglify-loader](https://www.npmjs.com/package/uglify-loader)。
 

@@ -68,7 +68,7 @@ Webpack不需要强制刷新浏览器。这里有更聪明的做法。</p>
 <h3 id="css">加载CSS</h3>
 <p>我们首先需要这两个加载器(loaders)。</p>
 
-<p><code class="highlighter-rouge">npm i css-loader style-loader --save-dev</code></p>
+<p><code class="highlighter-rouge">npm i css-loader style-loader --save-dev </code></p>
 
 <p><strong>libs/parts.js</strong></p>
 
@@ -109,12 +109,12 @@ Webpack不需要强制刷新浏览器。这里有更聪明的做法。</p>
 
 <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">validate</span><span class="p">(</span><span class="nx">config</span><span class="p">);</span></code></pre></figure>
 
-<p><code class="highlighter-rouge">test</code>接收一个正则表达式，匹配的文件会通知特定的加载器。
+<p><code class="highlighter-rouge">test </code>接收一个正则表达式，匹配的文件会通知特定的加载器。
 加载器的执行时从右到左。</p>
 
 <p>在上面的代码中，<em>css-loader</em>会先执行，然后再执行<em>style-loader</em>。
-<code class="highlighter-rouge">css-loader</code>会解析CSS文件中的<code class="highlighter-rouge">@import</code>和<code class="highlighter-rouge">url</code>语句。
-<code class="highlighter-rouge">style-loader</code>处理JavaScript中的<code class="highlighter-rouge">require</code>语句。
+ <code class="highlighter-rouge">css-loader </code>会解析CSS文件中的 <code class="highlighter-rouge">@import </code>和 <code class="highlighter-rouge">url </code>语句。
+ <code class="highlighter-rouge">style-loader </code>处理JavaScript中的 <code class="highlighter-rouge">require </code>语句。
 CSS预处理语言，如Sass和Less。也是用这样的方式。</p>
 
 <blockquote>
@@ -128,7 +128,7 @@ CSS预处理语言，如Sass和Less。也是用这样的方式。</p>
     <span class="nl">background</span><span class="p">:</span> <span class="no">cornsilk</span><span class="p">;</span>
 <span class="p">}</span></code></pre></figure>
 
-<p>Webpack不会处理没被<code class="highlighter-rouge">require</code>的文件。</p>
+<p>Webpack不会处理没被 <code class="highlighter-rouge">require </code>的文件。</p>
 
 <p><strong>app/index.js</strong></p>
 
@@ -140,12 +140,12 @@ CSS预处理语言，如Sass和Less。也是用这样的方式。</p>
 修改main.css，会看到网页样式随之更改。</p>
 
 <h3 id="csscss">理解CSS作用域和CSS模块</h3>
-<p>当你像这样<code class="highlighter-rouge">require</code>一个CSS文件，Webpack会将其绑定到你<code class="highlighter-rouge">require</code>它的地方。
-假设你用<em>style-loader</em>，Webpack会将它写到一个<code class="highlighter-rouge">style</code>标签中。这意味着，默认的情况下，这个文件被作用于全局作用域中。</p>
+<p>当你像这样 <code class="highlighter-rouge">require </code>一个CSS文件，Webpack会将其绑定到你 <code class="highlighter-rouge">require </code>它的地方。
+假设你用<em>style-loader</em>，Webpack会将它写到一个 <code class="highlighter-rouge">style </code>标签中。这意味着，默认的情况下，这个文件被作用于全局作用域中。</p>
 
 <p><a href="https://github.com/css-modules/css-modules">CSS Modules</a>
 是一个CSS文件，其中默认情况下所有类名和动画名称都在局部作用域里。
-所有的<code class="highlighter-rouge">(url(...))</code>和<code class="highlighter-rouge">@imports</code>都是模块请求模式(<code class="highlighter-rouge">./xxx</code>和<code class="highlighter-rouge">../xxx</code>代表相对路径，<code class="highlighter-rouge">xxx</code>和<code class="highlighter-rouge">xxx/yyy</code>代表模块文件夹)。</p>
+所有的 <code class="highlighter-rouge">(url(...)) </code>和 <code class="highlighter-rouge">@imports </code>都是模块请求模式( <code class="highlighter-rouge">./xxx </code>和 <code class="highlighter-rouge">../xxx </code>代表相对路径， <code class="highlighter-rouge">xxx </code>和 <code class="highlighter-rouge">xxx/yyy </code>代表模块文件夹)。</p>
 
 <p>CSS Modules 编译成一个低级交换格式称为ICSS或者<a href="https://github.com/css-modules/icss">interoperable CSS</a>,
 但是像正常的CSS文件一样。</p>
@@ -178,13 +178,13 @@ CSS预处理语言，如Sass和Less。也是用这样的方式。</p>
   <span class="nl">color</span><span class="p">:</span> <span class="no">yellow</span><span class="p">;</span>
 <span class="p">}</span></code></pre></figure>
 
-<p>这里需要注意的是，<code class="highlighter-rouge">composes</code>的选择器要在其它的之前。继承只能对于同个本地作用域的选择器和它只是一个单独的类名。
-当一个类名<code class="highlighter-rouge">composes</code>到另一个类名，CSS Modules导出本地类的两个类名。这可以添加多个类名。
-<code class="highlighter-rouge">compose: classNameA classNameB</code>。</p>
+<p>这里需要注意的是， <code class="highlighter-rouge">composes </code>的选择器要在其它的之前。继承只能对于同个本地作用域的选择器和它只是一个单独的类名。
+当一个类名 <code class="highlighter-rouge">composes </code>到另一个类名，CSS Modules导出本地类的两个类名。这可以添加多个类名。
+ <code class="highlighter-rouge">compose: classNameA classNameB </code>。</p>
 
 <p>依赖</p>
 
-<p>从其它的CSS Modules<code class="highlighter-rouge">compose</code>类名进来。</p>
+<p>从其它的CSS Modules <code class="highlighter-rouge">compose </code>类名进来。</p>
 
 <figure class="highlight"><pre><code class="language-css" data-lang="css"><span class="nc">.otherClassName</span> <span class="p">{</span>
     <span class="py">compose</span><span class="p">:</span> <span class="n">className</span> <span class="n">from</span> <span class="s1">"./style.css"</span><span class="p">;</span>

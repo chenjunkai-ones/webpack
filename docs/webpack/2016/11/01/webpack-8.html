@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>2016-11-01-webpack-8</title>
+  <meta name="description" content="目前我们的应用就只是一个单一的文件，这样并不理想，如果我们改变了应用，客户端会连同依赖一并下载。我们只想它下载改变了的部分。如果依赖改变了，客户端应该只获取依赖。实际应用的代码也是如此。">
+
+  <link rel="stylesheet" href="/webpack/css/main.css">
+  <link rel="canonical" href="https://whatthecole.github.io/webpack//webpack/webpack/2016/11/01/webpack-8.html">
+  <link rel="alternate" type="application/rss+xml" title="webpack" href="https://whatthecole.github.io/webpack//webpack/feed.xml">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/webpack/">webpack</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/webpack/about/">About</a>
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">2016-11-01-webpack-8</h1>
+    <p class="post-meta"><time datetime="2016-11-01T11:45:00+08:00" itemprop="datePublished">Nov 1, 2016</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>目前我们的应用就只是一个单一的文件，
+这样并不理想，如果我们改变了应用，客户端会连同依赖一并下载。
+我们只想它下载改变了的部分。如果依赖改变了，客户端应该只获取依赖。
+实际应用的代码也是如此。</p>
+
+<p><strong>bundle splitting</strong>，可以把依赖捆绑到自己包上，这样有利于客户端缓存。
+我们依然可以保持整个应用的大小跟之前一样，不过这样会增加一些网络请求，会带来一部分开销。
+不过缓存的好处可以弥补这部分开销。</p>
+
+<p>简单来说，假设我们有一个<em>app.js</em>(100KB),我们可以将它切割成<em>app.js</em>和<em>vendor.js</em>。
+这样对于那些之前使用过应用的客户端来说，应用改变的代价变小了。</p>
+
+<p>缓存也会带来一些问题。其中有一个就是缓存失效的问题。
+不过我们之后再来讨论，我们先来分割一些捆绑包。</p>
+
+<p>目前为止我们的项目只有个一入口 <code class="highlighter-rouge">app </code>。我们从 <code class="highlighter-rouge">app </code>目录输出到 <code class="highlighter-rouge">build </code>目录。</p>
+
+<p>为了改善情况，我们定义一个包含React的 <code class="highlighter-rouge">vendor </code>的入口。</p>
+
+<p><strong>webpack.config.js</strong></p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="p">...</span>
+
+<span class="kr">const</span> <span class="nx">common</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1">//入口采用一个路径或者是一个入口对象</span>
+    <span class="na">entry</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">app</span><span class="p">:</span> <span class="nx">PATH</span><span class="p">.</span><span class="nx">app</span><span class="p">,</span>
+        <span class="na">vendor</span><span class="p">:</span> <span class="p">[</span><span class="s1">'react'</span><span class="p">]</span>
+    <span class="p">},</span>
+    <span class="na">output</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">path</span><span class="p">:</span> <span class="nx">PATH</span><span class="p">.</span><span class="nx">build</span><span class="p">,</span>
+        <span class="na">filename</span><span class="p">:</span> <span class="s1">'[name].js'</span>
+    <span class="p">},</span>
+    <span class="na">plugins</span><span class="p">:</span> <span class="p">[</span>
+        <span class="k">new</span> <span class="nx">HtmlWebpackPlugin</span><span class="p">({</span>
+            <span class="na">title</span><span class="p">:</span> <span class="s1">'Webpack demo'</span>
+        <span class="p">})</span>
+    <span class="p">]</span>
+<span class="p">};</span>
+
+<span class="p">...</span></code></pre></figure>
+
+<p>我们拥有两个单独的入口，或者叫<strong>entry chunks</strong>。
+现在运行 <code class="highlighter-rouge">npm run build </code>;</p>
+
+<figure class="highlight"><pre><code class="language-text" data-lang="text">Hash: 985a128e4956eb9a22da
+Version: webpack 1.13.3
+Time: 2187ms
+        Asset       Size  Chunks             Chunk Names
+       app.js    24.2 kB       0  [emitted]  app
+    vendor.js    20.2 kB       1  [emitted]  vendor
+   app.js.map     295 kB       0  [emitted]  app
+vendor.js.map     265 kB       1  [emitted]  vendor
+   index.html  236 bytes          [emitted]
+   [0] ./app/index.js 121 bytes {0} [built]
+   [0] multi vendor 28 bytes {1} [built]
+  [34] ./app/component.js 228 bytes {0} [built]
+    + 33 hidden modules
+Child html-webpack-plugin for "index.html":
+        + 3 hidden modules</code></pre></figure>
+
+<p>现在<em>app.js</em>和<em>vendor.js</em>有了单独的chunk id，尽管输出的大小有点偏差。
+<em>app.js</em>应该更小一点。</p>
+
+<p>检查你的输出结果，你会发现app.js包含了React。Webpack默认会将相关的依赖加入文件中。
+如下图：
+<img src="http://survivejs.com/webpack/images/bundle_01.png" alt="Webpack" /></p>
+
+<p><code class="highlighter-rouge">CommonsChunkPlugin </code>插件允许我们改变这种默认的行为，这样我们就可以达到我们的预期效果了。</p>
+
+<h3 id="commonschunkplugin">CommonsChunkPlugin</h3>
+
+<p><a href="https://webpack.github.io/docs/list-of-plugins.html#commonschunkplugin">CommonsChunkPlugin</a>
+是一个复杂且强悍的插件。为了让我们以后的工作更简单，我们提取一个的文件–<strong>manifest</strong>。
+它包含启动整个应用程序并包含其所需的依赖性信息的Webpack运行时。这样可以避免一系列的问题。尽管浏览器需要加载多一个文件，
+但是它允许我们去实现一个可靠的缓存，这个将会在接下讨论。</p>
+
+<p>如果我们不提取一个manifest，Webpack将会把运行时生成在vendor绑定包中。
+一旦我们修改了应用代码，应用的绑定包hash将会改变。正因为hash改变，运行时的实现也会改变，因为它是用hash来加载应用绑定的。
+由于这样，vendor绑定也会得到一个新hash。这样也是为什么我们要把manifest单独开来，这样做可以避免一些问题。</p>
+
+<p><strong>libs/parts.js</strong></p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="p">...</span>
+
+<span class="nx">exports</span><span class="p">.</span><span class="nx">extractBundle</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kr">const</span> <span class="nx">entry</span> <span class="o">=</span> <span class="p">{};</span>
+    <span class="nx">entry</span><span class="p">[</span><span class="nx">options</span><span class="p">.</span><span class="nx">name</span><span class="p">]</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">entries</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="na">entry</span><span class="p">:</span> <span class="nx">entry</span><span class="p">,</span>
+        <span class="na">plugins</span><span class="p">:</span> <span class="p">[</span>
+            <span class="k">new</span> <span class="nx">webpack</span><span class="p">.</span><span class="nx">optimize</span><span class="p">.</span><span class="nx">CommonsChunkPlugin</span><span class="p">({</span>
+                <span class="na">names</span><span class="p">:</span> <span class="p">[</span><span class="nx">options</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span> <span class="s1">'manifest'</span><span class="p">]</span>
+            <span class="p">})</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">};</span></code></pre></figure>
+
+<p>我们现在可以把相关的 <code class="highlighter-rouge">vendor </code>配置去掉了，用extractBundle函数替代：</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="p">...</span>
+
+<span class="kr">const</span> <span class="nx">common</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1">//入口采用一个路径或者是一个入口对象</span>
+    <span class="na">entry</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">app</span><span class="p">:</span> <span class="nx">PATH</span><span class="p">.</span><span class="nx">app</span>
+    <span class="p">},</span>
+    <span class="na">output</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">path</span><span class="p">:</span> <span class="nx">PATH</span><span class="p">.</span><span class="nx">build</span><span class="p">,</span>
+        <span class="na">filename</span><span class="p">:</span> <span class="s1">'[name].js'</span>
+    <span class="p">},</span>
+    <span class="na">plugins</span><span class="p">:</span> <span class="p">[</span>
+        <span class="k">new</span> <span class="nx">HtmlWebpackPlugin</span><span class="p">({</span>
+            <span class="na">title</span><span class="p">:</span> <span class="s1">'Webpack demo'</span>
+        <span class="p">})</span>
+    <span class="p">]</span>
+<span class="p">};</span>
+
+<span class="p">...</span>
+
+<span class="k">switch</span> <span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">npm_lifecycle_event</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="s1">'build'</span><span class="err">:</span>
+        <span class="nx">config</span> <span class="o">=</span> <span class="nx">merge</span><span class="p">(</span>
+            <span class="nx">common</span><span class="p">,</span>
+            <span class="p">{</span>
+                <span class="na">devtool</span><span class="p">:</span> <span class="s1">'source-map'</span>
+            <span class="p">},</span>
+            <span class="nx">parts</span><span class="p">.</span><span class="nx">setFreeVariable</span><span class="p">(</span>
+                <span class="s1">'process.env.NODE_ENV'</span><span class="p">,</span>
+                <span class="s1">'production'</span>
+            <span class="p">),</span>
+            <span class="nx">parts</span><span class="p">.</span><span class="nx">extractBundle</span><span class="p">({</span>
+                <span class="na">name</span><span class="p">:</span> <span class="s1">'vendor'</span><span class="p">,</span>
+                <span class="na">entries</span><span class="p">:</span> <span class="p">[</span><span class="s1">'react'</span><span class="p">]</span>
+            <span class="p">}),</span>
+            <span class="nx">parts</span><span class="p">.</span><span class="nx">minify</span><span class="p">(),</span>
+            <span class="nx">parts</span><span class="p">.</span><span class="nx">setupCSS</span><span class="p">(</span><span class="nx">PATH</span><span class="p">.</span><span class="nx">app</span><span class="p">)</span>
+        <span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="nl">default</span> <span class="p">:</span>
+        <span class="p">...</span>
+<span class="p">}</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">validate</span><span class="p">(</span><span class="nx">config</span><span class="p">);</span></code></pre></figure>
+
+<p>执行 <code class="highlighter-rouge">npm run build </code></p>
+
+<figure class="highlight"><pre><code class="language-text" data-lang="text">Hash: 141575b511b4c7f0f9f9
+Version: webpack 1.13.3
+Time: 1743ms
+          Asset       Size  Chunks             Chunk Names
+         app.js    4.07 kB    0, 2  [emitted]  app
+      vendor.js      20 kB    1, 2  [emitted]  vendor
+    manifest.js  774 bytes       2  [emitted]  manifest
+     app.js.map    31.2 kB    0, 2  [emitted]  app
+  vendor.js.map     262 kB    1, 2  [emitted]  vendor
+manifest.js.map    8.71 kB       2  [emitted]  manifest
+     index.html  294 bytes          [emitted]
+   [0] ./app/index.js 121 bytes {0} [built]
+   [0] multi vendor 28 bytes {1} [built]
+  [34] ./app/component.js 228 bytes {0} [built]
+    + 33 hidden modules
+Child html-webpack-plugin for "index.html":
+        + 3 hidden modules</code></pre></figure>
+
+<p>现在的结果就是我们想要的了：
+<img src="http://survivejs.com/webpack/images/bundle_02.png" alt="webpack" /></p>
+
+<blockquote>
+  <p>除了这样，我们可以通过<a href="https://webpack.github.io/docs/code-splitting.html">require.ensure</a>异步加载</p>
+</blockquote>
+
+<h3 id="vendor">自动加载依赖到vendor绑定</h3>
+<p>如果你严格区分 <code class="highlighter-rouge">dependencies </code>和 <code class="highlighter-rouge">devDependencies </code>,那么下面的方法可以让Webpack可以自动选出 <code class="highlighter-rouge">vendor </code>依赖。</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="p">...</span>
+
+<span class="kr">const</span> <span class="nx">pkg</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'./package.json'</span><span class="p">);</span>
+
+<span class="p">...</span>
+
+<span class="kr">const</span> <span class="nx">common</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">entry</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">app</span><span class="p">:</span> <span class="nx">PATH</span><span class="p">.</span><span class="nx">app</span><span class="p">,</span>
+        <span class="na">vendor</span><span class="p">:</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">pkg</span><span class="p">.</span><span class="nx">dependencies</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+
+<span class="p">...</span></code></pre></figure>
+
+<p>当然你想排除一些依赖时， 你可以用 <code class="highlighter-rouge">filter </code>。</p>
+
+<h3 id="section">小结</h3>
+
+<p><a href="http://survivejs.com/webpack/building-with-webpack/splitting-bundles/">原文地址</a></p>
+
+  </div>
+
+</article>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">webpack</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>webpack</li>
+          <li><a href="mailto:302656338@qq.com">302656338@qq.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/whatthecole"><span class="icon icon--github"><svg viewBox="0 0 16 16"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">whatthecole</span></a>
+
+          </li>
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p></p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

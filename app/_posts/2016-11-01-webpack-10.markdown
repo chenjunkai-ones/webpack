@@ -1,0 +1,69 @@
+---
+layout: post
+title: "2016-11-01-webpack-10"
+date: 2016-11-01 22:56:00 +0800
+categories: webpack
+---
+
+我们当前的设置并没有在两次构建之间清除`build`目录。
+你可以通过npm脚本出发`rm -rf ./build && webpack`。
+也可以通过插件来清除目录。
+
+### 设置clean-webpack-plugin
+首先安装 [clean-webpack-plugin](https://www.npmjs.com/package/clean-webpack-plugin)
+
+`npm i clean-webpack-plugin --save-dev`
+
+**libs/parts.js**
+{% highlight javascript %}
+const webpack = require('webpack');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+...
+
+exports.clean = function(path) {
+    return {
+        plugins: [
+            new CleanWebpackPlugin([path], {
+                root: process.cwd()
+            })
+        ]      
+    }
+};
+{% endhighlight %}
+
+**webpack.config.js**
+{% highlight javascript %}
+...
+
+switch (process.env.npm_lifecycle_event) {
+    case 'build':
+        config = merge(
+            common,
+            {
+                devtool: 'source-map',
+                output: {
+                    path: PATHS.build,
+                    filename: '[name].[chunkhash].js',
+                    chunkFilename: '[chunkhash].js'
+                }
+            },
+            parts.clean(PATHS.build),
+            ...
+        );
+        break;
+    default :
+        ...
+}
+
+
+{% endhighlight %}
+
+这样就能保证每次构建之后 `build` 目录始终保持整洁。
+
+> 如果你想保护你的隐藏文件。你可以使用 `path.join(PATHS.build, '*')` 替换掉 `PATHS.build`。
+
+### 小结
+
+[原文地址](http://survivejs.com/webpack/building-with-webpack/cleaning-build/)
+
+### 小结

@@ -1,0 +1,145 @@
+---
+layout: post
+title: "2016-11-01-webpack-7"
+date: 2016-11-01 01:20:00 +0800
+categories: webpack
+---
+### 设置环境变量
+React 依赖于基于 `process.env.NODE_ENV `的优化。如果把环境变量设置为 `production `，React将会以一种优化的方式去构建。
+这样会禁用一些检查。例如原型类型检查(property type checks)。最重要的是构建之后的体积会更小而且提高了性能。
+
+### DefinePlugin
+Webpack 提供了  `DefinePlugin `。它能重写匹配自由变量(free variables)。如下：
+
+{% highlight javascript %}
+var foo;
+
+// Not free, not ok to replace
+if(foo === 'bar') {
+  console.log('bar');
+}
+
+// Free, ok to replace
+if(bar === 'bar') {
+  console.log('bar');
+}
+{% endhighlight %}
+
+如果我们将 `bar `替换成 `'bar' `,如下：
+
+{% highlight javascript %}
+var foo;
+
+// Not free, not ok to replace
+if(foo === 'bar') {
+  console.log('bar');
+}
+
+// Free, ok to replace
+if('bar' === 'bar') {
+  console.log('bar');
+}
+{% endhighlight %}
+
+进一步分析 `'bar' === 'bar' `等于 `true `，所以UglifyJS会将代码格式化成：
+
+{% highlight javascript %}
+var foo;
+
+// Not free, not ok to replace
+if(foo === 'bar') {
+  console.log('bar');
+}
+
+// Free, ok to replace
+if(true) {
+  console.log('bar');
+}
+{% endhighlight %}
+
+而且UglifyJS可以排除一些 `if `语句：
+
+{% highlight javascript %}
+var foo;
+
+// Not free, not ok to replace
+if(foo === 'bar') {
+  console.log('bar');
+}
+
+// Free, ok to replace
+console.log('bar');
+{% endhighlight %}
+
+这就是 `DefinePlugin `的核心理念。利用这种技巧我们可以切换部分代码。
+UglifyJS能够为我们执行分析，并启用或禁用我们想启用或禁用的整个部分。
+
+### 设置process.env.NODE_ENV
+
+**libs/parts.js**
+{% highlight javascript %}
+...
+
+exports.setFreeVariable = function (key, value) {
+    const env = {};
+    env[key] = JSON.stringify(value);
+
+    return {
+        plugins: [
+            new webpack.DefinePlugin(env)
+        ]
+    };
+};
+{% endhighlight %}
+
+**webpack.config.js**
+{% highlight javascript %}
+...
+
+switch (process.env.npm_lifecycle_event) {
+    case 'build':
+        config = merge(
+            common,
+            {
+                devtool: 'source-map'
+            },
+            parts.setFreeVariable(
+                'process.env.NODE_ENV',
+                'production'
+            ),
+            parts.minify(),
+            parts.setupCSS(PATH.app)
+        );
+        break;
+    default :
+        ...
+}
+
+module.exports = validate(config);
+{% endhighlight %}
+
+执行 `npm run build `：
+
+{% highlight text %}
+Hash: 6c5477b354dc8086006f
+Version: webpack 1.13.3
+Time: 1803ms
+     Asset       Size  Chunks             Chunk Names
+    app.js    24.2 kB       0  [emitted]  app
+app.js.map     295 kB       0  [emitted]  app
+index.html  180 bytes          [emitted]
+   [0] ./app/index.js 121 bytes {0} [built]
+  [34] ./app/component.js 228 bytes {0} [built]
+    + 33 hidden modules
+Child html-webpack-plugin for "index.html":
+        + 3 hidden modules
+{% endhighlight %}
+
+我们从155kb到44.8kb。到现在的24.2kb。我们在通过gzip再压缩40%。
+
+### 小结
+[原文地址](http://survivejs.com/webpack/building-with-webpack/setting-environment-variables/)
+
+
+
+

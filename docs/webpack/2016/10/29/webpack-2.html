@@ -68,24 +68,24 @@
 
 <ul>
   <li>
-    <p>用多个文件中维护配置，通过<code class="highlighter-rouge">--config</code>参数将Webpack指向到各个配置文件中。
+    <p>用多个文件中维护配置，通过 <code class="highlighter-rouge">--config </code>参数将Webpack指向到各个配置文件中。
 通过模块导入分享配置。可以参考<a href="https://github.com/webpack/react-starter">webpack/react-starter</a></p>
   </li>
   <li>
     <p>把配置放入一个库，例如：<a href="https://github.com/HenrikJoreteg/hjs-webpack">HenrikJoreteg/hjs-webpack</a></p>
   </li>
   <li>
-    <p>将配置写入一个单独的文件。如果我们通过<em>npm</em>(i.e.,<code class="highlighter-rouge">npm run test</code>),
+    <p>将配置写入一个单独的文件。如果我们通过<em>npm</em>(i.e., <code class="highlighter-rouge">npm run test </code>),
 npm会将这个信息设置到环境变量中去。我们可以匹配它，并返回我们想要配置。</p>
   </li>
 </ul>
 
-<p>在这里，为了方便我们理解我们使用最后一种方法，这里有个<code class="highlighter-rouge">webpack-merge</code>去实现这个方法。</p>
+<p>在这里，为了方便我们理解我们使用最后一种方法，这里有个 <code class="highlighter-rouge">webpack-merge </code>去实现这个方法。</p>
 
 <h3 id="webpack-merge">webpack-merge</h3>
 <p>首先安装这个模块</p>
 
-<p><code class="highlighter-rouge">npm i webpack-merge --save-dev</code></p>
+<p><code class="highlighter-rouge">npm i webpack-merge --save-dev </code></p>
 
 <p>接下来，我们需要为您的配置定义一些拆分点，以便我们可以根据每个npm脚本进行自定义。</p>
 
@@ -136,7 +136,7 @@ npm会将这个信息设置到环境变量中去。我们可以匹配它，并�
 <p><a href="https://www.npmjs.com/package/webpack-validator">webpack-validator</a>
 可以验证配置并提供一些警告。这可以带走我们学习和使用Webpack的痛苦。</p>
 
-<p><code class="highlighter-rouge">npm i webpack-validator --save-dev</code></p>
+<p><code class="highlighter-rouge">npm i webpack-validator --save-dev </code></p>
 
 <p>直接导入：</p>
 
