@@ -1,0 +1,108 @@
+---
+layout: post
+title: "2016-11-01-webpack-11"
+date: 2016-11-01 23:24:00 +0800
+categories: webpack
+---
+
+在我们之前的配置，我们把CSS内嵌进JavaScript中了。
+这样不利于我们缓存这个CSS。还有可能造成未样式内容闪烁(Flash of Unstyled Content)(FOUC)。
+
+Webpack提供了一个方法来生成单独CSS绑定。
+我们用[ExtractTextPlugin](https://www.npmjs.com/package/extract-text-webpack-plugin)来实现。
+在编译的时候会带来一些开销，而且它本身的设计没办法使用Hot Modules Replacement(HRM)。
+鉴于这些，我们只把它用在发布产品的时候。
+
+> 一样的技术也可以用其它资源上，如模板等。
+
+> 在产品中内联样式是一个隐患，因为它相当一个攻击媒介。
+在产品中最好使用`ExtractTextPlugin`等相似的解决方案。
+
+### 设置extract-text-webpack-plugin
+安装：
+
+`npm i extract-text-webpack-plugin --save-dev`
+
+插件的操作分为两部分。加载器`ExtractTextPlugin.extract`标记需要被提取出来的资源。
+
+{% highlight javascript %}
+const webpack = require('webpack');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+
+...
+
+exports.extractCSS = function(paths) {
+  return {
+      module: {
+          loaders: [
+              {
+                  test: /\.css$/,
+                  loader: ExtractTextPlugin.extract('style', 'css'),
+                  include: paths
+              }
+          ]
+      },
+      
+      plugins: [
+          new ExtractTextPlugin('[name].[chunkhash].css')
+      ]
+  }  
+};
+{% endhighlight %}
+
+**webpack.config.js**
+{% highlight javascript %}
+...
+
+switch (process.env.npm_lifecycle_event) {
+    case 'build':
+        config = merge(
+            ...
+            parts.minify(),
+            parts.extractCSS(PATHS.app)
+        );
+        break;
+    default :
+        config = merge(
+            ...
+        );
+}
+
+{% endhighlight %}
+
+用这样设置，我们可以继续在开发过程中从HMR中获益。
+对于发布构建，我们生成一个单独CSS.*html-webpack-plugin*会自动注入到`index.html`中。
+
+运行 `npm run build`
+{% highlight javascript %}
+clean-webpack-plugin: /Users/cjk/Documents/survivejs/webpack-demo/build has been removed.
+Hash: 572efff42c58964788cb
+Version: webpack 1.13.3
+Time: 1780ms
+                               Asset       Size  Chunks             Chunk Names
+         app.ecc20a8eb22f930ec45e.js  370 bytes    0, 2  [emitted]  app
+      vendor.e3291039820e572fafd3.js      20 kB    1, 2  [emitted]  vendor
+    manifest.ce9ae964510633b89732.js  815 bytes       2  [emitted]  manifest
+        app.ecc20a8eb22f930ec45e.css  120 bytes    0, 2  [emitted]  app
+     app.ecc20a8eb22f930ec45e.js.map    2.36 kB    0, 2  [emitted]  app
+    app.ecc20a8eb22f930ec45e.css.map  105 bytes    0, 2  [emitted]  app
+  vendor.e3291039820e572fafd3.js.map     262 kB    1, 2  [emitted]  vendor
+manifest.ce9ae964510633b89732.js.map    8.76 kB       2  [emitted]  manifest
+                          index.html  416 bytes          [emitted]
+   [0] ./app/index.js 121 bytes {0} [built]
+   [0] multi vendor 28 bytes {1} [built]
+  [34] ./app/component.js 228 bytes {0} [built]
+    + 33 hidden modules
+Child html-webpack-plugin for "index.html":
+        + 3 hidden modules
+Child extract-text-webpack-plugin:
+        + 2 hidden modules
+{% endhighlight %}
+
+现在我们把样式从js中分离出来了。
+对它做的更改不应该影响到JavaScript chunk的hash，反之亦然。
+
+### 小结
+
+[原文地址](http://survivejs.com/webpack/building-with-webpack/separating-css/)

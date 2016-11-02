@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>2016-11-02-webpack</title>
+  <meta name="description" content="使用[Bootstrap]这种框架会带来很多CSS。通常你只会用到其中的一小部分。这样会引入很多无用的CSS。purifycss可以通过分析文件把没有用到的CSS剔除掉。这样的方式在单页应用中一样有效。">
+
+  <link rel="stylesheet" href="/webpack/css/main.css">
+  <link rel="canonical" href="https://whatthecole.github.io/webpack//webpack/webpack/2016/11/02/webpack-12.html">
+  <link rel="alternate" type="application/rss+xml" title="webpack" href="https://whatthecole.github.io/webpack//webpack/feed.xml">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/webpack/">webpack</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/webpack/about/">About</a>
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">2016-11-02-webpack</h1>
+    <p class="post-meta"><time datetime="2016-11-02T10:44:00+08:00" itemprop="datePublished">Nov 2, 2016</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>使用[Bootstrap]这种框架会带来很多CSS。通常你只会用到其中的一小部分。
+这样会引入很多无用的CSS。<a href="https://github.com/purifycss/purifycss">purifycss</a>
+可以通过分析文件把没有用到的CSS剔除掉。这样的方式在单页应用中一样有效。</p>
+
+<h3 id="purifycss">配置purifycss</h3>
+<p>使用<a href="https://www.npmjs.com/package/purifycss-webpack-plugin">purifycss-webpack-plugin</a>可以节省巨大的空间。
+它非常合适更 <code class="highlighter-rouge">ExtractTextPlugin</code> 一起用。</p>
+
+<p><code class="highlighter-rouge">npm i purifycss-webpack-plugin --save-dev</code></p>
+
+<p>为了让例子更真实，我们安装一个CSS框架<a href="http://purecss.io/">Pure.css</a>。</p>
+
+<p><code class="highlighter-rouge">npm i purecss --save</code></p>
+
+<p>然后修改配置。</p>
+
+<p><strong>webpack.config.js</strong></p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="p">...</span>
+
+<span class="kr">const</span> <span class="nx">PATHS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">app</span><span class="p">:</span> <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">,</span> <span class="s1">'app'</span><span class="p">),</span>
+    <span class="na">style</span><span class="p">:</span> <span class="p">[</span>
+        <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">,</span> <span class="s1">'node_modules'</span><span class="p">,</span> <span class="s1">'purecss'</span><span class="p">),</span>
+        <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">,</span> <span class="s1">'app'</span><span class="p">,</span> <span class="s1">'main.css'</span><span class="p">)</span>
+    <span class="p">],</span>
+    <span class="na">build</span><span class="p">:</span> <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">,</span> <span class="s1">'build'</span><span class="p">)</span>
+<span class="p">};</span>
+<span class="p">...</span></code></pre></figure>
+
+<p>运行<code class="highlighter-rouge">npm run build</code></p>
+
+<figure class="highlight"><pre><code class="language-text" data-lang="text">clean-webpack-plugin: /Users/cjk/Documents/survivejs/webpack-demo/build has been removed.
+Hash: 6ed7337982012a4f3f27
+Version: webpack 1.13.3
+Time: 2228ms
+                               Asset       Size  Chunks             Chunk Names
+     app.7dde950067e3ba60cb7a.js.map    1.66 kB    0, 3  [emitted]  app
+         app.7dde950067e3ba60cb7a.js  284 bytes    0, 3  [emitted]  app
+      vendor.db65ca793ede5234a786.js      20 kB    2, 3  [emitted]  vendor
+    manifest.62448fedc30416af4cf7.js  840 bytes       3  [emitted]  manifest
+      style.bb54a8a538bde5b8f220.css    16.7 kB    1, 3  [emitted]  style
+       style.bb54a8a538bde5b8f220.js  203 bytes    1, 3  [emitted]  style
+   style.bb54a8a538bde5b8f220.js.map    1.17 kB    1, 3  [emitted]  style
+  style.bb54a8a538bde5b8f220.css.map  107 bytes    1, 3  [emitted]  style
+  vendor.db65ca793ede5234a786.js.map     262 kB    2, 3  [emitted]  vendor
+manifest.62448fedc30416af4cf7.js.map    8.84 kB       3  [emitted]  manifest
+                          index.html  494 bytes          [emitted]
+   [0] ./app/index.js 98 bytes {0} [built]
+   [0] multi vendor 28 bytes {2} [built]
+   [0] multi style 40 bytes {1} [built]
+  [30] ./app/component.js 186 bytes {0} [built]
+    + 35 hidden modules
+Child html-webpack-plugin for "index.html":
+        + 3 hidden modules
+Child extract-text-webpack-plugin:
+        + 2 hidden modules
+Child extract-text-webpack-plugin:
+        + 2 hidden modules</code></pre></figure>
+
+<p>能看到样式文件从120byte增加到16.7kb。
+我们现在添加一个<code class="highlighter-rouge">className</code>到我们的组件中去。</p>
+
+<p><strong>app/component.js</strong></p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">element</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s1">'h1'</span><span class="p">);</span>
+    <span class="nx">element</span><span class="p">.</span><span class="nx">className</span> <span class="o">=</span> <span class="s1">'pure-button'</span><span class="p">;</span>
+    <span class="nx">element</span><span class="p">.</span><span class="nx">innerHTML</span> <span class="o">=</span> <span class="s1">'Hello World!!! dad'</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="nx">element</span><span class="p">;</span>
+<span class="p">};</span></code></pre></figure>
+
+<p>接下来运行<code class="highlighter-rouge">npm start</code>，打开页面你会看到一个”Hello World”的按钮。</p>
+
+<p>现在让purifycss工作起来：</p>
+
+<p><strong>libs/parts.js</strong></p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">exports</span><span class="p">.</span><span class="nx">purifyCSS</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">paths</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="na">plugins</span><span class="p">:</span> <span class="p">[</span>
+            <span class="k">new</span> <span class="nx">PurifyCSSPlugin</span><span class="p">({</span>
+                <span class="na">basePath</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">cwd</span><span class="p">(),</span>
+                <span class="na">paths</span><span class="p">:</span> <span class="nx">paths</span>
+            <span class="p">})</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">};</span></code></pre></figure>
+
+<p>使用这个插件要注意一点，必须在<code class="highlighter-rouge">ExtractPlugin</code>后使用。</p>
+
+<p><strong>webpack.config.js</strong></p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="p">...</span>
+
+<span class="k">switch</span> <span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">npm_lifecycle_event</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="s1">'build'</span><span class="err">:</span>
+        <span class="nx">config</span> <span class="o">=</span> <span class="nx">merge</span><span class="p">(</span>
+            <span class="p">...</span>
+            <span class="nx">parts</span><span class="p">.</span><span class="nx">extractCSS</span><span class="p">(</span><span class="nx">PATHS</span><span class="p">.</span><span class="nx">style</span><span class="p">),</span>
+            <span class="nx">parts</span><span class="p">.</span><span class="nx">purifyCSS</span><span class="p">([</span><span class="nx">PATHS</span><span class="p">.</span><span class="nx">app</span><span class="p">])</span>
+        <span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="nl">default</span> <span class="p">:</span>
+    <span class="p">...</span>
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">validate</span><span class="p">(</span><span class="nx">config</span><span class="p">);</span></code></pre></figure>
+
+<p>可以不用传参给parts.purifyCSS,Webpack会通过entry识别PATH.app。
+不过写上去也没有坏处。</p>
+
+<p>执行<code class="highlighter-rouge">npm run build</code>:</p>
+
+<figure class="highlight"><pre><code class="language-text" data-lang="text">clean-webpack-plugin: /Users/cjk/Documents/survivejs/webpack-demo/build has been removed.
+Hash: 3604c79c81b223f28ff6
+Version: webpack 1.13.3
+Time: 4728ms
+                               Asset       Size  Chunks             Chunk Names
+     app.febcdee78caa7cccf92e.js.map    1.67 kB    0, 3  [emitted]  app
+         app.febcdee78caa7cccf92e.js  285 bytes    0, 3  [emitted]  app
+      vendor.db65ca793ede5234a786.js      20 kB    2, 3  [emitted]  vendor
+    manifest.2da1fe5560677a37b5cc.js  840 bytes       3  [emitted]  manifest
+      style.bb54a8a538bde5b8f220.css    13.1 kB    1, 3  [emitted]  style
+       style.bb54a8a538bde5b8f220.js  203 bytes    1, 3  [emitted]  style
+   style.bb54a8a538bde5b8f220.js.map    1.17 kB    1, 3  [emitted]  style
+  style.bb54a8a538bde5b8f220.css.map  107 bytes    1, 3  [emitted]  style
+  vendor.db65ca793ede5234a786.js.map     262 kB    2, 3  [emitted]  vendor
+manifest.2da1fe5560677a37b5cc.js.map    8.84 kB       3  [emitted]  manifest
+                          index.html  494 bytes          [emitted]
+   [0] ./app/index.js 98 bytes {0} [built]
+   [0] multi vendor 28 bytes {2} [built]
+   [0] multi style 40 bytes {1} [built]
+  [30] ./app/component.js 187 bytes {0} [built]
+    + 35 hidden modules
+Child html-webpack-plugin for "index.html":
+        + 3 hidden modules
+Child extract-text-webpack-plugin:
+        + 2 hidden modules
+Child extract-text-webpack-plugin:
+        + 2 hidden modules</code></pre></figure>
+
+<p>这里我们看到样式大小从16.7kB变成了13.1kB。
+虽然只是缩小了一点，但对重量级的CSS框架是十分有用的。</p>
+
+<p>PurifyCSS支持<a href="https://github.com/purifycss/purifycss#the-optional-options-argument">额外选项</a>。
+你可以尝试设置 <code class="highlighter-rouge">purifyOptions: {info: true}</code>来输出日志。</p>
+
+<h3 id="section">小结</h3>
+
+<p><a href="http://survivejs.com/webpack/building-with-webpack/eliminating-unused-css/">原文链接</a></p>
+
+  </div>
+
+</article>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">webpack</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>webpack</li>
+          <li><a href="mailto:302656338@qq.com">302656338@qq.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/whatthecole"><span class="icon icon--github"><svg viewBox="0 0 16 16"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">whatthecole</span></a>
+
+          </li>
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p></p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
