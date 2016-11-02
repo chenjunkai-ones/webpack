@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "2016-11-01-webpack-11"
+title: "webpack 分离CSS"
 date: 2016-11-01 23:24:00 +0800
 categories: webpack
 ---

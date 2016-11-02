@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "2016-10-28-webpack-1"
+title:  "webpack 开始"
 date:   2016-10-28 04:34
 categories: webpack
 ---

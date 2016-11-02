@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "2016-10-31-webpack-6"
+title:  "webpack 压缩"
 date:   2016-10-31 22:30:00 +0800
 categories: webpack
 ---

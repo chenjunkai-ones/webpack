@@ -1,11 +1,11 @@
 ---
 layout: post
-title: "2016-11-02-webpack-14"
+title: "webpack 托管到Github Pages"
 date: 2016-11-02 14:51:00 +0800
 categories: webpack
 ---
 
-[gh-pages]可以方便的将你的应用发到GitHub。
+[gh-pages]可以方便的将你的应用托管到GitHub。
 
 ### 设置 gh-pages
 
@@ -21,7 +21,7 @@ categories: webpack
 }
 {% endhighlight %}
 
-运行 `npm run deploy`你就可以在 `https://<name>.github.io/<project>`看到你的GitHub Pages了
+运行 `npm run deploy`你就可以在 `https://<name>.github.io/<project>`看到你托管的GitHub Pages了
 
 ### 小结
 

@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "2016-10-29-webpack-3"
+title:  "webpack 自动刷新"
 date:   2016-10-29 16:34
 categories: webpack
 ---

@@ -6,11 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>webpack 托管到Github Pages</title>
-  <meta name="description" content="[gh-pages]可以方便的将你的应用托管到GitHub。">
+  <title>webpack 高级技术</title>
+  <meta name="description" content="理解Chunkshttp://survivejs.com/webpack/advanced-techniques/understanding-chunks/### 检测语法http://survivejs.com/webpack/advanced-techniques/linting### 创作Packagesh...">
 
   <link rel="stylesheet" href="/webpack/css/main.css">
-  <link rel="canonical" href="https://whatthecole.github.io/webpack//webpack/webpack/2016/11/02/webpack-14.html">
+  <link rel="canonical" href="https://whatthecole.github.io/webpack//webpack/webpack/2016/11/02/webpack-16.html">
   <link rel="alternate" type="application/rss+xml" title="webpack" href="https://whatthecole.github.io/webpack//webpack/feed.xml">
 </head>
 
@@ -57,30 +57,20 @@
         <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
-    <h1 class="post-title" itemprop="name headline">webpack 托管到Github Pages</h1>
-    <p class="post-meta"><time datetime="2016-11-02T14:51:00+08:00" itemprop="datePublished">Nov 2, 2016</time></p>
+    <h1 class="post-title" itemprop="name headline">webpack 高级技术</h1>
+    <p class="post-meta"><time datetime="2016-11-02T22:36:00+08:00" itemprop="datePublished">Nov 2, 2016</time></p>
   </header>
 
   <div class="post-content" itemprop="articleBody">
-    <p>[gh-pages]可以方便的将你的应用托管到GitHub。</p>
+    <h3 id="chunks">理解Chunks</h3>
+<p><a href="http://survivejs.com/webpack/advanced-techniques/understanding-chunks/">http://survivejs.com/webpack/advanced-techniques/understanding-chunks/</a>
+### 检测语法
+<a href="http://survivejs.com/webpack/advanced-techniques/linting">http://survivejs.com/webpack/advanced-techniques/linting</a>
+### 创作Packages
+<a href="http://survivejs.com/webpack/advanced-techniques/authoring-packages">http://survivejs.com/webpack/advanced-techniques/authoring-packages</a>
+### 写Loaders</p>
 
-<h3 id="gh-pages">设置 gh-pages</h3>
-
-<p><code class="highlighter-rouge">npm i gh-pages --save-dev</code></p>
-
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="p">{</span>
-    <span class="p">...</span>
-    <span class="s2">"scripts"</span><span class="err">:</span> <span class="p">{</span>
-        <span class="s2">"deploy"</span><span class="err">:</span> <span class="s2">"gh-pages -d build"</span>
-    <span class="p">},</span>
-    <span class="p">...</span>
-<span class="p">}</span></code></pre></figure>
-
-<p>运行 <code class="highlighter-rouge">npm run deploy</code>你就可以在 <code class="highlighter-rouge">https://&lt;name&gt;.github.io/&lt;project&gt;</code>看到你托管的GitHub Pages了</p>
-
-<h3 id="section">小结</h3>
-
-<p><a href="http://survivejs.com/webpack/building-with-webpack/hosting-on-github-pages/">原文地址</a></p>
+<h3 id="react">配置React</h3>
 
   </div>
 

@@ -1,0 +1,16 @@
+---
+layout: post
+title: "webpack 高级技术"
+date: 2016-11-02 22:36:00 +0800
+categories: webpack
+---
+
+### 理解Chunks
+[http://survivejs.com/webpack/advanced-techniques/understanding-chunks/](http://survivejs.com/webpack/advanced-techniques/understanding-chunks/)
+### 检测语法
+[http://survivejs.com/webpack/advanced-techniques/linting](http://survivejs.com/webpack/advanced-techniques/linting)
+### 创作Packages
+[http://survivejs.com/webpack/advanced-techniques/authoring-packages](http://survivejs.com/webpack/advanced-techniques/authoring-packages)
+### 写Loaders
+
+### 配置React

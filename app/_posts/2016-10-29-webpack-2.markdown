@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "2016-10-29-webpack-2"
+title:  "webpack 分离配置"
 date:   2016-10-29 10:16
 categories: webpack
 ---

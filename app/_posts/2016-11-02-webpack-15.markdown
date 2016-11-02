@@ -1,0 +1,259 @@
+---
+layout: post
+title: "webpack 资源加载"
+date: 2016-11-02 15:12:00 +0800
+categories: wepack
+---
+
+### 资源加载
+
+Webpack通过加载器支持很多各种各样的格式。
+另外，它也支持一些JavaScript模块化。
+
+************
+
+### Webpack对JavaScript模块化支持
+
+Webpack允许你使用不同的模块化，但是它们的工作原理都是一样的。
+其中对CommonJS的支持和AMD支持最为重要。Webpack2将会支持ES6模块定义。
+现在你必须用[Babel]和[label-loader]才能实现ES6的支持。
+
+我接下来会举几个简单的例子，我会用CommonJS和AMD这两个经典的格式，不过可能的话，
+请坚持用ES6。由于它定义的特性，它不完全兼容CommonJS，不过这已经够我们使用了。
+
+### CommonJS
+如果你使用Node.js，那对CommonJS想必十分熟悉。下面是一个简短的例子：
+{% highlight javascript %}
+var MyModule = require('./MyModule');
+
+module.exports = function() {...};
+
+exports.hello = function() {...};
+{% endhighlight %}
+
+
+### ES6
+ES6跟CommonJS有些许类似，而且十分简洁。
+{% highlight javascript %}
+import MyModule from './MyModule.js';
+
+export default function() {...};
+
+export function hello() {...};
+
+{% endhighlight %}
+> Webpack现在还不支持这个格式，你必须要使用[babel-loader](https://www.npmjs.com/package/babel-loader)
+#### AMD
+AMD(asynchronous module definition),因为[RequireJS](http://requirejs.org/)流行起来。
+它引入了一个`define`包装器。
+
+{% highlight javascript %}
+define(['./MyModule.js'], function (MyModule) {
+  return function() {};
+});
+
+// or
+define(['./MyModule.js'], function (MyModule) {
+  return {
+    hello: function() {...}
+  };
+});
+{% endhighlight %}
+
+你也可以使用`require`,如下：
+
+{% highlight javascript %}
+define(['require'], function (require) {
+  var MyModule = require('./MyModule.js');
+
+  return function() {...};
+});
+{% endhighlight %}
+
+第二个方法排除掉一些杂乱东西。鉴于现在有了ES6了，使用AMD已经没有多大意义了。
+
+### UMD
+UMD(universal module definition)，通用模块定义。
+> 原文作者说 It is a monster of a format that aims to make the aforementioned formats compatible with each other. I will spare your eyes from it. Never write it yourself, leave it to the tools. If that didn't scare you off, check out the official definitions.
+
+大意是指通过工具去实现它而不要尝试自己去写，不信可以去看[官方文档](https://github.com/umdjs/umd)
+
+*********
+
+### 加载器定义
+Webpack provides multiple ways to set up module loaders. I'll cover the most important ones next. Generally you either use loader (accepts string) or loaders field (accepts array of strings) and then pass possible query parameters using one of the available methods.
+
+我建议为每个加载器加入一个 `include`字段。这样可以限制加载器搜索路径的范围，提高效率，而且使你的配置更容易追踪。 `include`可以接收一个path或者是一个path数组。
+
+### 加载器执行顺序
+简单来说就是从右到左，从下到上。你可以将 `loaders:['style','css']`理解成 `style(css(input))`。
+下面的例子是等价的：
+{% highlight javascript %}
+{
+  test: /\.css$/,
+  loaders: ['style', 'css'],
+  include: PATHS.app
+}
+{% endhighlight %}
+
+{% highlight javascript %}
+{
+  test: /\.css$/,
+  loaders: ['style'],
+  include: PATHS.app
+},
+{
+  test: /\.css$/,
+  loaders: ['css'],
+  include: PATHS.app
+}
+
+{% endhighlight %}
+
+### 加载器传参
+有时候你想给加载器传参，默认的情况下你可以这样做：
+{% highlight javascript %}
+{
+  test: /\.jsx?$/,
+  loaders: [
+    'babel?cacheDirectory,presets[]=react,presets[]=es2015'
+  ],
+  include: PATHS.app
+}
+{% endhighlight %}
+
+不过这样的可读性不强。更好的方法是用 `query`:
+{% highlight javascript %}
+{
+  test: /\.jsx?$/,
+  loader: 'babel',
+  query: {
+    cacheDirectory: true,
+    presets: ['react', 'es2015']
+  },
+  include: PATHS.app
+}
+{% endhighlight %}
+
+这个方法只能用在只有一个加载器的时候，当你有多个加载器的时候，你需要把它们单独声明。
+
+### 加载样式
+加载样式是一个标准操作。有许多方法可以用，这些方法结合 `ExtractTextPlugin`可以为你的产品构建获得更好的输出。
+
+### 加载CSS
+**webpack.config.js**
+加载普通的CSS非常直接，具体可以看我们之前给过的例子。
+{% highlight javascript %}
+const common = {
+  ...
+  module: {
+    loaders: [
+      {
+        test: /\.css$/,
+        loaders: ['style', 'css'],
+        include: PATHS.style
+      }
+    ]
+  },
+  ...
+};
+{% endhighlight %}
+
+首先[css-loader](https://www.npmjs.com/package/css-loader)把匹配到的文件中的 `@import`和 `url()`语句当成 `require`看待。
+这里允许我们依靠其它的加载器，如file-loader或者url-loader。
+
+### 加载LESS
+[Less](http://lesscss.org/)是一个CSS预处理语言。在Webpack上使用Less并没有多大的效果。
+你需要安装[less](https://www.npmjs.com/package/less), [less-loader](https://www.npmjs.com/package/less-loader)
+{% highlight javascript %}
+{
+  test: /\.less$/,
+  loaders: ['style', 'css', 'less'],
+  include: PATHS.style
+}
+{% endhighlight %}
+
+### 加载SASS
+使用[sass-loader](https://www.npmjs.com/package/sass-loader)需要安装[node-sass](https://www.npmjs.com/package/node-sass)
+{% highlight javascript %}
+{
+  test: /\.scss$/,
+  loaders: ['style', 'css', 'sass'],
+  include: PATHS.style
+}
+{% endhighlight %}
+
+加载stylus、YETICSS还有PostCSS自己[查看原文](http://survivejs.com/webpack/loading-assets/loading-styles/)吧
+
+### 加载图片
+这里重点介绍两个加载器--[url-loader](https://www.npmjs.com/package/url-loader)和[file-loader](https://www.npmjs.com/package/file-loader)
+
+### 配置url-loader
+{% highlight javascript %}
+{
+  test: /\.(jpg|png)$/,
+  loader: 'url?limit=25000',
+  include: PATHS.images
+}
+{% endhighlight %}
+
+### 配置file-loader
+如果你不需要使用内联，你可以直接用*file-loader*。
+{% highlight javascript %}
+{
+  test: /\.(jpg|png)$/,
+  loader: 'file?name=[path][name].[hash].[ext]',
+  include: PATHS.images
+}
+{% endhighlight %}
+
+### 加载SVG
+这里有几个加载SVG的[方法](https://github.com/webpack/webpack/issues/595)，
+最简单的方式是用*file-loader*：
+
+{% highlight javascript %}
+{
+  test: /\.svg$/,
+  loader: 'file',
+  include: PATHS.images
+}
+{% endhighlight %}
+
+如果你想要未经处理的SVG内容，你可以用[raw-loader](https://www.npmjs.com/package/raw-loader)
+
+### 压缩图片
+[image-webpack-loader](https://www.npmjs.com/package/image-webpack-loader)
+或者[svgo-loader](https://github.com/pozadi/svgo-loader)。这些加载器需要最先执行，所以记得把它们放在加载器的最后。
+
+### 引入图片
+如果你配置了*css-loader*，你可以这样引用你的图片：
+{% highlight javascript %}
+const src = require('./avatar.png');
+
+// Use the image in your code somehow now
+const Profile = () => (
+  <img src={src} />
+);
+{% endhighlight %}
+
+如果你用React，你可以使用[babel-plugin-transform-react-jsx-img-import](https://www.npmjs.com/package/babel-plugin-transform-react-jsx-img-import)
+来自动生成 `require`:
+{% highlight javascript %}
+const Profile = () => (
+  <img src="avatar.png" />
+);
+{% endhighlight %}
+
+### 加载字体
+[原文地址](http://survivejs.com/webpack/loading-assets/loading-fonts/)
+
+
+### 小结
+[原文地址](http://survivejs.com/webpack/loading-assets/formats-supported)
+[原文地址](http://survivejs.com/webpack/loading-assets/loader-definitions)
+[原文地址](http://survivejs.com/webpack/loading-assets/loading-styles)
+[原文地址](http://survivejs.com/webpack/loading-assets/loading-images)
+[原文地址](http://survivejs.com/webpack/loading-assets/loading-fonts)
+
+
+

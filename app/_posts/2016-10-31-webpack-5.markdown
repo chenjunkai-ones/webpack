@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "2016-10-31-webpack-5"
+title:  "webpack 启用Sourcemaps"
 date:   2016-10-31 12:32:00 +0800
 categories: webpack
 ---
