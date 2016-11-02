@@ -1,0 +1,63 @@
+---
+layout: post
+title: "2016-11-02-webpack-13"
+date: 2016-11-02 14:24:00 +0800
+categories: webpack
+---
+
+### 设置统计
+
+- `--profile` 捕获相关信息的时长。
+- `--json` 使Webpack输出我们想要的信息。
+
+**package.json**
+
+{% highlight javascript %}
+{
+    ...
+    "scripts": {
+        "stats": "webpack --profile --json > stats.json"
+        ...
+    }
+    ...
+}
+{% endhighlight %}
+
+然后稍微调整一下配置
+
+**webpack.config.js**
+
+{% highlight javascript %}
+switch(process.env.npm_lifecycle_event) {
+  case 'build':
+  case 'stats':
+
+    config = merge(
+      ...
+    );
+    break;
+  default:
+    config = merge(
+      ...
+    );
+}
+
+// 用静默模式运行validate,避免输出到统计中。
+module.exports = validate(config, {
+  quiet: true
+});
+{% endhighlight %}
+
+执行 `npm run stats`, 在根目录多了一个stats.json。
+配合下列的工具使用。
+- [The official analyse tool](http://webpack.github.io/analyse/)
+- [Webpack Visualizer](https://chrisbateman.github.io/webpack-visualizer/)
+- [Webpack Chart](https://alexkuz.github.io/webpack-chart/)
+- [robertknight/webpack-bundle-size-analyzer](https://github.com/robertknight/webpack-bundle-size-analyzer)
+
+### Webpack 统计插件
+如果你想用插件来管理统计,请查看[stats-webpack-plugin](https://www.npmjs.com/package/stats-webpack-plugin)
+
+### 小结
+
+[原文地址](http://survivejs.com/webpack/building-with-webpack/analyzing-build-statistics/)

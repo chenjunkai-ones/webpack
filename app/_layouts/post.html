@@ -1,6 +1,15 @@
 ---
 layout: default
 ---
+
+<ul style="position: absolute; top: 70px; left: 30px; width: 100px;">
+    {% for post in site.posts reversed %}
+        <li>
+            <a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
+        </li>
+    {% endfor %}
+</ul>
+
 <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">

@@ -1,0 +1,28 @@
+---
+layout: post
+title: "2016-11-02-webpack-14"
+date: 2016-11-02 14:51:00 +0800
+categories: webpack
+---
+
+[gh-pages]可以方便的将你的应用发到GitHub。
+
+### 设置 gh-pages
+
+`npm i gh-pages --save-dev`
+
+{% highlight javascript %}
+{
+    ...
+    "scripts": {
+        "deploy": "gh-pages -d build"
+    },
+    ...
+}
+{% endhighlight %}
+
+运行 `npm run deploy`你就可以在 `https://<name>.github.io/<project>`看到你的GitHub Pages了
+
+### 小结
+
+[原文地址](http://survivejs.com/webpack/building-with-webpack/hosting-on-github-pages/)
