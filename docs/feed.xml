@@ -5,21 +5,26 @@
     <description></description>
     <link>https://whatthecole.github.io/webpack//webpack/</link>
     <atom:link href="https://whatthecole.github.io/webpack//webpack/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 03 Nov 2016 00:20:32 +0800</pubDate>
-    <lastBuildDate>Thu, 03 Nov 2016 00:20:32 +0800</lastBuildDate>
+    <pubDate>Thu, 03 Nov 2016 00:26:10 +0800</pubDate>
+    <lastBuildDate>Thu, 03 Nov 2016 00:26:10 +0800</lastBuildDate>
     <generator>Jekyll v3.1.1</generator>
     
       <item>
         <title>webpack 高级技术</title>
         <description>&lt;h3 id=&quot;chunks&quot;&gt;理解Chunks&lt;/h3&gt;
-&lt;p&gt;&lt;a href=&quot;http://survivejs.com/webpack/advanced-techniques/understanding-chunks/&quot;&gt;http://survivejs.com/webpack/advanced-techniques/understanding-chunks/&lt;/a&gt;
-### 检测语法
-&lt;a href=&quot;http://survivejs.com/webpack/advanced-techniques/linting&quot;&gt;http://survivejs.com/webpack/advanced-techniques/linting&lt;/a&gt;
-### 创作Packages
-&lt;a href=&quot;http://survivejs.com/webpack/advanced-techniques/authoring-packages&quot;&gt;http://survivejs.com/webpack/advanced-techniques/authoring-packages&lt;/a&gt;
-### 写Loaders&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://survivejs.com/webpack/advanced-techniques/understanding-chunks/&quot;&gt;http://survivejs.com/webpack/advanced-techniques/understanding-chunks/&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;section&quot;&gt;检测语法&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;http://survivejs.com/webpack/advanced-techniques/linting&quot;&gt;http://survivejs.com/webpack/advanced-techniques/linting&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;packages&quot;&gt;创作Packages&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;http://survivejs.com/webpack/advanced-techniques/authoring-packages&quot;&gt;http://survivejs.com/webpack/advanced-techniques/authoring-packages&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;loaders&quot;&gt;写Loaders&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;http://survivejs.com/webpack/advanced-techniques/writing-loaders/&quot;&gt;http://survivejs.com/webpack/advanced-techniques/writing-loaders/&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;react&quot;&gt;配置React&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;http://survivejs.com/webpack/advanced-techniques/configuring-react&quot;&gt;http://survivejs.com/webpack/advanced-techniques/configuring-react&lt;/a&gt;&lt;/p&gt;
 </description>
         <pubDate>Wed, 02 Nov 2016 22:36:00 +0800</pubDate>
         <link>https://whatthecole.github.io/webpack//webpack/webpack/2016/11/02/webpack-16.html</link>
