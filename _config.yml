@@ -18,3 +18,10 @@ github_username:  whatthecole
 markdown: kramdown
 source: app
 destination: docs
+
+# pagination
+paginate: 10
+paginate_path: "/:num/"
+
+#gem
+gems: [jekyll-paginate]

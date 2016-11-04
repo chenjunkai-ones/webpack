@@ -6,16 +6,124 @@ categories: webpack
 ---
 
 ### 理解Chunks
-[http://survivejs.com/webpack/advanced-techniques/understanding-chunks/](http://survivejs.com/webpack/advanced-techniques/understanding-chunks/)
+[原文地址：http://survivejs.com/webpack/advanced-techniques/understanding-chunks/](http://survivejs.com/webpack/advanced-techniques/understanding-chunks/)
+
+Chunks是Webpack最基础的概念之一。我们之前在*分离绑定*一章已经接触过了。
+
+#### Chunk 类型
+如[文档](https://webpack.github.io/docs/code-splitting.html#chunk-types)里讨论的,
+Webpack将chunks分为三种类型：
+
+- **Entry chunks** - Entry chunks 包含了Webpack运行时和加载的模块。
+- **Normal chunks** - Normal chunks 不包含Webpack运行时。它们能通过异步加载。就像JSONP一样，Webpack会为它们生成一个合适的包装器。
+- **Initial chunks** - Initial chunks 是统计应用的初始化的时间的normal chunks。它们通过 `CommonChunkPlugin`生成。
+
+我们已经处理过entry chunks，这里不再探究。我打算像你展示如果处理normal chunks。
+Webpack有个很彪悍的功能--lazy loading。
+
+#### Webpack 懒加载
+![](http://survivejs.com/webpack/images/dynamic.png)
+Webpack之所以强大的原因，是它能将你的应用分离成小的块来加载的能力。
+这个远比标准连接要灵活。
+
+通常我们并不需要一下子加载所有依赖。正如我们之前看到的那样，我们分离了依赖让它更利于浏览器缓存，不过这样还不足够。
+懒加载可以使我们更进一步优化我们的应用。
+
+这里有个[例子](https://github.com/survivejs/lunr-demo), 使用了lunr, React，Webpack。可以让你理解它们是如何工作的。
+
 
 ### 检测语法
-[http://survivejs.com/webpack/advanced-techniques/linting](http://survivejs.com/webpack/advanced-techniques/linting)
+[原文地址：http://survivejs.com/webpack/advanced-techniques/linting](http://survivejs.com/webpack/advanced-techniques/linting)
 
 ### 创作Packages
 [http://survivejs.com/webpack/advanced-techniques/authoring-packages](http://survivejs.com/webpack/advanced-techniques/authoring-packages)
 
+寄几看原文吧，太长了懒得翻。
+
 ### 写Loaders
 [http://survivejs.com/webpack/advanced-techniques/writing-loaders/](http://survivejs.com/webpack/advanced-techniques/writing-loaders/)
+如何写加载器的，也寄几看吧
 
 ### 配置React
 [http://survivejs.com/webpack/advanced-techniques/configuring-react](http://survivejs.com/webpack/advanced-techniques/configuring-react)
+[Babel](https://babeljs.io/)在React开发中很有用。可以让我们在使用未来JavaScript的功能的同时又不用太多的考虑浏览器支持的问题。
+由于技术的限制它不能支持规范中的所有功能，不过它还是一个很好用的工具。
+
+#### 配置Babel
+React使用的是[JSX](https://facebook.github.io/jsx/),
+这是一个JavaScript的超集，它允许你JavaScript中混入XML语法。
+
+有一些React开发者喜欢通过一种叫[Flow](http://flowtype.org/)的语言扩展来添加代码注解。
+这个技术很适合React，不过它不能限制它。[TypeScript]是另外一个可行的替代品。它们都可以和JSX一起运行。
+
+Babel允许我们轻松的使用JSX和React。此外，我们可以使用封装了插件集合的插件或预设来启用我们想要的语言功能。 例如，您可以在预设中找到所有ES6功能。 React相关功能也是如此。 我们将在我们的设置中依靠这些。
+
+#### 安装 babel-loader
+
+`npm i babel-loader babel-core --save-dev`
+
+*babel-core*包含了Babel的核心逻辑，所以也要一并安装进来。
+
+如果你想 `import Button from './Button'`, 启用resolve.extensions。
+
+**webpack.config.js**
+{% highlight javascript %}
+...
+const common = {
+    ...
+    //不要移除掉''，如果移除掉了，在你导入没有扩展名的时候将会失效
+    resolve: {
+        extensions: ['', '.js', '.jsx']
+    }
+}
+{% endhighlight %}
+
+
+启用 `cacheDirectory`来提高开发时的性能。
+**webpack.config.js**
+{% highlight javascript %}
+...
+module: {
+  loaders: [
+    {
+      test: /\.jsx?$/,
+      // Enable caching for improved performance during development
+      // It uses default OS directory by default. If you need
+      // something more custom, pass a path to it.
+      // I.e., babel?cacheDirectory=<path>
+      loaders: ['babel?cacheDirectory'],
+      // Parse only app files! Without this it will go through
+      // the entire project. In addition to being slow,
+      // that will most likely result in an error.
+      include: PATHS.app
+    },
+    ...
+  }
+}
+...
+{% endhighlight %}
+
+#### 配置 .babelrc
+我们需要安装两个Babel预设：
+
+`npm i babel-preset-es2015 babel-preset-react --save-dev`
+
+**.babelrc**
+{% highlight json %}
+{
+  "presets": [
+    "es2015",
+    "react"
+  ]
+}
+{% endhighlight %}
+
+#### 配置Hot Loading
+
+#### 配置 babel-preset-react-hmre
+
+`npm i babel-preset-react-hmre --save-dev`
+
+
+
+

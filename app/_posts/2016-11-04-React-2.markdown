@@ -1,0 +1,141 @@
+---
+layout: post
+title: "2016-11-04-React-2"
+date: 2016-11-04 11:01:00 +0800
+categories: React
+---
+
+### 什么是React
+![](http://survivejs.com/react/images/react_header.png)
+
+React是一个JavaScript库。它改变了人们对web开发的观念。
+其中核心的功能就是虚拟节点(Virtual DOM)。这种理念模式很适合用户界面开发。
+但是你需要仔细考虑它的`state`的概念。
+
+由于*state management*是一个难题，出现了很多解决的方法。
+例如Redux,MobX,Cerebral等，接下来我们会以Alt为切入点。
+
+<br />
+<br />
+<br />
+
+
+### 虚拟节点
+![virtual dom](http://survivejs.com/react/images/vdom.png)
+
+一个编程中的基本的问题就是如何处理`state`。
+假设你在开发用户界面而且你想展示相同的数据在多个地方。
+你如果确保你的数据是统一的？
+
+以前我们总需要担心节点和状态，试图去管理它们。React通过许多方法帮我解决了这些问题。
+它引入了虚拟节点的概念。
+
+虚拟节点存在于实际节点之上，或者其它一些渲染目标上。
+它按自己的方式解决状态操作的问题。每当改变虚拟节点时，会通过一个最好的方式批量去更新在它之下的节点。
+它能够通过其虚拟树传播变化，如上图所示。
+
+<br />
+<br />
+<br />
+
+### 虚拟节点性能
+DOM节点操作通常会带来很多性能上的开销。手动操作DOM节点效率底下而且难以优化。
+通过一些好的实现来解决DOM节点操作的问题，可以帮助你节省很多时间。
+
+React允许您通过实现钩子来调整虚拟树的更新方式来进一步调整性能。虽然这是个可选步骤。
+
+虚拟节点最大的代价是它的实现使得React变得十分大。
+您可以预期小应用程序包括了React之后，它的捆绑压缩后大小约为150-200 kB，尽管gzip可以压缩掉一部分，但它仍然很大。
+
+> 解决的办法，你可以找一些体积较小的替代品，[preact](https://developit.github.io/preact/)和[react-lite](https://github.com/Lucifier129/react-lite)
+。它们牺牲掉了一些功能，获得了更小的体积。
+
+<br />
+<br />
+<br />
+
+### React渲染器
+如上面说的，React的方法将它从web中解耦出来。你可以在多个平台上用它实现界面。
+我们将用一个渲染器--[react-dom](https://www.npmjs.com/package/react-dom)。
+react-dom支持客户端和服务端的渲染。
+
+#### 通用渲染
+使用react-dom来实现，我们称其为通用渲染。
+概念就是服务器渲染初始标签并传初始的数据到客户端。
+通过避免一些不必要的往返传输来提升性能，因为每个请求都会带来开销。
+它也有利于搜索引擎优化(SEO)
+
+虽然技术听起来很简单，不过对于实现一个大等级的应用还是困难的。
+
+有时，使用 react-dom的服务器部分已经足够了。你可以用[generate invoices](https://github.com/bebraw/generate-invoice)作为参考例子。
+这是活用React的一种方式。生成报告毕竟是一个常见的需求
+
+
+#### 可用的React的渲染器
+
+- [React Native](https://facebook.github.io/react-native/) - React Native is a framework and renderer for mobile platforms including iOS and Android. You can also run React Native applications on the web.
+- [react-blessed](https://github.com/Yomguithereal/react-blessed) - react-blessed allows you to write terminal applications using React. It's even possible to animate them.
+- [gl-react](https://projectseptemberinc.gitbooks.io/gl-react/content/) - gl-react provides WebGL bindings for React. You can write shaders this way for example.
+- [react-canvas](https://github.com/Flipboard/react-canvas) - react-canvas provides React bindings for the Canvas element.
+
+<br />
+<br />
+<br />
+
+### React.createElement 和 JSX
+鉴于我们是用虚拟节点操作，这里有一些[高级API](https://facebook.github.io/react/docs/top-level-api.html)需要掌握。
+用JavaScript API写一个原生React组件：
+{% highlight javascript %}
+const Names = () => {
+    const names = ['John', 'Jill', 'Jack'];
+    
+    return React.createElement(
+        'div',
+        null,
+        React.createElement('h2', null, 'Names'),
+        React.createElement(
+            'ul',
+            {className: 'names'},
+            names.map(name => {
+                return React.createElement(
+                    'li',
+                    { className: 'name'},
+                    name
+                );
+            })
+        )
+    );
+};
+{% endhighlight %}
+
+这种写法既冗长，可读性也差。人们通常会用[JSX](https://facebook.github.io/jsx/)来代替。
+下面用JSX的写法来实现上面那个组件：
+
+{% highlight javascript %}
+const Names = () => {
+    const names = ['John', 'Jill', 'Jack'];
+    return (
+        <div>
+            <h2>Names</h2>
+            <ul className="names">
+                names.map(name=>
+                    <li className="name">{name}</li>
+                )
+            </ul>
+        </div>
+    );
+};
+{% endhighlight %}
+
+上面的例子说明了JSX的最基本的概念。它提供了一种类似HTMl的语法。
+同时也提供了在`{}`里写JavaScript的方式。
+
+对比普通的HTML,我们使用`className`来替代`class`。这是因为API建模是在DOM命名之后。
+这可能需要习惯一下。
+
+> [HyperScript](https://github.com/dominictarr/hyperscript) 是一个有趣的JSX的替代品。
+它提供了一个JavaScript基础API。你可以通过[hyperscript-helpers](https://www.npmjs.com/package/hyperscript-helpers)在React中使用语法。
+
+### 小结
+
+[原文地址](http://survivejs.com/react/getting-started/introduction-to-react/)

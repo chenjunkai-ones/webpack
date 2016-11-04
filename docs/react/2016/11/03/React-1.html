@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>2016-11-03-React-1</title>
+  <meta name="description" content="ES6(或者称为ES2015)是长时间以来JavaScript最大的改变。多了很多新的功能。这个附录的目的是单独说明本书中使用的功能，以便清楚地了解它们的工作原理。比起去阅读整个文档,我比较倾向把精力集中到这本书所用到的功能上。">
+
+  <link rel="stylesheet" href="/webpack/css/main.css">
+  <link rel="canonical" href="https://whatthecole.github.io/webpack//webpack/react/2016/11/03/React-1.html">
+  <link rel="alternate" type="application/rss+xml" title="webpack" href="https://whatthecole.github.io/webpack//webpack/feed.xml">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/webpack/">webpack</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/webpack/about/">About</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">2016-11-03-React-1</h1>
+    <p class="post-meta"><time datetime="2016-11-03T15:16:00+08:00" itemprop="datePublished">Nov 3, 2016</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>ES6(或者称为ES2015)是长时间以来JavaScript最大的改变。多了很多新的功能。
+这个附录的目的是单独说明本书中使用的功能，以便清楚地了解它们的工作原理。
+比起去阅读整个<a href="http://www.ecma-international.org/ecma-262/6.0/index.html">文档</a>,
+我比较倾向把精力集中到这本书所用到的功能上。</p>
+
+<h3 id="modules">Modules</h3>
+<p>ES6引入了正确模块声明。
+早些时候，我们使用AMD或者CommonJS来实现模块化。
+ES6的模块声明是静态分析的。
+对于工具创作者来说，这是极其有用的。
+这意味着我们可以获得像<em>tree shaking</em> 一样的功能。
+这允许工具通过分离import结构轻松地跳过无用代码。</p>
+
+<h4 id="import--export">单个的 import 和 export</h4>
+<p>下面是一个直接通过模块导出的例子：
+<strong>persist.js</strong></p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kr">import</span> <span class="nx">makeFinalStore</span> <span class="nx">from</span> <span class="s1">'alt-utils/lib/makeFinalStore'</span><span class="p">;</span>
+
+<span class="kr">export</span> <span class="k">default</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">alt</span><span class="p">,</span> <span class="nx">storage</span><span class="p">,</span> <span class="nx">storeName</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">...</span>
+<span class="p">}</span></code></pre></figure>
+
+<p><strong>index.js</strong></p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kr">import</span> <span class="nx">persist</span> <span class="nx">from</span> <span class="s1">'./persist'</span><span class="p">;</span>
+<span class="p">...</span></code></pre></figure>
+
+<p><br />
+<br /></p>
+
+<h4 id="import--export-1">多个的 import 和 export</h4>
+
+<p>使用模块作为多个函数的命名空间有时会很有用：</p>
+
+<p><strong>math.js</strong></p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kr">export</span> <span class="kd">function</span> <span class="nx">add</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">d</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">a</span> <span class="o">+</span> <span class="nx">b</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kr">export</span> <span class="kd">function</span> <span class="nx">multiply</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">a</span> <span class="o">*</span> <span class="nx">b</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kr">export</span> <span class="kd">function</span> <span class="nx">square</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">a</span> <span class="o">*</span> <span class="nx">a</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>我们也可以这样写：</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kr">const</span> <span class="nx">add</span> <span class="o">=</span> <span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">a</span> <span class="o">+</span> <span class="nx">b</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">multiple</span> <span class="o">=</span> <span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">a</span> <span class="o">*</span> <span class="nx">b</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">square</span> <span class="o">=</span> <span class="p">(</span><span class="nx">a</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">a</span> <span class="o">*</span> <span class="nx">a</span><span class="p">;</span>
+
+<span class="kr">export</span> <span class="p">{</span><span class="nx">add</span><span class="p">,</span> <span class="nx">multiple</span><span class="p">}</span></code></pre></figure>
+
+<p>这里用到了箭头函数(fat arrow syntax)和属性简洁表示法(property value shorthand)。</p>
+
+<p>你可以这样导入这个模块：
+<strong>index.js</strong></p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kr">import</span> <span class="p">{</span><span class="nx">add</span><span class="p">}</span> <span class="nx">from</span> <span class="s1">'./math'</span><span class="p">;</span></code></pre></figure>
+
+<p><br />
+<br /></p>
+
+<h4 id="imports">别名 imports</h4>
+<p>我们可以灵活地为import别名：</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kr">import</span> <span class="p">{</span><span class="nx">actions</span> <span class="nx">as</span> <span class="nx">TodoActions</span><span class="p">}</span> <span class="nx">from</span> <span class="s1">'../actions/todo'</span>
+
+<span class="p">...</span></code></pre></figure>
+
+<p><code class="highlighter-rouge">as</code>可以让你避免命名冲突。</p>
+
+<h4 id="webpack-resolvealias">Webpack resolve.alias</h4>
+<p>打包器，像Webpack,可以提供一些功能。你可以为你的模块路径定义一个 <code class="highlighter-rouge">resolve.alias</code>。
+不论你在哪个位置，你都可以像 <code class="highlighter-rouge">import persist from 'libs/persist'</code>这样使用import。</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="p">...</span>
+<span class="nx">resolve</span> <span class="p">{</span>
+    <span class="nl">alias</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nl">libs</span><span class="p">:</span> <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">,</span> <span class="s1">'libs'</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>官方文档详细描述了<a href="https://webpack.github.io/docs/configuration.html#resolve-alias">possible variants</a></p>
+
+<p><br />
+<br /></p>
+
+<h4 id="classes">Classes</h4>
+<p>不像其他语言，JavaScript使用基于原型继承来代替基于类继承。
+两个方法都有各自的好处。
+实际上，你可以通过基于原型模型来模拟基于类模型。
+ES6类是为了在JavaScript的基础机制上提供语法。内部还是使用旧的系统。</p>
+
+<p>React支持类对组件的定义，不过不是所有人都看好这件事。
+也就是说，定义可以变得十分整洁只要你不滥用它。
+下面是一个例子：</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s1">'react'</span><span class="p">;</span>
+
+<span class="kr">export</span> <span class="k">default</span> <span class="kr">class</span> <span class="nx">App</span> <span class="kr">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kr">super</span><span class="p">(</span><span class="nx">props</span><span class="p">);</span>
+
+    <span class="c1">// This is a regular property outside of React's machinery.</span>
+    <span class="c1">// If you don't need to trigger render() when it's changed,</span>
+    <span class="c1">// this can work.</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">privateProperty</span> <span class="o">=</span> <span class="s1">'private'</span><span class="p">;</span>
+
+    <span class="c1">// React specific state. Alter this through `this.setState`. That</span>
+    <span class="c1">// will call `render()` eventually.</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">state</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="na">name</span><span class="p">:</span> <span class="s1">'Class demo'</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// Use the properties somehow.</span>
+    <span class="kr">const</span> <span class="nx">privateProperty</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">privateProperty</span><span class="p">;</span>
+    <span class="kr">const</span> <span class="nx">name</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">state</span><span class="p">.</span><span class="nx">name</span>
+    <span class="kr">const</span> <span class="nx">notes</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">notes</span><span class="p">;</span>
+
+    <span class="p">...</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>也许基于类的方法的最大的好处就是实际上，它能砍掉一些复杂方面，特别是当它涉及到React生命周期方法的时候。
+需要知道的重要的一点是类的方法默认是无法绑定的，这也是本书为什么要依靠一个实验性的功能–属性初始化(property initializer)</p>
+
+<p><br />
+<br /></p>
+
+<h4 id="classes--modules">Classes 和 Modules</h4>
+<p>如上面说的，ES6模块允许 <code class="highlighter-rouge">export</code>很 <code class="highlighter-rouge">import</code>单个和多个的对象，函数，甚至是类。
+你可以使用 <code class="highlighter-rouge">export default class</code>来导出一个匿名类或使用 <code class="highlighter-rouge">export class className</code>从同一个模块中导出多个匿名类。</p>
+
+<p>单一个类的时候可以用 <code class="highlighter-rouge">export default class</code>
+<strong>Note.jsx</strong></p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kr">export</span> <span class="k">default</span> <span class="kr">class</span> <span class="kr">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{...}</span></code></pre></figure>
+
+<p><strong>Notes.jsx</strong></p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kr">import</span> <span class="nx">Note</span> <span class="nx">form</span> <span class="s1">'./Note.jsx'</span><span class="p">;</span></code></pre></figure>
+
+<p>或者用 <code class="highlighter-rouge">export class className</code> 从一个单一模块中导出几个已命名的类：</p>
+
+<p><strong>Components.jsx</strong></p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kr">export</span> <span class="kr">class</span> <span class="nx">Note</span> <span class="kr">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{...};</span>
+
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">Notes</span> <span class="kr">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{...};</span></code></pre></figure>
+
+<p><strong>App.jsx</strong></p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kr">import</span> <span class="nx">Notes</span> <span class="nx">from</span> <span class="s1">'./Components.jsx'</span><span class="p">;</span>
+<span class="kr">import</span> <span class="nx">Note</span> <span class="nx">from</span> <span class="s1">'./Components.jsx'</span><span class="p">;</span>
+
+<span class="p">...</span></code></pre></figure>
+
+<p>我建议将类分离到不同模块中。</p>
+
+<p><br />
+<br /></p>
+
+<h4 id="section">类属性和属性初始化</h4>
+<p>ES6类默认不会绑定它们的方法。当你想访问实例属性的时候会有一些问题。
+实验性的功能<a href="https://github.com/jeffmo/es-class-static-properties-and-fields">class properties and property initializers</a>
+能解决这个问题。没有它们的情况下，我们可能要这样写：</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s1">'react'</span><span class="p">;</span>
+
+<span class="kr">class</span> <span class="nx">App</span> <span class="kr">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{</span>
+  <span class="nx">constructor</span><span class="p">(</span><span class="nx">props</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kr">super</span><span class="p">(</span><span class="nx">props</span><span class="p">);</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">renderNote</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">renderNote</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// Use `renderNote` here somehow.</span>
+    <span class="p">...</span>
+
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">renderNote</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="nx">renderNote</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// Given renderNote was bound, we can access `this` as expected</span>
+    <span class="k">return</span> <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">note</span><span class="p">}</span><span class="o">&lt;</span><span class="sr">/div&gt;</span><span class="err">;
+</span>  <span class="p">}</span>
+<span class="p">}</span>
+<span class="nx">App</span><span class="p">.</span><span class="nx">propTypes</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">value</span><span class="p">:</span> <span class="nx">React</span><span class="p">.</span><span class="nx">PropTypes</span><span class="p">.</span><span class="nx">string</span>
+<span class="p">};</span>
+<span class="nx">App</span><span class="p">.</span><span class="nx">defaultProps</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">value</span><span class="p">:</span> <span class="s1">''</span>
+<span class="p">};</span>
+
+<span class="kr">export</span> <span class="k">default</span> <span class="nx">App</span><span class="p">;</span></code></pre></figure>
+
+<p>使用类属性和属性初始化，我们可以这样写：</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s1">'react'</span><span class="p">;</span>
+
+<span class="kr">export</span> <span class="k">default</span> <span class="kr">class</span> <span class="nx">App</span> <span class="kr">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{</span>
+    <span class="kr">static</span> <span class="nx">propTypes</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="na">value</span><span class="p">:</span> <span class="nx">React</span><span class="p">.</span><span class="nx">PropTypes</span><span class="p">.</span><span class="nx">string</span>
+    <span class="p">}</span>
+    
+    <span class="kr">static</span> <span class="nx">defaultProps</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="na">value</span><span class="p">:</span> <span class="s1">''</span>
+    <span class="p">}</span>
+    <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+        <span class="p">...</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">renderNote</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">renderNote</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">note</span><span class="p">}</span><span class="o">&lt;</span><span class="sr">/div</span><span class="err">&gt;
+</span>    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>把声明推送到方法级别，这样读起来更容易。</p>
+
+<p><br />
+<br /></p>
+
+<h4 id="section-1">函数</h4>
+<p>JavaScript的函数已经非常灵活了。这里介绍一种更好的方法。
+下面是如何实现 <code class="highlighter-rouge">map</code>:</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">map</span><span class="p">(</span><span class="nx">cb</span><span class="p">,</span> <span class="nx">values</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">ret</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="kd">var</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">len</span><span class="p">;</span>
+    
+    <span class="k">for</span><span class="p">(</span><span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">len</span> <span class="o">=</span> <span class="nx">values</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">ret</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">cb</span><span class="p">(</span><span class="nx">values</span><span class="p">[</span><span class="nx">i</span><span class="p">]));</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="nx">ret</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">v</span><span class="p">){</span>
+    <span class="k">return</span> <span class="nx">v</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span>
+<span class="p">},</span> <span class="p">[</span><span class="mi">34</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">]);</span></code></pre></figure>
+
+<p>在ES6中你可以这样写：</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">map</span><span class="p">(</span><span class="nx">cb</span><span class="p">,</span> <span class="nx">values</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kr">const</span> <span class="nx">ret</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="kr">const</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">len</span><span class="p">;</span>
+    
+    <span class="k">for</span><span class="p">(</span><span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">len</span> <span class="o">=</span> <span class="nx">values</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">){</span>
+        <span class="nx">ret</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">cb</span><span class="p">(</span><span class="nx">values</span><span class="p">[</span><span class="nx">i</span><span class="p">]));</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="nx">ret</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">map</span><span class="p">((</span><span class="nx">v</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">v</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="mi">34</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">]);</span></code></pre></figure>
+
+<p><code class="highlighter-rouge">map</code> 的实现大体是一样的。值得注意的是后面调用的部分。
+你会发现回调的部分被换成了 <code class="highlighter-rouge">(v) =&gt; v * 2</code>。
+比起 <code class="highlighter-rouge">function </code>，箭头语法(fat arrow syntax)会更简洁一些。
+下面是更进一步的使用例子。</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="c1">//这三种写法结果是一样的</span>
+<span class="nx">v</span> <span class="o">=&gt;</span> <span class="nx">v</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span>
+<span class="p">(</span><span class="nx">v</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">v</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span>
+<span class="p">(</span><span class="nx">v</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">v</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">//可以绑定到变量中</span>
+<span class="kr">const</span> <span class="kr">double</span> <span class="o">=</span> <span class="p">(</span><span class="nx">v</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">v</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="kr">double</span><span class="p">(</span><span class="mi">2</span><span class="p">));</span>
+
+<span class="c1">//如果你想返回一个对象，你需要在外面加个括号</span>
+<span class="nx">v</span> <span class="o">=&gt;</span> <span class="p">({</span>
+    <span class="na">foo</span><span class="p">:</span> <span class="s1">'bar'</span>
+<span class="p">})</span></code></pre></figure>
+
+<p><br />
+<br /></p>
+
+<h4 id="section-2">箭头函数的上下文</h4>
+<p>箭头函数比较特别的是它没有 <code class="highlighter-rouge">this</code>, <code class="highlighter-rouge">this</code>将会指向到调用的对象的作用域。</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">obj</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">context</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">},</span>
+    <span class="na">name</span><span class="p">:</span> <span class="s1">'demo object 1'</span>
+<span class="p">};</span>
+
+<span class="kd">var</span> <span class="nx">obj2</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">context</span><span class="p">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">,</span>
+    <span class="na">name</span><span class="p">:</span> <span class="s1">'demo object 2'</span>
+<span class="p">}</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">obj</span><span class="p">.</span><span class="nx">context</span><span class="p">());</span> <span class="c1">// { context: [Function], name: 'demo object 1' }</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">obj2</span><span class="p">.</span><span class="nx">context</span><span class="p">());</span> <span class="c1">// {} in Node.js, Window in browser</span></code></pre></figure>
+
+<p>正如你可以在上面的代码片段中注意到的，
+匿名函数有一个<code class="highlighter-rouge">this</code>指向obj对象中的 <code class="highlighter-rouge">context</code>函数。
+换句话说，它将调用对象obj的范围绑定到<code class="highlighter-rouge">context</code>函数中。</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">obj</span><span class="p">.</span><span class="nx">context</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">obj2</span><span class="p">));</span><span class="c1">// { context: [Function], name: 'demo object 2' }</span></code></pre></figure>
+
+<h5 id="section-3">函数参数</h5>
+<p>以前函数参数的存在一些限制。
+有许多hack，例如<code class="highlighter-rouge">values = values || []</code>, 不过这样做既不优雅也容易导致一些错误。
+例如，当前面为0的时候用 <code class="highlighter-rouge">||</code>就会有问题。ES6通过传入默认值解决了这个问题。
+我们可以简单的这样写道 <code class="highlighter-rouge">function map(cb, value=[])</code>。</p>
+
+<p>还有更多的，默认值甚至可以依赖于彼此。
+你可以传一个随意数量参数给 <code class="highlighter-rouge">function map(cb, values...)</code>，
+这个API可能对<code class="highlighter-rouge">map</code>并不合适，但是在某些场景很有意义。</p>
+
+<p>还可以这样方便的从传入的对象中把值挑出来。</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kr">export</span> <span class="k">default</span> <span class="p">({</span><span class="nx">name</span><span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="c1">// ES6 string interpolation. Note the back-ticks!</span>
+  <span class="k">return</span> <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span><span class="p">{</span><span class="err">`</span><span class="nx">Hello</span> <span class="nx">$</span><span class="p">{</span><span class="nx">name</span><span class="p">}</span><span class="o">!</span><span class="err">`</span><span class="p">}</span><span class="o">&lt;</span><span class="sr">/div&gt;</span><span class="err">;
+</span><span class="p">};</span></code></pre></figure>
+
+<p><br />
+<br /></p>
+
+<h4 id="section-4">字符串插入</h4>
+<p>ES6提供了反引号语法，从此可以告别用+号拼接字符串的日子</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kr">const</span> <span class="nx">hello</span> <span class="o">=</span> <span class="err">`</span><span class="nx">Hello</span> <span class="nx">$</span><span class="p">{</span><span class="nx">name</span><span class="p">}</span><span class="o">!</span><span class="err">`</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">multiline</span> <span class="o">=</span> <span class="err">`</span>
+<span class="nx">multiple</span>
+<span class="nx">lines</span> <span class="nx">of</span>
+<span class="nx">awesomeness</span>
+<span class="err">`</span><span class="p">;</span></code></pre></figure>
+
+<p><br />
+<br /></p>
+
+<h4 id="section-5">解构</h4>
+
+<h4 id="section-6">对象初始化</h4>
+
+  </div>
+
+</article>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">webpack</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>webpack</li>
+          <li><a href="mailto:302656338@qq.com">302656338@qq.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/whatthecole"><span class="icon icon--github"><svg viewBox="0 0 16 16"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">whatthecole</span></a>
+
+          </li>
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p></p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

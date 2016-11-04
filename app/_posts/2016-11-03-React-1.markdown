@@ -1,0 +1,379 @@
+---
+layout: post
+title: "2016-11-03-React-1"
+date: 2016-11-03 15:16:00 +0800
+categories: React
+---
+
+ES6(或者称为ES2015)是长时间以来JavaScript最大的改变。多了很多新的功能。
+这个附录的目的是单独说明本书中使用的功能，以便清楚地了解它们的工作原理。
+比起去阅读整个[文档](http://www.ecma-international.org/ecma-262/6.0/index.html),
+我比较倾向把精力集中到这本书所用到的功能上。
+
+### Modules
+ES6引入了正确模块声明。
+早些时候，我们使用AMD或者CommonJS来实现模块化。
+ES6的模块声明是静态分析的。
+对于工具创作者来说，这是极其有用的。
+这意味着我们可以获得像*tree shaking* 一样的功能。
+这允许工具通过分离import结构轻松地跳过无用代码。
+
+#### 单个的 import 和 export
+下面是一个直接通过模块导出的例子：
+**persist.js**
+{% highlight javascript %}
+
+import makeFinalStore from 'alt-utils/lib/makeFinalStore';
+
+export default function (alt, storage, storeName) {
+    ...
+}
+
+{% endhighlight%}
+
+**index.js**
+{% highlight javascript %}
+import persist from './persist';
+...
+{% endhighlight%}
+<br />
+<br />
+
+#### 多个的 import 和 export
+
+使用模块作为多个函数的命名空间有时会很有用：
+
+**math.js**
+{% highlight javascript %}
+export function add(a, d) {
+    return a + b;
+}
+
+export function multiply(a, b) {
+    return a * b;
+}
+
+export function square(a) {
+    return a * a;
+}
+{% endhighlight%}
+
+我们也可以这样写：
+{% highlight javascript %}
+const add = (a, b) => a + b;
+const multiple = (a, b) => a * b;
+const square = (a) => a * a;
+
+export {add, multiple}
+{% endhighlight%}
+
+这里用到了箭头函数(fat arrow syntax)和属性简洁表示法(property value shorthand)。
+
+你可以这样导入这个模块：
+**index.js**
+{% highlight javascript %}
+import {add} from './math';
+{% endhighlight%}
+<br />
+<br />
+
+#### 别名 imports
+我们可以灵活地为import别名：
+{% highlight javascript %}
+import {actions as TodoActions} from '../actions/todo'
+
+...
+{% endhighlight%}
+
+`as`可以让你避免命名冲突。
+
+#### Webpack resolve.alias
+打包器，像Webpack,可以提供一些功能。你可以为你的模块路径定义一个 `resolve.alias`。
+不论你在哪个位置，你都可以像 `import persist from 'libs/persist'`这样使用import。
+{% highlight javascript %}
+...
+resolve {
+    alias: {
+        libs: path.join(__dirname, 'libs')
+    }
+}
+{% endhighlight%}
+
+官方文档详细描述了[possible variants](https://webpack.github.io/docs/configuration.html#resolve-alias)
+
+<br />
+<br />
+
+#### Classes
+不像其他语言，JavaScript使用基于原型继承来代替基于类继承。
+两个方法都有各自的好处。
+实际上，你可以通过基于原型模型来模拟基于类模型。
+ES6类是为了在JavaScript的基础机制上提供语法。内部还是使用旧的系统。
+
+React支持类对组件的定义，不过不是所有人都看好这件事。
+也就是说，定义可以变得十分整洁只要你不滥用它。
+下面是一个例子：
+{% highlight javascript %}
+import React from 'react';
+
+export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    // This is a regular property outside of React's machinery.
+    // If you don't need to trigger render() when it's changed,
+    // this can work.
+    this.privateProperty = 'private';
+
+    // React specific state. Alter this through `this.setState`. That
+    // will call `render()` eventually.
+    this.state = {
+      name: 'Class demo'
+    };
+  }
+  render() {
+    // Use the properties somehow.
+    const privateProperty = this.privateProperty;
+    const name = this.state.name
+    const notes = this.props.notes;
+
+    ...
+  }
+}
+
+{% endhighlight%}
+
+也许基于类的方法的最大的好处就是实际上，它能砍掉一些复杂方面，特别是当它涉及到React生命周期方法的时候。
+需要知道的重要的一点是类的方法默认是无法绑定的，这也是本书为什么要依靠一个实验性的功能--属性初始化(property initializer)
+
+<br />
+<br />
+
+#### Classes 和 Modules
+如上面说的，ES6模块允许 `export`很 `import`单个和多个的对象，函数，甚至是类。
+你可以使用 `export default class`来导出一个匿名类或使用 `export class className`从同一个模块中导出多个匿名类。
+
+单一个类的时候可以用 `export default class`
+**Note.jsx**
+{% highlight javascript %}
+export default class extends React.Component {...}
+{% endhighlight%}
+**Notes.jsx**
+{% highlight javascript %}
+import Note form './Note.jsx';
+{% endhighlight%}
+
+或者用 `export class className` 从一个单一模块中导出几个已命名的类：
+
+**Components.jsx**
+{% highlight javascript %}
+export class Note extends React.Component {...};
+
+export class Notes extends React.Component {...};
+{% endhighlight%}
+
+**App.jsx**
+{% highlight javascript %}
+import Notes from './Components.jsx';
+import Note from './Components.jsx';
+
+...
+{% endhighlight%}
+
+我建议将类分离到不同模块中。
+
+<br />
+<br />
+
+#### 类属性和属性初始化
+ES6类默认不会绑定它们的方法。当你想访问实例属性的时候会有一些问题。
+实验性的功能[class properties and property initializers](https://github.com/jeffmo/es-class-static-properties-and-fields)
+能解决这个问题。没有它们的情况下，我们可能要这样写：
+{% highlight javascript %}
+import React from 'react';
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.renderNote = this.renderNote.bind(this);
+  }
+  render() {
+    // Use `renderNote` here somehow.
+    ...
+
+    return this.renderNote();
+  }
+  renderNote() {
+    // Given renderNote was bound, we can access `this` as expected
+    return <div>{this.props.note}</div>;
+  }
+}
+App.propTypes = {
+  value: React.PropTypes.string
+};
+App.defaultProps = {
+  value: ''
+};
+
+export default App;
+
+{% endhighlight %}
+
+使用类属性和属性初始化，我们可以这样写：
+{% highlight javascript %}
+import React from 'react';
+
+export default class App extends React.Component {
+    static propTypes = {
+        value: React.PropTypes.string
+    }
+    
+    static defaultProps = {
+        value: ''
+    }
+    render() {
+        ...
+        return this.renderNote();
+    }
+    renderNote = () => {
+        return <div>{this.props.note}</div>
+    }
+}
+{% endhighlight %}
+把声明推送到方法级别，这样读起来更容易。
+
+<br />
+<br />
+
+#### 函数
+JavaScript的函数已经非常灵活了。这里介绍一种更好的方法。
+下面是如何实现 `map`:
+{% highlight javascript %}
+function map(cb, values) {
+    var ret = [];
+    var i, len;
+    
+    for(i = 0, len = values.length; i < len; i++) {
+        ret.push(cb(values[i]));
+    }
+    
+    return ret;
+}
+
+map(function(v){
+    return v * 2;
+}, [34, 2, 5]);
+
+{% endhighlight %}
+
+在ES6中你可以这样写：
+
+{% highlight javascript %}
+function map(cb, values) {
+    const ret = [];
+    const i, len;
+    
+    for(i = 0, len = values.length; i < len; i++){
+        ret.push(cb(values[i]));
+    }
+    
+    return ret;
+}
+
+map((v) => v * 2, [34, 2, 5]);
+{% endhighlight %}
+
+`map` 的实现大体是一样的。值得注意的是后面调用的部分。
+你会发现回调的部分被换成了 `(v) => v * 2`。
+比起 `function `，箭头语法(fat arrow syntax)会更简洁一些。
+下面是更进一步的使用例子。
+{% highlight javascript %}
+//这三种写法结果是一样的
+v => v * 2;
+(v) => v * 2;
+(v) => {
+    return v * 2;
+}
+
+//可以绑定到变量中
+const double = (v) => v * 2;
+
+console.log(double(2));
+
+//如果你想返回一个对象，你需要在外面加个括号
+v => ({
+    foo: 'bar'
+})
+
+{% endhighlight %}
+
+<br />
+<br />
+
+#### 箭头函数的上下文
+箭头函数比较特别的是它没有 `this`, `this`将会指向到调用的对象的作用域。
+{% highlight javascript %}
+var obj = {
+    context: function() {
+        return this;
+    },
+    name: 'demo object 1'
+};
+
+var obj2 = {
+    context: () => this,
+    name: 'demo object 2'
+}
+
+console.log(obj.context()); // { context: [Function], name: 'demo object 1' }
+console.log(obj2.context()); // {} in Node.js, Window in browser
+
+{% endhighlight %}
+正如你可以在上面的代码片段中注意到的，
+匿名函数有一个`this`指向obj对象中的 `context`函数。
+换句话说，它将调用对象obj的范围绑定到`context`函数中。
+
+{% highlight javascript %}
+console.log(obj.context.call(obj2));// { context: [Function], name: 'demo object 2' }
+{% endhighlight %}
+
+##### 函数参数
+以前函数参数的存在一些限制。
+有许多hack，例如`values = values || []`, 不过这样做既不优雅也容易导致一些错误。
+例如，当前面为0的时候用 `||`就会有问题。ES6通过传入默认值解决了这个问题。
+我们可以简单的这样写道 `function map(cb, value=[])`。
+
+还有更多的，默认值甚至可以依赖于彼此。
+你可以传一个随意数量参数给 `function map(cb, values...)`，
+这个API可能对`map`并不合适，但是在某些场景很有意义。
+
+还可以这样方便的从传入的对象中把值挑出来。
+{% highlight javascript %}
+export default ({name}) => {
+  // ES6 string interpolation. Note the back-ticks!
+  return <div>{`Hello ${name}!`}</div>;
+};
+{% endhighlight %}
+
+<br />
+<br />
+
+#### 字符串插入
+ES6提供了反引号语法，从此可以告别用+号拼接字符串的日子
+{% highlight javascript %}
+const hello = `Hello ${name}!`;
+const multiline = `
+multiple
+lines of
+awesomeness
+`;
+{% endhighlight %}
+
+<br />
+<br />
+
+#### 解构
+
+
+#### 对象初始化
