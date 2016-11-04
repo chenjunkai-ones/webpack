@@ -5,8 +5,8 @@
     <description></description>
     <link>https://whatthecole.github.io/webpack//webpack/</link>
     <atom:link href="https://whatthecole.github.io/webpack//webpack/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 04 Nov 2016 16:04:54 +0800</pubDate>
-    <lastBuildDate>Fri, 04 Nov 2016 16:04:54 +0800</lastBuildDate>
+    <pubDate>Fri, 04 Nov 2016 16:38:44 +0800</pubDate>
+    <lastBuildDate>Fri, 04 Nov 2016 16:38:44 +0800</lastBuildDate>
     <generator>Jekyll v3.1.1</generator>
     
       <item>
@@ -679,9 +679,9 @@ Webpack之所以强大的原因，是它能将你的应用分离成小的块来�
 &lt;span class=&quot;kr&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;hello&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{...};&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;blockquote&gt;
-  &lt;p&gt;Webpack现在还不支持这个格式，你必须要使用&lt;a href=&quot;https://www.npmjs.com/package/babel-loader&quot;&gt;babel-loader&lt;/a&gt;
-#### AMD
-AMD(asynchronous module definition),因为&lt;a href=&quot;http://requirejs.org/&quot;&gt;RequireJS&lt;/a&gt;流行起来。
+  &lt;p&gt;Webpack现在还不支持这个格式，你必须要使用&lt;a href=&quot;https://www.npmjs.com/package/babel-loader&quot;&gt;babel-loader&lt;/a&gt;&lt;/p&gt;
+  &lt;h4 id=&quot;amd&quot;&gt;AMD&lt;/h4&gt;
+  &lt;p&gt;AMD(asynchronous module definition),因为&lt;a href=&quot;http://requirejs.org/&quot;&gt;RequireJS&lt;/a&gt;流行起来。
 它引入了一个&lt;code class=&quot;highlighter-rouge&quot;&gt;define&lt;/code&gt;包装器。&lt;/p&gt;
 &lt;/blockquote&gt;
 
@@ -707,8 +707,10 @@ AMD(asynchronous module definition),因为&lt;a href=&quot;http://requirejs.org/
 &lt;p&gt;第二个方法排除掉一些杂乱东西。鉴于现在有了ES6了，使用AMD已经没有多大意义了。&lt;/p&gt;
 
 &lt;h3 id=&quot;umd&quot;&gt;UMD&lt;/h3&gt;
-&lt;p&gt;UMD(universal module definition)，通用模块定义。
-&amp;gt; 原文作者说 It is a monster of a format that aims to make the aforementioned formats compatible with each other. I will spare your eyes from it. Never write it yourself, leave it to the tools. If that didn’t scare you off, check out the official definitions.&lt;/p&gt;
+&lt;p&gt;UMD(universal module definition)，通用模块定义。&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;原文作者说 It is a monster of a format that aims to make the aforementioned formats compatible with each other. I will spare your eyes from it. Never write it yourself, leave it to the tools. If that didn’t scare you off, check out the official definitions.&lt;/p&gt;
+&lt;/blockquote&gt;
 
 &lt;p&gt;大意是指通过工具去实现它而不要尝试自己去写，不信可以去看&lt;a href=&quot;https://github.com/umdjs/umd&quot;&gt;官方文档&lt;/a&gt;&lt;/p&gt;
 
@@ -875,11 +877,11 @@ AMD(asynchronous module definition),因为&lt;a href=&quot;http://requirejs.org/
 
 </description>
         <pubDate>Wed, 02 Nov 2016 15:12:00 +0800</pubDate>
-        <link>https://whatthecole.github.io/webpack//webpack/wepack/2016/11/02/webpack-15.html</link>
-        <guid isPermaLink="true">https://whatthecole.github.io/webpack//webpack/wepack/2016/11/02/webpack-15.html</guid>
+        <link>https://whatthecole.github.io/webpack//webpack/webpack/2016/11/02/webpack-15.html</link>
+        <guid isPermaLink="true">https://whatthecole.github.io/webpack//webpack/webpack/2016/11/02/webpack-15.html</guid>
         
         
-        <category>wepack</category>
+        <category>webpack</category>
         
       </item>
     
@@ -958,11 +960,13 @@ AMD(asynchronous module definition),因为&lt;a href=&quot;http://requirejs.org/
 &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;执行 &lt;code class=&quot;highlighter-rouge&quot;&gt;npm run stats&lt;/code&gt;, 在根目录多了一个stats.json。
-配合下列的工具使用。
-- &lt;a href=&quot;http://webpack.github.io/analyse/&quot;&gt;The official analyse tool&lt;/a&gt;
-- &lt;a href=&quot;https://chrisbateman.github.io/webpack-visualizer/&quot;&gt;Webpack Visualizer&lt;/a&gt;
-- &lt;a href=&quot;https://alexkuz.github.io/webpack-chart/&quot;&gt;Webpack Chart&lt;/a&gt;
-- &lt;a href=&quot;https://github.com/robertknight/webpack-bundle-size-analyzer&quot;&gt;robertknight/webpack-bundle-size-analyzer&lt;/a&gt;&lt;/p&gt;
+配合下列的工具使用。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://webpack.github.io/analyse/&quot;&gt;The official analyse tool&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://chrisbateman.github.io/webpack-visualizer/&quot;&gt;Webpack Visualizer&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://alexkuz.github.io/webpack-chart/&quot;&gt;Webpack Chart&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/robertknight/webpack-bundle-size-analyzer&quot;&gt;robertknight/webpack-bundle-size-analyzer&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;h3 id=&quot;webpack-&quot;&gt;Webpack 统计插件&lt;/h3&gt;
 &lt;p&gt;如果你想用插件来管理统计,请查看&lt;a href=&quot;https://www.npmjs.com/package/stats-webpack-plugin&quot;&gt;stats-webpack-plugin&lt;/a&gt;&lt;/p&gt;
@@ -1329,11 +1333,13 @@ Child extract-text-webpack-plugin:
       <item>
         <title>webpack 添加hash到文件名</title>
         <description>&lt;p&gt;Webpack有个占位符的概念（&lt;strong&gt;placeholders&lt;/strong&gt;）。这些字符串被用于将特定的信息附加到Webpack输出上。
-最常见的用法：
--  &lt;code class=&quot;highlighter-rouge&quot;&gt;[path] &lt;/code&gt; - 返回入口路径
--  &lt;code class=&quot;highlighter-rouge&quot;&gt;[name] &lt;/code&gt; - 返回入口名
--  &lt;code class=&quot;highlighter-rouge&quot;&gt;[hash] &lt;/code&gt; - 返回构建的哈希值
--  &lt;code class=&quot;highlighter-rouge&quot;&gt;[chunkhash] &lt;/code&gt; - 返回一个chunk的指定hash&lt;/p&gt;
+最常见的用法：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;[path] &lt;/code&gt; - 返回入口路径&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;[name] &lt;/code&gt; - 返回入口名&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;[hash] &lt;/code&gt; - 返回构建的哈希值&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;[chunkhash] &lt;/code&gt; - 返回一个chunk的指定hash&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;p&gt;假设我们有一个这样的配置文件：&lt;/p&gt;
 

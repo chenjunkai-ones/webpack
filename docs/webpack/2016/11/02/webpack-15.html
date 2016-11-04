@@ -10,7 +10,7 @@
   <meta name="description" content="资源加载">
 
   <link rel="stylesheet" href="/webpack/css/main.css">
-  <link rel="canonical" href="https://whatthecole.github.io/webpack//webpack/wepack/2016/11/02/webpack-15.html">
+  <link rel="canonical" href="https://whatthecole.github.io/webpack//webpack/webpack/2016/11/02/webpack-15.html">
   <link rel="alternate" type="application/rss+xml" title="webpack" href="https://whatthecole.github.io/webpack//webpack/feed.xml">
 </head>
 
@@ -99,9 +99,9 @@
 <span class="kr">export</span> <span class="kd">function</span> <span class="nx">hello</span><span class="p">()</span> <span class="p">{...};</span></code></pre></figure>
 
 <blockquote>
-  <p>Webpack现在还不支持这个格式，你必须要使用<a href="https://www.npmjs.com/package/babel-loader">babel-loader</a>
-#### AMD
-AMD(asynchronous module definition),因为<a href="http://requirejs.org/">RequireJS</a>流行起来。
+  <p>Webpack现在还不支持这个格式，你必须要使用<a href="https://www.npmjs.com/package/babel-loader">babel-loader</a></p>
+  <h4 id="amd">AMD</h4>
+  <p>AMD(asynchronous module definition),因为<a href="http://requirejs.org/">RequireJS</a>流行起来。
 它引入了一个<code class="highlighter-rouge">define</code>包装器。</p>
 </blockquote>
 
@@ -127,8 +127,10 @@ AMD(asynchronous module definition),因为<a href="http://requirejs.org/">Requir
 <p>第二个方法排除掉一些杂乱东西。鉴于现在有了ES6了，使用AMD已经没有多大意义了。</p>
 
 <h3 id="umd">UMD</h3>
-<p>UMD(universal module definition)，通用模块定义。
-&gt; 原文作者说 It is a monster of a format that aims to make the aforementioned formats compatible with each other. I will spare your eyes from it. Never write it yourself, leave it to the tools. If that didn’t scare you off, check out the official definitions.</p>
+<p>UMD(universal module definition)，通用模块定义。</p>
+<blockquote>
+  <p>原文作者说 It is a monster of a format that aims to make the aforementioned formats compatible with each other. I will spare your eyes from it. Never write it yourself, leave it to the tools. If that didn’t scare you off, check out the official definitions.</p>
+</blockquote>
 
 <p>大意是指通过工具去实现它而不要尝试自己去写，不信可以去看<a href="https://github.com/umdjs/umd">官方文档</a></p>
 

@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>webpack 添加hash到文件名</title>
-  <meta name="description" content="Webpack有个占位符的概念（placeholders）。这些字符串被用于将特定的信息附加到Webpack输出上。最常见的用法：-  [path]  - 返回入口路径-  [name]  - 返回入口名-  [hash]  - 返回构建的哈希值-  [chunkhash]  - 返回一个chunk的指定hash">
+  <meta name="description" content="Webpack有个占位符的概念（placeholders）。这些字符串被用于将特定的信息附加到Webpack输出上。最常见的用法：  [path]  - 返回入口路径  [name]  - 返回入口名  [hash]  - 返回构建的哈希值  [chunkhash]  - 返回一个chunk的指定hash">
 
   <link rel="stylesheet" href="/webpack/css/main.css">
   <link rel="canonical" href="https://whatthecole.github.io/webpack//webpack/webpack/2016/11/01/webpack-9.html">
@@ -65,11 +65,13 @@
 
   <div class="post-content" itemprop="articleBody">
     <p>Webpack有个占位符的概念（<strong>placeholders</strong>）。这些字符串被用于将特定的信息附加到Webpack输出上。
-最常见的用法：
--  <code class="highlighter-rouge">[path] </code> - 返回入口路径
--  <code class="highlighter-rouge">[name] </code> - 返回入口名
--  <code class="highlighter-rouge">[hash] </code> - 返回构建的哈希值
--  <code class="highlighter-rouge">[chunkhash] </code> - 返回一个chunk的指定hash</p>
+最常见的用法：</p>
+<ul>
+  <li><code class="highlighter-rouge">[path] </code> - 返回入口路径</li>
+  <li><code class="highlighter-rouge">[name] </code> - 返回入口名</li>
+  <li><code class="highlighter-rouge">[hash] </code> - 返回构建的哈希值</li>
+  <li><code class="highlighter-rouge">[chunkhash] </code> - 返回一个chunk的指定hash</li>
+</ul>
 
 <p>假设我们有一个这样的配置文件：</p>
 

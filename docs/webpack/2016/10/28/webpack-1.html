@@ -124,12 +124,14 @@
   <span class="no">Output</span> <span class="n">filename</span> <span class="n">not</span> <span class="n">configured</span><span class="o">.</span></code></pre></figure>
 
 <h3 id="section-2">目录结构</h3>
-<p>-app/ 
-  - index.js
-  - component.js
--build/<br />
-- package.json
-- webpack.config.js</p>
+<p>-app/</p>
+<ul>
+  <li>index.js</li>
+  <li>component.js
+-build/</li>
+  <li>package.json</li>
+  <li>webpack.config.js</li>
+</ul>
 
 <p>这是项目的目录结构，app是我们项目的源码，build是项目输出目录，webpack.config.js
 是Webpack的配置文件。</p>
@@ -233,16 +235,18 @@ app.js  1.69 kB       0  [emitted]  app
    [0] ./app/index.js 80 bytes {0} [built]
    [1] ./app/component.js 145 bytes {0} [built]</code></pre></figure>
 
-<p>输出的内容有很多，这里一一讲解一下： <br />
--  <code class="highlighter-rouge">Hash: d9bcbc55eb97ef228d44 </code> - 构建的哈希值。  <br />
--  <code class="highlighter-rouge">Version: webpack 1.13.3 </code> - Webpack的版本。<br />
--  <code class="highlighter-rouge">Time: 53ms </code> - 构建耗费的时间。<br />
--  <code class="highlighter-rouge">app.js  1.69 kB       0  [emitted]  app </code> - 分别为生产的资源名，大小，相关的<strong>chunks</strong>的id,
-生成状态，chunk名。<br />
--  <code class="highlighter-rouge">[0] ./app/index.js 80 bytes {0} [built] </code> - 生成的资源的id,名字，大小，入口chunk id,生成的方式。 <br />
--  <code class="highlighter-rouge">Child html-webpack-plugin for "index.html" </code> - 输出的相关组件。 <br />
--  <code class="highlighter-rouge">+ 3 hidden modules </code> - Webpack忽略一些输出，即 <code class="highlighter-rouge">node_modules </code>中的模块和类似目录。
-你可以执行 <code class="highlighter-rouge">webpack --display-modules </code>看看信息。<a href="https://stackoverflow.com/questions/28858176/what-does-webpack-mean-by-xx-hidden-modules">更多解释</a>。</p>
+<p>输出的内容有很多，这里一一讲解一下：</p>
+<ul>
+  <li><code class="highlighter-rouge">Hash: d9bcbc55eb97ef228d44 </code> - 构建的哈希值。</li>
+  <li><code class="highlighter-rouge">Version: webpack 1.13.3 </code> - Webpack的版本。</li>
+  <li><code class="highlighter-rouge">Time: 53ms </code> - 构建耗费的时间。</li>
+  <li><code class="highlighter-rouge">app.js  1.69 kB       0  [emitted]  app </code> - 分别为生产的资源名，大小，相关的<strong>chunks</strong>的id,
+生成状态，chunk名。</li>
+  <li><code class="highlighter-rouge">[0] ./app/index.js 80 bytes {0} [built] </code> - 生成的资源的id,名字，大小，入口chunk id,生成的方式。</li>
+  <li><code class="highlighter-rouge">Child html-webpack-plugin for "index.html" </code> - 输出的相关组件。</li>
+  <li><code class="highlighter-rouge">+ 3 hidden modules </code> - Webpack忽略一些输出，即 <code class="highlighter-rouge">node_modules </code>中的模块和类似目录。
+你可以执行 <code class="highlighter-rouge">webpack --display-modules </code>看看信息。<a href="https://stackoverflow.com/questions/28858176/what-does-webpack-mean-by-xx-hidden-modules">更多解释</a>。</li>
+</ul>
 
 <p>检查 <code class="highlighter-rouge">build/ </code>目录下，如果你仔细看，你会发一些id在你的资源里面。
 <img src="/webpack/images/A8E62B5F-5274-4F80-88DA-EF0FA7824F4A.png" alt="ids within source" /></p>
